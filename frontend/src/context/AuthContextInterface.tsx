@@ -8,6 +8,8 @@ export const AuthProvider = ({ children }:any) => {
     const [token, setToken] = React.useState<string | null>(null);
 
     useEffect(() => {
+        console.log('montou auth context');
+        
         let tokenLocalStorage=localStorage.getItem('token');
         let parseToken= tokenLocalStorage ? JSON.parse(tokenLocalStorage) : null;
         if(parseToken && !token){
@@ -15,10 +17,10 @@ export const AuthProvider = ({ children }:any) => {
 
         }
 
-    }, []);
+    }, [token]);
 
     
-    const login = useCallback(async (username: string, password: string) => {
+    const login = async (username: string, password: string) => {
         let axiosRequest=axios.create({
             baseURL: process.env.REACT_APP_API_URL,
             headers: {
@@ -29,7 +31,7 @@ export const AuthProvider = ({ children }:any) => {
         const response = await axiosRequest.post<{accessToken:string}>('/login', {username, password});
         setToken(response.data.accessToken);
         
-    }, []);
+    }
     const isAutenticated = useCallback(() => {
         if(token){
             return true;
@@ -37,7 +39,7 @@ export const AuthProvider = ({ children }:any) => {
             return true;
         }
         return  false;
-    },[]);
+    },[token]);
 
 
     return (
