@@ -1,16 +1,17 @@
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import pawBackground from "../../assets/paw.jpg"
 import imagem from '../../assets/family2.jpg'
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
 import Input from "../../components/input/Input"
-import { InputBoolean } from "../../components/inputboolean/InputBoolean";
-import { InputCombobox } from "../../components/InputCombobox/InputCombobox";
-import { useState } from "react";
-import { InputFile } from "../../components/inputfile/InputFile";
+import { InputCombobox } from "../../components/input/InputCombobox";
+import { InputBoolean } from "../../components/input/InputBoolean";
+import { InputFile } from "../../components/input/InputFile";
+
 
 export const CastrationRequest = () => {
 
-    const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
+
     const { register, handleSubmit, formState: { errors }, control, watch } = useForm<CastrationRequestInterface>({
         defaultValues: {
             nome: "",
@@ -21,10 +22,13 @@ export const CastrationRequest = () => {
             bairro: "Centro",
             tipoAnimal: "GATO",
             nomeAnimal: "Jeremias",
-            animalVacinado: true
-        }
+            animalVacinado: true,
+            descricaoAnimal: "Animal muito dócil, adora brincar e correr",
+        },
     });
+    
 
+    const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
     const formValues = watch();
 
     // const { openModal } = useModal();
@@ -32,7 +36,6 @@ export const CastrationRequest = () => {
     const onSubmit: SubmitHandler<CastrationRequestInterface> = data => {
         alert(JSON.stringify(data, null, '\t'));
     };
-
     const handleFile = (name: string, files:FileList) => {
         if (file && files.length > 0) {
             setFile({ fileName: files[0].name, file: files[0] });
@@ -157,6 +160,18 @@ export const CastrationRequest = () => {
                                         register={register} />
 
                                 </div>
+                                <div className="sm:col-span-5">
+                                    <Input id="descricaoAnimalIdx"
+                                        name="descricaoAnimal"
+                                        label="Descrição do Animal (comportamento)"
+                                        type="textarea"
+                                        lines={4}
+                                        required
+                                        //onChange={(name, value)=>console.log(name,value)}
+                                        errors={errors.descricaoAnimal}
+                                        register={register} />
+
+                                </div>
                                 <div className="sm:col-span-2">
                                     <InputBoolean id='animalVacinadoIdx' name='animalVacinado' label='Animal é vacinado' control={control} />
                                 </div>
@@ -182,6 +197,7 @@ export const CastrationRequest = () => {
                             <p>Nome do Animal: {formValues.nomeAnimal}</p>
                             <p>Raça do Animal: {formValues.racaAnimal}</p>
                             <p>Animal Vacinado: {`${formValues.animalVacinado ? 'Sim' : 'Não'}`}</p>
+                            <p>Descricao do Animal: {formValues.descricaoAnimal}</p>
 
                         </pre>
                      

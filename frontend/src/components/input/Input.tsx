@@ -1,6 +1,5 @@
 import React, {forwardRef, useEffect, useState } from "react";
 import { InputInterface } from "../../types/InputInterface"
-import { formatCpf } from "../../services/Util";
 
 const Input = forwardRef<HTMLInputElement, InputInterface>(({
     id,
@@ -14,6 +13,7 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
     required,
     validationMessage,
     errors,
+    lines
 
 }: InputInterface, ref) => {
 
@@ -31,7 +31,42 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
         }
 
     }, [errors]);
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    const renderTextArea = () => {
+        return (
+            <textarea
+                id={id}
+                name={name}
+                rows={lines}
+                value={value}
+                onChange={handleChange}
+                {...register && register(name, { required: required && (validationMessage || 'Campo obrigatório')})}
+                className={`block w-full px-3 py-1.5 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
+            />
+        )
+    }
+    const renderInput = () => {
+        return (
+            <input
+                id={id}
+                name={name}
+                type={type}
+                value={value}
+                onChange={handleChange}
+                {...register && register(name, { required: required && (validationMessage || 'Campo obrigatório')})}
+                className={`block w-full px-3 py-1.5 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
+            />
+        )
+    }
+    const renderInputType = () => {
+        switch (type) {
+            case 'textarea':
+                return renderTextArea();
+            default:
+                return renderInput();
+        }
+    }
+    const handleChange = (e: any) => {
         let value= e.target.value;
         onChange && onChange(name, value);
     }
@@ -39,7 +74,7 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
         <div>
             <label htmlFor={name} className="block text-sm/6 font-medium text-gray-900">{label}</label>
             <div className="mt-2">
-                <input
+                {/* <input
                     id={id}
                     name={name}
                     type={type}
@@ -47,7 +82,8 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
                     onChange={handleChange}
                     {...register && register(name, { required: required && (validationMessage || 'Campo obrigatório')})} 
                     className={`"block w-full px-3  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"`}
-                />
+                /> */}
+                {renderInputType()}
                 <p className="text-red-500 text-xs mt-1">
                     {errorMessage}
                 </p>

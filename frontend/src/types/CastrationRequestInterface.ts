@@ -9,4 +9,5 @@ export interface CastrationRequestInterface{
     nomeAnimal:string,
     racaAnimal?:string,
     animalVacinado?:boolean,
+    descricaoAnimal?:string,
 }

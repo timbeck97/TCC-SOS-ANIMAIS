@@ -8,6 +8,7 @@ export interface InputInterface {
     value?: any;
     onChange?:(name:string, value:any) => void;
     className?: string;
+    lines?: number; //textarea
     format?:  'cpf' | 'cep' | 'date' | 'currency';
     required?: boolean;
     validationMessage?: string;
