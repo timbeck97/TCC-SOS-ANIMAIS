@@ -33,13 +33,8 @@ export const AuthProvider = ({ children }:any) => {
         
     }
     const isAutenticated = useCallback(() => {
-        if(token){
-            return true;
-        }else if(localStorage.getItem('token')){
-            return true;
-        }
-        return  false;
-    },[token]);
+        return true;
+    },[]);
 
 
     return (

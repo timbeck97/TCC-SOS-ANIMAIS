@@ -13,7 +13,9 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
     required,
     validationMessage,
     errors,
-    lines
+    lines,
+    format,
+    ...rest
 
 }: InputInterface, ref) => {
 
@@ -49,11 +51,11 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
         return (
             <input
                 id={id}
+                ref={ref}
                 name={name}
-                type={type}
+                onChange={onChange}
                 value={value}
-                onChange={handleChange}
-                {...register && register(name, { required: required && (validationMessage || 'Campo obrigatório')})}
+                {...rest}
                 className={`block w-full px-3 py-1.5 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
             />
         )
@@ -91,4 +93,5 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
         </div>
     )
 });
+Input.displayName = 'Input';
 export default Input;

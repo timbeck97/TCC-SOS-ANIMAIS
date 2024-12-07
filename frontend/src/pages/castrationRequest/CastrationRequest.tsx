@@ -7,29 +7,35 @@ import Input from "../../components/input/Input"
 import { InputCombobox } from "../../components/input/InputCombobox";
 import { InputBoolean } from "../../components/input/InputBoolean";
 import { InputFile } from "../../components/input/InputFile";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useHookFormMask } from "use-mask-input";
+import { CastrationFormSchema, CastrationSchema } from "../../schemas/CastrationSchema";
+
 
 
 export const CastrationRequest = () => {
 
 
-    const { register, handleSubmit, formState: { errors }, control, watch } = useForm<CastrationRequestInterface>({
+    const { register, handleSubmit, formState: { errors }, control, watch} = useForm<CastrationFormSchema>({
         defaultValues: {
-            nome: "",
-            sobrenome: "Morgenstern",
-            cpf: "04263284003",
-            rua: "Lajeado",
-            numero: "99",
-            bairro: "Centro",
+            // nome: "",
+            // sobrenome: "",
+            // cpf: "",
+            // rua: "",
+            // numero: "",
+            // bairro: "",
             tipoAnimal: "GATO",
-            nomeAnimal: "Jeremias",
+            //nomeAnimal: "",
             animalVacinado: true,
-            descricaoAnimal: "Animal muito dócil, adora brincar e correr",
+            //descricaoAnimal: "",
         },
+        resolver: zodResolver(CastrationSchema)
     });
-    
 
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
     const formValues = watch();
+    
+    const registerWithMask = useHookFormMask(register);
 
     // const { openModal } = useModal();
 
@@ -43,6 +49,7 @@ export const CastrationRequest = () => {
             setFile(null);
         }
     }
+ 
     return (
         <div style={{ backgroundImage: `url(${pawBackground})` }}>
             <div className="container sm:max-w-full  md:max-w-4xl	 mx-auto ">
@@ -59,34 +66,29 @@ export const CastrationRequest = () => {
 
                                     <Input id="nomeidx"
                                         label="Nome"
-                                        name="nome"
                                         type="text"
-                                        required
                                         errors={errors.nome}
-                                        register={register}
-                                        onChange={(name, value) => console.log(name, value)}
+                                        {...register('nome')}
+
                                     />
 
                                 </div>
                                 <div className="sm:col-span-2">
 
                                     <Input id="sobrenomeidx"
-                                        name="sobrenome"
                                         label="Sobrenome"
                                         type="text"
-                                        required
                                         errors={errors.sobrenome}
-                                        register={register} />
+                                        {...register('sobrenome')} />
                                 </div>
                                 <div className="sm:col-span-2">
                                     <Input id="cpfidx"
-                                        name="cpf"
                                         label="CPF"
                                         type="text"
                                         format="cpf"
-                                        required
+                                        {...registerWithMask('cpf', '999.999.999-99',{autoUnmask:true})}
                                         errors={errors.cpf}
-                                        register={register} />
+                                        />
                                 </div>
 
                             </div>
@@ -96,34 +98,25 @@ export const CastrationRequest = () => {
                             <div className="mt-3 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 ">
                                 <div className="sm:col-span-2">
                                     <Input id="ruaidx"
-                                        name="rua"
                                         label="Rua"
                                         type="text"
-                                        required
-                                        onChange={(name, value) => console.log(name, value)}
                                         errors={errors.rua}
-                                        register={register} />
+                                        {...register('rua')} />
                                 </div>
                                 <div className="sm:col-span-1">
                                     <Input id="numeroidx"
-                                        name="numero"
                                         label="Número"
                                         type="text"
-                                        required
-                                        //onChange={(name, value)=>console.log(name,value)}
                                         errors={errors.numero}
-                                        register={register} />
+                                        {...register('numero')} />
                                 </div>
                                 <div className="sm:col-span-2">
                                     {/* <Input id="bairroidx" name="bairro" type="text" label="Bairro" value={form.bairro} onChange={onChangeForm} /> */}
                                     <Input id="bairroidx"
-                                        name="bairro"
                                         label="Bairro"
                                         type="text"
-                                        required
-                                        //onChange={(name, value)=>console.log(name,value)}
                                         errors={errors.bairro}
-                                        register={register} />
+                                        {...register('bairro')} />
                                 </div>
                             </div>
                         </div>
@@ -134,30 +127,24 @@ export const CastrationRequest = () => {
 
                                     <InputCombobox id="tipoAnimalidx" name="tipoAnimal"
                                         label="Tipo de Animal" onChange={() => console.log('alterando valor')}
-
                                         comboboxValues={[{ label: 'Cachorro', value: 'CACHORRO' }, { label: 'Gato', value: 'GATO' }]}
                                         errors={errors.tipoAnimal}
                                         register={register} />
                                 </div>
                                 <div className="sm:col-span-2">
                                     <Input id="nomeAnimalidx"
-                                        name="nomeAnimal"
                                         label="Nome do Animal"
                                         type="text"
-                                        required
                                         //onChange={(name, value)=>console.log(name,value)}
                                         errors={errors.nomeAnimal}
-                                        register={register} />
+                                        {...register('nomeAnimal')} />
                                 </div>
                                 <div className="sm:col-span-2">
                                     <Input id="racaAnimalIdx"
-                                        name="racaAnimal"
                                         label="Raça do Animal"
                                         type="text"
-                                        required
-                                        //onChange={(name, value)=>console.log(name,value)}
                                         errors={errors.racaAnimal}
-                                        register={register} />
+                                        {...register('racaAnimal')} />
 
                                 </div>
                                 <div className="sm:col-span-5">
