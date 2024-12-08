@@ -1,17 +1,170 @@
+import DataTable, { TableColumn } from 'react-data-table-component'
 import dog from '../../assets/cachorro.jpg'
 import cat2 from '../../assets/cat-svgrepo-com.svg'
 import graph from '../../assets/graph.svg'
 import pawBackground from "../../assets/paw.jpg"
+import { FcInfo } from "react-icons/fc";
+import { FcOvertime } from "react-icons/fc";
+import { EsperaCastracao } from '../../types/EsperaCastracao'
+import { useState } from 'react'
+import { Modal } from '../../components/modal/Modal'
 
 export const FilaEspera = () => {
-    return (
-        <div style={{ backgroundImage: `url(${pawBackground})` }} className='h-full'>
 
+    const [showModal, setShowModal] = useState(false);
+    const handleShowModal = () => {
+        setShowModal(true);
+    }
+    const columns: TableColumn<EsperaCastracao>[] = [
+        { name: 'Nome do Requerente', selector: (row: EsperaCastracao) => row.nomeRequerente, sortable: true, sortField: 'nomeRequerente', },
+        { name: 'Tipo do Animal', selector: (row: EsperaCastracao) => row.tipoAnimal },
+        { name: 'Nome do Animal', selector: (row: EsperaCastracao) => row.nomeAnimal },
+        { name: 'Porte do Animal', selector: (row: EsperaCastracao) => row.porteAnimal },
+        { name: 'Data da Solicitação', selector: (row: EsperaCastracao) => row.dataSolicitacao },
+        { name: 'Ações', cell: (row: EsperaCastracao) => <button onClick={handleShowModal}><FcInfo size={30} /></button> }
+    ]
+    const data = [
+        {
+            nomeRequerente: 'João da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'João da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'João da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'João da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'João da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'Maria da Silva',
+            tipoAnimal: 'Gato',
+            nomeAnimal: 'Bichano',
+            porteAnimal: 'Pequeno',
+            dataSolicitacao: '12/10/2021'
+        },
+        {
+            nomeRequerente: 'José da Silva',
+            tipoAnimal: 'Cachorro',
+            nomeAnimal: 'Rex',
+            porteAnimal: 'Grande',
+            dataSolicitacao: '12/10/2021'
+        },
+
+    ]
+    const renderModal = () => {
+        return (
+            <Modal isModalOpen={showModal} closeModal={() => setShowModal(false)} modalSize='medium'>
+                <p>
+                    TESTE
+                </p>
+            </Modal>
+        )
+    }
+    return (
+        <div style={{ backgroundImage: `url(${pawBackground})`,
+        minHeight: '100%'}} >
+         {/* <div style={{ background: '#F9F9F9', minHeight:'100%'}}> */}
             <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md">
                 <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white'>
 
-                    <div className="text-center rounded px-2 pt-4  border-b border-gray-900/10 pb-5">
-                        <h1 className="text-3xl  poppins-bold">Fila de Espera</h1>
+                    <div className="rounded px-2 pt-4 flex items-center  border-b border-gray-900/10 pb-5">
+                        <FcOvertime size={35} />
+
+                        <h1 className="text-2xl ml-3  poppins-semibold">Fila de Espera</h1>
                     </div>
                     <div>
                         <div className="grid  grid-cols-1 sm:grid-cols-3 gap-4 mt-5 border-b border-gray-900/10 pb-5">
@@ -44,6 +197,27 @@ export const FilaEspera = () => {
                             </div>
 
                         </div>
+                        <div>
+                            <DataTable
+                                columns={columns}
+                                data={data}
+                                pagination={true}
+                                expandableRows={true}
+                                expandableRowsComponent={(row: any) => <div>
+                                    <p>Descrição: {row.data.nomeRequerente}</p>
+                                    <p>Porte: </p>
+                                </div>}
+                                paginationComponentOptions={
+                                    {
+                                        rowsPerPageText: 'Registros por página',
+                                        rangeSeparatorText: 'de',
+                                        selectAllRowsItem: true,
+                                        selectAllRowsItemText: 'Todos',
+                                    }
+                                }
+                            />
+                        </div>
+                        {renderModal()}
 
                     </div>
                 </div>

@@ -7,5 +7,4 @@ export interface InputComboboxInterface {
     className?: string;
     comboboxValues?:{value: string; label: string }[];
     errors?: any;
-    register: any;
 }

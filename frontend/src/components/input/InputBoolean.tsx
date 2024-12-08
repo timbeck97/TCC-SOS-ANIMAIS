@@ -12,7 +12,7 @@ export const InputBoolean = ({ id, name, label, value, control }: InputBooleanIn
     return (
         <div>
             <label  className="block text-sm/6 font-medium text-gray-900">{label}</label>
-            <div className="flex items-center">
+            <div className="flex items-center mt-2">
                 <button id={id + "sim"}
                     type="button"
                     className={`px-4 py-2 rounded-l-lg ${field.value === true
