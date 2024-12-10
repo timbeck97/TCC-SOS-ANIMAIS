@@ -12,6 +12,9 @@ import { useHookFormMask } from "use-mask-input";
 import { CastrationFormSchema, CastrationSchema } from "../../schemas/CastrationSchema";
 import { InputNumber } from "../../components/input/InputNumber";
 import { PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import { NavLink } from "react-router-dom";
+import { FaPaw } from "react-icons/fa";
+
 
 
 
@@ -56,7 +59,16 @@ export const CastrationRequest = () => {
 
     return (
         <div style={{ backgroundImage: `url(${pawBackground})` }}>
-            <div className="container sm:max-w-full  md:max-w-4xl	 mx-auto ">
+            <header className="bg-[#e5e7eb82] shadow-md shadow-Stone-400">
+                <div className="container px-4 py-3">
+                    <NavLink to="/" end className='flex items-center text-gray-700 hover:text-gray-900 text-gray-700 hover:text-gray-900'>
+                        <FaPaw className="text-3xl  " />
+                        <span className="text-lg font-semibold   ml-2 border-b-2 border-gray-500">SOS Animais</span>
+                    </NavLink>
+                </div>
+            </header>
+
+            <div className="container sm:max-w-full  md:max-w-4xl mt-3	 mx-auto ">
                 <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white">
                     <div className="pt-5">
                         <img src={imagem} alt="Imagem logo SOS Animais" className="size-1/4  rounded-full mx-auto" />
@@ -137,11 +149,11 @@ export const CastrationRequest = () => {
                                 <div className="sm:col-span-1">
 
                                     <InputCombobox id="tipoAnimalidx"
-                                        label="Tipo de Animal" 
+                                        label="Tipo de Animal"
                                         comboboxValues={TIPO_ANIMAIS}
                                         errors={errors.tipoAnimal}
                                         {...register('tipoAnimal')}
-                                         />
+                                    />
                                 </div>
                                 <div className="sm:col-span-2">
                                     <Input id="nomeAnimalidx"
@@ -169,7 +181,7 @@ export const CastrationRequest = () => {
                                         errors={errors.pesoAnimal} />
                                 </div>
                                 <div className="sm:col-span-1">
-                                    <InputCombobox id="porteAnimalIdx" 
+                                    <InputCombobox id="porteAnimalIdx"
                                         label="Porte do Animal"
                                         comboboxValues={PORTE_ANIMAIS}
                                         errors={errors.porteAnimal}
