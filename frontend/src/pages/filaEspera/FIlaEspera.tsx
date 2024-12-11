@@ -8,10 +8,136 @@ import { FcOvertime } from "react-icons/fc";
 import { EsperaCastracao } from '../../types/EsperaCastracao'
 import { useState } from 'react'
 import { Modal } from '../../components/modal/Modal'
+import { openAlertSuccess } from '../../services/Alert'
+
+const data = [
+    {
+        nomeRequerente: 'João da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'João da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'João da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'João da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'João da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'Maria da Silva',
+        tipoAnimal: 'Gato',
+        nomeAnimal: 'Bichano',
+        porteAnimal: 'Pequeno',
+        dataSolicitacao: '12/10/2021'
+    },
+    {
+        nomeRequerente: 'José da Silva',
+        tipoAnimal: 'Cachorro',
+        nomeAnimal: 'Rex',
+        porteAnimal: 'Grande',
+        dataSolicitacao: '12/10/2021'
+    },
+
+]
 
 export const FilaEspera = () => {
 
     const [showModal, setShowModal] = useState(false);
+    const [animaisSelecionados, setAnimaisSelecionados] = useState<EsperaCastracao[]>([]);
+    const [selecionarAnimais, setSelecionarAnimais] = useState(false);
     const handleShowModal = () => {
         setShowModal(true);
     }
@@ -23,128 +149,14 @@ export const FilaEspera = () => {
         { name: 'Data da Solicitação', selector: (row: EsperaCastracao) => row.dataSolicitacao },
         { name: 'Ações', cell: (row: EsperaCastracao) => <button onClick={handleShowModal}><FcInfo size={30} /></button> }
     ]
-    const data = [
-        {
-            nomeRequerente: 'João da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'João da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'João da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'João da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'João da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'Maria da Silva',
-            tipoAnimal: 'Gato',
-            nomeAnimal: 'Bichano',
-            porteAnimal: 'Pequeno',
-            dataSolicitacao: '12/10/2021'
-        },
-        {
-            nomeRequerente: 'José da Silva',
-            tipoAnimal: 'Cachorro',
-            nomeAnimal: 'Rex',
-            porteAnimal: 'Grande',
-            dataSolicitacao: '12/10/2021'
-        },
-
-    ]
+   
+    const handleSelectRows = ({selectedRows}: {
+        allSelected: boolean;
+        selectedCount: number;
+        selectedRows: EsperaCastracao[];
+    }) => {
+        setAnimaisSelecionados(selectedRows);
+    }
     const renderModal = () => {
         return (
             <Modal isModalOpen={showModal} closeModal={() => setShowModal(false)} modalSize='medium'>
@@ -154,10 +166,17 @@ export const FilaEspera = () => {
             </Modal>
         )
     }
+    const renderFilaEspera = () => {
+        return (
+            ''
+        )
+    }
     return (
-        <div style={{ backgroundImage: `url(${pawBackground})`,
-        minHeight: '100%'}} >
-         {/* <div style={{ background: '#F9F9F9', minHeight:'100%'}}> */}
+        <div style={{
+            backgroundImage: `url(${pawBackground})`,
+            minHeight: '100%'
+        }} >
+            {/* <div style={{ background: '#F9F9F9', minHeight:'100%'}}> */}
             <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md pt-3">
                 <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white'>
 
@@ -198,11 +217,20 @@ export const FilaEspera = () => {
 
                         </div>
                         <div>
+                           
+                            <button type="submit" 
+                            className="bg-indigo-500 mt-8 float-right text-white px-4 rounded-xl py-1 mb-5 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            onClick={()=>setSelecionarAnimais(!selecionarAnimais)}>
+                                Selecionar Animais
+                            </button>
+                           
                             <DataTable
                                 columns={columns}
                                 data={data}
                                 pagination={true}
                                 expandableRows={true}
+                                selectableRows={selecionarAnimais}
+                                onSelectedRowsChange={handleSelectRows}
                                 expandableRowsComponent={(row: any) => <div>
                                     <p>Descrição: {row.data.nomeRequerente}</p>
                                     <p>Porte: </p>

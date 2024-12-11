@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }: any) => {
     //     return !!token && !!refreshToken;
     // }, [token, refreshToken]);
     const isAutenticated = useCallback(() => {
-        return true;
+        return false;
        
     }, []);
 

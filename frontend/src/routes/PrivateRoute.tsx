@@ -13,7 +13,7 @@ export const PrivateRoute = () => {
     //autentication logic
 
     if (isAutenticated()) {
-        return <div className="h-full">
+        return <div>
             <Menu />
             <Outlet />
         </div>
