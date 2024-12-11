@@ -109,10 +109,14 @@ export const AuthProvider = ({ children }: any) => {
         localStorage.removeItem("token_id");
         window.location.href = logoutUrl;
     };
-    const isAutenticated = useCallback(() => {
+    // const isAutenticated = useCallback(() => {
         
-        return !!token && !!refreshToken;
-    }, [token, refreshToken]);
+    //     return !!token && !!refreshToken;
+    // }, [token, refreshToken]);
+    const isAutenticated = useCallback(() => {
+        return true;
+       
+    }, []);
 
 
     return (

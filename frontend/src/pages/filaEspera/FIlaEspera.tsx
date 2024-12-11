@@ -158,7 +158,7 @@ export const FilaEspera = () => {
         <div style={{ backgroundImage: `url(${pawBackground})`,
         minHeight: '100%'}} >
          {/* <div style={{ background: '#F9F9F9', minHeight:'100%'}}> */}
-            <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md">
+            <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md pt-3">
                 <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white'>
 
                     <div className="rounded px-2 pt-4 flex items-center  border-b border-gray-900/10 pb-5">
