@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CastrationSchema = z.object({
+export const WaitingListRequestSchema = z.object({
     nome: z.string().min(1, {message: 'Campo obrigatório'}),
     sobrenome: z.string().min(1, {message: 'Campo obrigatório'}),
     cpf: z.string().min(1, {message: 'Campo obrigatório'}).regex(/^\d{11}$/ , {message: 'CPF inválido'}),
@@ -17,4 +17,4 @@ export const CastrationSchema = z.object({
     porteAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
 })
 
-export type CastrationFormSchema = z.infer<typeof CastrationSchema>;
+export type WaitingListFormSchema = z.infer<typeof WaitingListRequestSchema>;

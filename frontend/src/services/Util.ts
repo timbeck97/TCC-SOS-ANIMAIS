@@ -32,3 +32,17 @@ export const formatNumberInput = (v:string)=>{
     }
     return (negativo ? "-" : "") + v;
 }
+export const fintNextMonday = () => {
+    var d = new Date();
+    var day = d.getDay();
+    var diff = 8 - day; // days until next monday
+    d.setDate(d.getDate() + diff);
+    d.setUTCHours(7, 30, 0, 0);
+    const isoString = d.toISOString(); // Ex: "2018-06-12T19:30:00.000Z"
+    let result=isoString.slice(0, 16)
+    return result;
+}
+export const parseDate = (date: string) => {
+    const dateArray = date.split('/')
+    return new Date(parseInt(dateArray[2]), parseInt(dateArray[1])-1, parseInt(dateArray[0]))
+}

@@ -1,12 +1,12 @@
 import React, {forwardRef, useEffect, useState } from "react";
 import { InputInterface } from "../../types/InputInterface"
 
-const Input = forwardRef<HTMLInputElement, InputInterface>(({
+const Input = forwardRef<any, InputInterface>(({
     id,
     name,
     register,
     label,
-    type,
+    type='text',
     value,
     className,
     onChange,
@@ -37,13 +37,13 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
     const renderTextArea = () => {
         return (
             <textarea
-                id={id}
-                name={name}
-                rows={lines}
-                value={value}
-                onChange={handleChange}
-                {...register && register(name, { required: required && (validationMessage || 'Campo obrigatório')})}
-                className={`block w-full px-3 py-1.5 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
+            id={id}
+            ref={ref}
+            name={name}
+            onChange={onChange}
+            value={value}
+            {...rest}
+                className={`block w-full px-3 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
             />
         )
     }
@@ -53,10 +53,11 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
                 id={id}
                 ref={ref}
                 name={name}
+                type={type}
                 onChange={onChange}
                 value={value}
                 {...rest}
-                className={`block w-full px-3 py-1.5 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
+                className={`block w-full px-3 py-2 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
             />
         )
     }
@@ -68,10 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputInterface>(({
                 return renderInput();
         }
     }
-    const handleChange = (e: any) => {
-        let value= e.target.value;
-        onChange && onChange(name, value);
-    }
+
     return (
         <div>
             <label htmlFor={name} className="block text-sm/6 font-medium text-gray-900">{label}</label>

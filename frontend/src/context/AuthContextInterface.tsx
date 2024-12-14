@@ -2,12 +2,12 @@ import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { AuthContextInterface } from '../types/AuthContext';
 
 
-const KEYCLOAK_AUTH_URL = "http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/auth";
-const KEYCLOAK_TOKEN_URL = "http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/token";
-const KEYCLOAK_LOGOUT_URL = "http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/logout";
-const CLIENT_ID = "sosanimais-client";
-const CLIENT_SECRET = "MAuY5mLjH6S0AwK1oXSSqIDwe7e1Ap3A";
-const REDIRECT_URI = "http://localhost:3000";
+const KEYCLOAK_AUTH_URL = process.env.KEYCLOAK_AUTH_URL ||'';
+const KEYCLOAK_TOKEN_URL = process.env.KEYCLOAK_TOKEN_URL||'';
+const KEYCLOAK_LOGOUT_URL = process.env.KEYCLOAK_LOGOUT_URL||'';
+const CLIENT_ID = process.env.CLIENT_ID||'';
+const CLIENT_SECRET = process.env.CLIENT_SECRET||'';
+const REDIRECT_URI = process.env.REDIRECT_URI||'';
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
 
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }: any) => {
     //     return !!token && !!refreshToken;
     // }, [token, refreshToken]);
     const isAutenticated = useCallback(() => {
-        return false;
+        return true;
        
     }, []);
 

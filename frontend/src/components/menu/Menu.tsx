@@ -135,8 +135,8 @@ export const Menu = () => {
                             name@flowbite.com
                         </span>
                     </Dropdown.Header> */}
-                 
-                   {isAutenticated()? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>:<Dropdown.Item onClick={login}>Login</Dropdown.Item>}
+
+                    {isAutenticated() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
                 </Dropdown>
                 {/* Hamburger Menu */}
                 <Navbar.Toggle />
@@ -148,10 +148,15 @@ export const Menu = () => {
                 <NavLink to="/solicitarCastracao" end>
                     Solicitar Castração
                 </NavLink>
-                {isAutenticated() && <NavLink to="/gerenciar/filaEspera" end>
-                    Lista de Espera
-                </NavLink>}
-            
+                {isAutenticated() && <>
+                    <NavLink to="/gerenciar/filaEspera" end>
+                        Lista de Espera
+                    </NavLink>
+                    <NavLink to="/gerenciar/castracoes" end>
+                        Castrações
+                    </NavLink>
+                    </>}
+
             </Navbar.Collapse>
         </Navbar>
     )

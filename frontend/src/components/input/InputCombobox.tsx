@@ -25,7 +25,7 @@ export const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxIn
                 ref={ref} 
                  name={name}
                  onChange={onChange} 
-                 className="block w-full bg-bgWhite pl-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm/6 outline-none">
+                 className="block w-full bg-bgWhite pl-2 py-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm/6 outline-none">
                     {comboboxValues?.map((obj, index) => {
                         return <option key={index} value={obj.value}>{obj.label}</option>
                     })}

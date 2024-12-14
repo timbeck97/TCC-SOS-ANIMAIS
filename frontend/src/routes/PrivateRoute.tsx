@@ -13,10 +13,11 @@ export const PrivateRoute = () => {
     //autentication logic
 
     if (isAutenticated()) {
-        return <div>
+        return <>
             <Menu />
             <Outlet />
-        </div>
+        </>
+        
 
     } else {
         return <Navigate to="/" />
