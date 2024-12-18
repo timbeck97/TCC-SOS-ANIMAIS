@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { ModalContextInterface } from "../types/ModalContextInterface";
+import { setOpenModalRef } from "../services/ModalTrigger";
 
 const ModalContext = createContext<ModalContextInterface | undefined>(undefined);
 
@@ -7,18 +8,24 @@ const ModalContext = createContext<ModalContextInterface | undefined>(undefined)
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [onConfirm, setOnConfirm] = useState<()=>void | undefined>();
 
-
-    const openModal = (message: string) => {
-        console.log('chamou');
-
+    useEffect(() => {
+        setOpenModalRef(openModal);
+    },[])
+    const openModal = (message: string, callback:any) => {
         setModalMessage(message);
         setIsModalOpen(true);
+        setOnConfirm(()=>callback);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setModalMessage('');
+        if(onConfirm){
+            onConfirm();
+            setOnConfirm(undefined);
+        }
     };
 
     return (

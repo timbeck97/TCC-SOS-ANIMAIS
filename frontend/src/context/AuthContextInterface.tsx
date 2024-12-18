@@ -2,18 +2,23 @@ import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { AuthContextInterface } from '../types/AuthContext';
 
 
-const KEYCLOAK_AUTH_URL = process.env.KEYCLOAK_AUTH_URL ||'';
-const KEYCLOAK_TOKEN_URL = process.env.KEYCLOAK_TOKEN_URL||'';
-const KEYCLOAK_LOGOUT_URL = process.env.KEYCLOAK_LOGOUT_URL||'';
-const CLIENT_ID = process.env.CLIENT_ID||'';
-const CLIENT_SECRET = process.env.CLIENT_SECRET||'';
-const REDIRECT_URI = process.env.REDIRECT_URI||'';
+const KEYCLOAK_AUTH_URL = process.env.REACT_APP_KEYCLOAK_AUTH_URL ||'';
+const KEYCLOAK_TOKEN_URL = process.env.REACT_APP_KEYCLOAK_TOKEN_URL||'';
+const KEYCLOAK_LOGOUT_URL = process.env.REACT_APP_KEYCLOAK_LOGOUT_URL||'';
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID||'';
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET||'';
+const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI||'';
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
 
-    const [token, setToken] = React.useState<string | null>(null);
-    const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
-    const [tokenId, setTokenId] = React.useState<string | null>(null);
+    // const [token, setToken] = React.useState<string | null>(null);
+    // const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
+    // const [tokenId, setTokenId] = React.useState<string | null>(null);
+    const [token, setToken] = React.useState<{
+        token: string
+        refreshToken: string
+        tokenId: string
+    }|null>(null);
 
     useEffect(() => {
         console.log('montou auth context');
@@ -24,31 +29,66 @@ export const AuthProvider = ({ children }: any) => {
         if (code) {
             fetchToken(code);
         } else {
-            if (!token && !refreshToken) {
-
-            }
+        
             let tokenLocalStorage = localStorage.getItem('access_token');
             let refreshLocalStorage = localStorage.getItem('refresh_token');
             let tokenIdLocalStorage = localStorage.getItem('token_id');
-            if (tokenLocalStorage) {
-                setToken(tokenLocalStorage);
-            }
-            if (refreshLocalStorage) {
-                setRefreshToken(refreshLocalStorage);
-            }
-            if (tokenIdLocalStorage) {
-                setTokenId(tokenIdLocalStorage);
+            if(tokenLocalStorage && refreshLocalStorage && tokenIdLocalStorage){
+                let token = {
+                    token: tokenLocalStorage,
+                    refreshToken: refreshLocalStorage,
+                    tokenId: tokenIdLocalStorage
+                }
+                setToken(token);
             }
 
         }
 
-    }, [token, refreshToken]);
+    }, []);
 
-
+    
   
     const login = () => {
         const authUrl = `${KEYCLOAK_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid`;
         window.location.href = authUrl;
+    }
+    const updateRefreshToken = async () => {
+        try {
+            const response = await fetch(KEYCLOAK_TOKEN_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    grant_type: "refresh_token",
+                    client_id: CLIENT_ID,
+                    client_secret: CLIENT_SECRET,
+                    refresh_token: token?.refreshToken || "",
+                }),
+                credentials: "omit",
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('DATA REFRESHED TOKEN: ',data);
+                
+                localStorage.setItem("access_token", data.access_token);
+                localStorage.setItem("refresh_token", data.refresh_token);
+                localStorage.setItem("token_id", data.id_token);
+                
+                let token = {
+                    token: data.access_token,
+                    refreshToken: data.refresh_token,
+                    tokenId: data.id_token
+                }
+                setToken(token);
+            } else {
+                console.error("Erro ao atualizar o token de acesso");
+                console.log('response', response);
+                
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar o token de acesso:", error);
+        }
     }
     const fetchToken = async (code: string) => {
         try {
@@ -69,19 +109,19 @@ export const AuthProvider = ({ children }: any) => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('data', data);
-                
                 localStorage.setItem("access_token", data.access_token);
                 localStorage.setItem("refresh_token", data.refresh_token);
                 localStorage.setItem("token_id", data.id_token);
-                setToken(data.access_token);
-                setRefreshToken(data.refresh_token);
-                setTokenId(data.id_token);
+                let token = {
+                    token: data.access_token,
+                    refreshToken: data.refresh_token,
+                    tokenId: data.id_token
+                }
+                setToken(token);
 
                 // Opcional: Decodificar e armazenar informações do usuário
-                // const userInfo = parseJwt(data.access_token);
-                // console.log("Usuário autenticado:", userInfo);
-
+                 const userInfo = parseJwt(data.access_token);
+                 console.log("Usuário autenticado:", userInfo);
 
                 // Remova o código da URL
                 window.history.replaceState({}, document.title, "/");
@@ -92,35 +132,35 @@ export const AuthProvider = ({ children }: any) => {
             console.error("Erro ao trocar o código pelo token:", error);
         }
     };
-    // const parseJwt = (token: string) => {
-    //     try {
-    //         const base64Url = token.split(".")[1];
-    //         const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    //         return JSON.parse(window.atob(base64));
-    //     } catch (e) {
-    //         console.error("Erro ao decodificar o token JWT:", e);
-    //         return null;
-    //     }
-    // };
+    const parseJwt = (token: string) => {
+        try {
+            const base64Url = token.split(".")[1];
+            const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+            return JSON.parse(window.atob(base64));
+        } catch (e) {
+            console.error("Erro ao decodificar o token JWT:", e);
+            return null;
+        }
+    };
     const logout = () => {
-        const logoutUrl = `${KEYCLOAK_LOGOUT_URL}?id_token_hint=${tokenId}&post_logout_redirect_uri=${encodeURIComponent('http://localhost:3000')}`;
+        const logoutUrl = `${KEYCLOAK_LOGOUT_URL}?id_token_hint=${token?.tokenId}&post_logout_redirect_uri=${encodeURIComponent('http://localhost:3000')}`;
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("token_id");
         window.location.href = logoutUrl;
     };
-    // const isAutenticated = useCallback(() => {
-        
-    //     return !!token && !!refreshToken;
-    // }, [token, refreshToken]);
     const isAutenticated = useCallback(() => {
-        return true;
+        
+        return !!token
+    }, [token]);
+    // const isAutenticated = useCallback(() => {
+    //     return true;
        
-    }, []);
+    // }, []);
 
 
     return (
-        <AuthContext.Provider value={{ login, isAutenticated, logout }}>
+        <AuthContext.Provider value={{ login, isAutenticated, logout, updateRefreshToken }}>
             {children}
         </AuthContext.Provider>
     );
