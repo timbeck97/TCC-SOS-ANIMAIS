@@ -13,10 +13,13 @@ export const PrivateRoute = () => {
     //autentication logic
 
     if (isAutenticated()) {
-        return <>
+        return <div className="flex flex-col min-h-0">
             <Menu />
-            <Outlet />
-        </>
+            <div style={{overflowY:'scroll'}}>
+                <Outlet/>
+            </div>
+        </div>
+        
         
 
     } else {

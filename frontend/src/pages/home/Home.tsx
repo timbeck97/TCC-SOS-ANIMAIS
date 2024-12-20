@@ -28,7 +28,7 @@ export const Home = () => {
     }
 
     return (
-        <div>
+        <div style={{overflowY:"auto", flex:'1'}}>
             <h1 className="text-4xl text-center">Bem-vindo ao sistema de castrações</h1>
             <p className="text-xl text-center mt-5">Aqui você
                 pode solicitar a castração de seu animal de estimação e acompanhar a fila de espera.</p>
@@ -45,11 +45,14 @@ export const Home = () => {
                 <button className="bg-red-400 rounded rounded-lg p-2 text-white mt-3" onClick={()=>fazerRequestPrivada('user')}>
                     Teste requisicao privada User
                 </button>
-
+               
+                
             </div>
+
             <div className="mt-5">
                 <p className="text-center font-bold">{data}</p>
             </div>
+            
         </div>
     )
 }

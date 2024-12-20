@@ -4,7 +4,7 @@ export const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
     return (
         <div style={{
             backgroundImage: `url(${pawBackground})`,
-            minHeight: '100%'
+            minHeight: '100vh'
         }} >
 
             <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md pt-3">

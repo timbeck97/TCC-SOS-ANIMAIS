@@ -3,9 +3,11 @@ import { Menu } from "../components/menu/Menu"
 
 export const PublicRoute = () => {
     return (
-        <div>
+        <div className="flex flex-col min-h-0" >
             <Menu />
-            <Outlet />
+            <div style={{ overflowY: 'scroll' }}>
+                <Outlet />
+            </div>
         </div>
     )
 }
