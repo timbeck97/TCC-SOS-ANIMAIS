@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import imagem from '../../assets/family2.jpg'
+import check from '../../assets/check.png'
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
 import Input from "../../components/input/Input"
 import { InputCombobox } from "../../components/input/InputCombobox";
@@ -13,6 +14,8 @@ import { InputNumber } from "../../components/input/InputNumber";
 import { PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
+import {publicPost } from "../../services/Axios";
+import { EsperaCastracao } from "../../types/EsperaCastracao";
 
 
 
@@ -22,7 +25,19 @@ export const CastrationRequest = () => {
 
     const { register, handleSubmit, formState: { errors }, control, watch } = useForm<WaitingListFormSchema>({
         defaultValues: {
-    
+            nome: "Tim",
+            sobrenome: "Maia",
+            cpf: "12345678900",
+            telefone: "51999696596",
+            rua: "Rua das Flores",
+            numero: "123",
+            bairro: "Centro",
+            tipoAnimal: "CACHORRO",
+            nomeAnimal: "Rex",
+            racaAnimal: "Vira-lata",
+            pesoAnimal: '4.5',
+            descricaoAnimal: "Animal dócil e brincalhão",
+
             animalVacinado: true,
             porteAnimal: "PEQUENO",
         },
@@ -30,6 +45,7 @@ export const CastrationRequest = () => {
     });
 
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
+    const [submittedData, setSubmittedData] = useState<EsperaCastracao | null>(null);
     const formValues = watch();
 
     const registerWithMask = useHookFormMask(register);
@@ -37,158 +53,195 @@ export const CastrationRequest = () => {
     // const { openModal } = useModal();
 
     const onSubmit: SubmitHandler<CastrationRequestInterface> = data => {
-        alert(JSON.stringify(data, null, '\t'));
+        let headers = {
+            'Content-Type': 'multipart/form-data'
+        }
+        const formData = new FormData();
+        if (file?.file) {
+            formData.append("file", file?.file);
+        }
+        formData.append("dto", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        publicPost<EsperaCastracao>('/public/castration', formData, headers, (resp) => {
+            setSubmittedData(resp);
+        })
     };
-    const handleFile = (name: string, files: FileList) => {
-        if (file && files.length > 0) {
+    const handleFile = (name: string, files: FileList | null) => {
+        if (files && files.length > 0) {
             setFile({ fileName: files[0].name, file: files[0] });
         } else {
             setFile(null);
         }
     }
-
-    return (
-        <Pawbackground>
-            <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white">
-                <div className="pt-5">
-                    <img src={imagem} alt="Imagem logo SOS Animais" className="size-1/4  rounded-full mx-auto" />
+    const renderConfirmacaoCastracao = () => {
+        return (
+            <div className="border border-gray-300 p-4 mt-5 rounded-md">
+                <div className="mensagem-topo bg-green-100 text-green-800 p-4 rounded mb-6 flex items-center space-x-4">
+                    <img src={check} alt="Check logo" className="w-20" />
+                    <p className="font-bold">
+                        Sua solicitação de castração foi registrada e você está na lista de espera. Avisaremos pelo celular assim que a SOS Animais agendar uma nova data.
+                    </p>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="border-b border-gray-900/10 pb-5 mt-5">
+                <h3 className="text-lg/7 font-semibold text-gray-900 border-b border-gray-900/10 pb-5 mt-10">
+                    Resumo da solicitação
+                </h3>
+                <ul className="mt-2 space-y-2">
+                    <li><strong>Nome:</strong> {submittedData?.nome}</li>
+                    <li><strong>Sobrenome:</strong> {submittedData?.sobrenome}</li>
+                    <li><strong>CPF:</strong> {submittedData?.cpf}</li>
+                    <li><strong>Telefone:</strong> {submittedData?.telefone}</li>
+                    <li><strong>Rua:</strong> {submittedData?.rua}</li>
+                    <li><strong>Número:</strong> {submittedData?.numero}</li>
+                    <li><strong>Bairro:</strong> {submittedData?.bairro}</li>
+                    <li><strong>Tipo de Animal:</strong> {submittedData?.tipoAnimal}</li>
+                    <li><strong>Nome do Animal:</strong> {submittedData?.nomeAnimal}</li>
+                    <li><strong>Raça do Animal:</strong> {submittedData?.racaAnimal}</li>
+                    <li><strong>Peso do Animal:</strong> {submittedData?.pesoAnimal}</li>
+                    <li><strong>Animal Vacinado:</strong> {submittedData?.animalVacinado ? "Sim" : "Não"}</li>
+                    <li><strong>Descrição:</strong> {submittedData?.descricaoAnimal}</li>
+                </ul>
+         
 
-                        <h2 className="text-lg/7 font-semibold text-gray-900">Informações Pessoais</h2>
-                        <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
-                            <div className="sm:col-span-2">
+            </div>
+        );
+    };
+    const renderFormCastracao = () => {
+        return (
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="border-b border-gray-900/10 pb-5 mt-5">
 
-                                <Input id="nomeidx"
-                                    label="Nome"
-                                    type="text"
-                                    errors={errors.nome}
-                                    {...register('nome')}
+                    <h2 className="text-lg/7 font-semibold text-gray-900">Informações Pessoais</h2>
+                    <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
+                        <div className="sm:col-span-2">
 
-                                />
+                            <Input id="nomeidx"
+                                label="Nome"
+                                type="text"
+                                errors={errors.nome}
+                                {...register('nome')}
 
-                            </div>
-                            <div className="sm:col-span-2">
+                            />
 
-                                <Input id="sobrenomeidx"
-                                    label="Sobrenome"
-                                    type="text"
-                                    errors={errors.sobrenome}
-                                    {...register('sobrenome')} />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <Input id="cpfidx"
-                                    label="CPF"
-                                    type="text"
-                                    {...registerWithMask('cpf', '999.999.999-99', { autoUnmask: true })}
-                                    errors={errors.cpf}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <Input id="telefoneIdx"
-                                    label="Telefone"
-                                    type="text"
-                                    {...register('telefone')}
-                                    errors={errors.telefone}
-                                />
-                            </div>
+                        </div>
+                        <div className="sm:col-span-2">
 
+                            <Input id="sobrenomeidx"
+                                label="Sobrenome"
+                                type="text"
+                                errors={errors.sobrenome}
+                                {...register('sobrenome')} />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <Input id="cpfidx"
+                                label="CPF"
+                                type="text"
+                                {...registerWithMask('cpf', '999.999.999-99', { autoUnmask: true })}
+                                errors={errors.cpf}
+                            />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <Input id="telefoneIdx"
+                                label="Telefone"
+                                type="text"
+                                {...register('telefone')}
+                                errors={errors.telefone}
+                            />
+                        </div>
+
+                    </div>
+                </div>
+                <div className="border-b border-gray-900/10 pb-5 mt-5">
+                    <h2 className="text-lg/7 font-semibold text-gray-900">Endereço</h2>
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 ">
+                        <div className="sm:col-span-2">
+                            <Input id="ruaidx"
+                                label="Rua"
+                                type="text"
+                                errors={errors.rua}
+                                {...register('rua')} />
+                        </div>
+                        <div className="sm:col-span-1">
+                            <Input id="numeroidx"
+                                label="Número"
+                                type="text"
+                                errors={errors.numero}
+                                {...register('numero')} />
+                        </div>
+                        <div className="sm:col-span-2">
+                            {/* <Input id="bairroidx" name="bairro" type="text" label="Bairro" value={form.bairro} onChange={onChangeForm} /> */}
+                            <Input id="bairroidx"
+                                label="Bairro"
+                                type="text"
+                                errors={errors.bairro}
+                                {...register('bairro')} />
                         </div>
                     </div>
-                    <div className="border-b border-gray-900/10 pb-5 mt-5">
-                        <h2 className="text-lg/7 font-semibold text-gray-900">Endereço</h2>
-                        <div className="mt-3 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 ">
-                            <div className="sm:col-span-2">
-                                <Input id="ruaidx"
-                                    label="Rua"
-                                    type="text"
-                                    errors={errors.rua}
-                                    {...register('rua')} />
-                            </div>
-                            <div className="sm:col-span-1">
-                                <Input id="numeroidx"
-                                    label="Número"
-                                    type="text"
-                                    errors={errors.numero}
-                                    {...register('numero')} />
-                            </div>
-                            <div className="sm:col-span-2">
-                                {/* <Input id="bairroidx" name="bairro" type="text" label="Bairro" value={form.bairro} onChange={onChangeForm} /> */}
-                                <Input id="bairroidx"
-                                    label="Bairro"
-                                    type="text"
-                                    errors={errors.bairro}
-                                    {...register('bairro')} />
-                            </div>
+                </div>
+                <div className="boder-b border-gray-900/10 pb-5 mt-5">
+                    <h2 className="text-lg/7 font-semibold text-gray-900">Dados do Animal</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 mt-3">
+                        <div className="sm:col-span-1">
+
+                            <InputCombobox id="tipoAnimalidx"
+                                label="Tipo de Animal"
+                                comboboxValues={TIPO_ANIMAIS}
+                                errors={errors.tipoAnimal}
+                                {...register('tipoAnimal')}
+                            />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <Input id="nomeAnimalidx"
+                                label="Nome do Animal"
+                                type="text"
+                                //onChange={(name, value)=>console.log(name,value)}
+                                errors={errors.nomeAnimal}
+                                {...register('nomeAnimal')} />
+                        </div>
+                        <div className="sm:col-span-2">
+                            <Input id="racaAnimalIdx"
+                                label="Raça do Animal"
+                                type="text"
+                                errors={errors.racaAnimal}
+                                {...register('racaAnimal')} />
+
+                        </div>
+                        <div className="sm:col-span-1">
+                            <InputNumber id="pesoIdx"
+                                name="pesoAnimal"
+                                value={formValues.pesoAnimal}
+                                label="Peso Aproximado (kg)"
+                                type="numeric2decimals"
+                                control={control}
+                                errors={errors.pesoAnimal} />
+                        </div>
+                        <div className="sm:col-span-1">
+                            <InputCombobox id="porteAnimalIdx"
+                                label="Porte do Animal"
+                                comboboxValues={PORTE_ANIMAIS}
+                                errors={errors.porteAnimal}
+                                //register={register} />
+                                {...register('porteAnimal')} />
+                        </div>
+                        <div className="sm:col-span-5">
+                            <Input id="descricaoAnimalIdx"
+                                label="Descrição do Animal (comportamento)"
+                                type="textarea"
+                                lines={4}
+                                errors={errors.descricaoAnimal}
+                                {...register('descricaoAnimal')}
+                            />
+
+                        </div>
+                        <div className="sm:col-span-2">
+                            <InputBoolean id='animalVacinadoIdx' name='animalVacinado' label='Animal é vacinado' control={control} />
                         </div>
                     </div>
-                    <div className="boder-b border-gray-900/10 pb-5 mt-5">
-                        <h2 className="text-lg/7 font-semibold text-gray-900">Dados do Animal</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 mt-3">
-                            <div className="sm:col-span-1">
-
-                                <InputCombobox id="tipoAnimalidx"
-                                    label="Tipo de Animal"
-                                    comboboxValues={TIPO_ANIMAIS}
-                                    errors={errors.tipoAnimal}
-                                    {...register('tipoAnimal')}
-                                />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <Input id="nomeAnimalidx"
-                                    label="Nome do Animal"
-                                    type="text"
-                                    //onChange={(name, value)=>console.log(name,value)}
-                                    errors={errors.nomeAnimal}
-                                    {...register('nomeAnimal')} />
-                            </div>
-                            <div className="sm:col-span-2">
-                                <Input id="racaAnimalIdx"
-                                    label="Raça do Animal"
-                                    type="text"
-                                    errors={errors.racaAnimal}
-                                    {...register('racaAnimal')} />
-
-                            </div>
-                            <div className="sm:col-span-1">
-                                <InputNumber id="pesoIdx"
-                                    name="pesoAnimal"
-                                    value={formValues.pesoAnimal}
-                                    label="Peso Aproximado (kg)"
-                                    type="numeric2decimals"
-                                    control={control}
-                                    errors={errors.pesoAnimal} />
-                            </div>
-                            <div className="sm:col-span-1">
-                                <InputCombobox id="porteAnimalIdx"
-                                    label="Porte do Animal"
-                                    comboboxValues={PORTE_ANIMAIS}
-                                    errors={errors.porteAnimal}
-                                    //register={register} />
-                                    {...register('porteAnimal')} />
-                            </div>
-                            <div className="sm:col-span-5">
-                                <Input id="descricaoAnimalIdx"
-                                    label="Descrição do Animal (comportamento)"
-                                    type="textarea"
-                                    lines={4}
-                                    errors={errors.descricaoAnimal}
-                                    {...register('descricaoAnimal')}
-                                    />
-
-                            </div>
-                            <div className="sm:col-span-2">
-                                <InputBoolean id='animalVacinadoIdx' name='animalVacinado' label='Animal é vacinado' control={control} />
-                            </div>
-                        </div>
-                        <div className="col-span-full mt-5">
-                            <InputFile id="file-upload" name="file-upload" label="Foto do Animal" value={file} onChange={handleFile} />
-                        </div>
+                    <div className="col-span-full mt-5">
+                        <InputFile id="file-upload" name="file-upload" types=".jpeg, .png, .jpg" label="Foto do Animal" value={file} onChange={handleFile} />
                     </div>
+                </div>
 
 
-                    <pre className="mt-5">
+                {/* <pre className="mt-5">
                         <p className="font-bold">
                             Valores formulário
                         </p>
@@ -207,15 +260,25 @@ export const CastrationRequest = () => {
                         <p>Peso do Animal: {formValues.pesoAnimal}</p>
                         <p>Animal Vacinado: {`${formValues.animalVacinado ? 'Sim' : 'Não'}`}</p>
                         <p>Descricao do Animal: {formValues.descricaoAnimal}</p>
+                        <p>FILE: {file?.fileName}</p>
 
-                    </pre>
+                    </pre> */}
 
-                    <div className="border-t border-gray-900/10 mt-5 flex justify-center    ">
-                        <button type="submit" className="bg-indigo-500 mt-8 text-white w-60 px-4 rounded-xl py-2 mb-5 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            Enviar
-                        </button>
-                    </div>
-                </form>
+                <div className="mt-5 flex justify-center">
+                    <button type="submit" className="bg-indigo-500 mt-8 text-white w-60 px-4 rounded-xl py-2 mb-5 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        )
+    }
+    return (
+        <Pawbackground>
+            <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white">
+                <div className="pt-5">
+                    <img src={imagem} alt="Imagem logo SOS Animais" className="size-1/4  rounded-full mx-auto" />
+                </div>
+                {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
             </div>
         </Pawbackground>
 

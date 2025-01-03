@@ -64,11 +64,6 @@ export const Menu = () => {
         return (
             <ul className="flex justify-center items-center gap-x-10">
                 <li>
-                    <NavLink to="/" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300'} end>
-                        Página Inicial
-                    </NavLink>
-                </li>
-                <li>
                     <NavLink to="/solicitarCastracao" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300'} end>
                         Solicitar Castração
                     </NavLink>
@@ -115,10 +110,10 @@ export const Menu = () => {
     return (
         <nav className='bg-[#464549]'>
             <div className="px-4 py-3  flex justify-between">
-                <div className='flex items-center'>
+                <NavLink to="/" end className='flex items-center'>
                     <FaPaw className="text-3xl text-white " />
                     <span className="text-lg font-semibold text-white  ml-2 border-b-2 border-gray-500">SOS Animais</span>
-                </div>
+                </NavLink>
                 {isMobile ? renderMenusMobile() : renderMenusDesktop()}
             </div>
             <div
@@ -126,24 +121,24 @@ export const Menu = () => {
                     }`}
             >
                 <ul className='flex flex-col items-center border-t border-gray-500'>
-                    <li className='text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center'>
-                        <NavLink to="/" end>
+                    <li className='w-full' onClick={toggleMenu}>
+                        <NavLink to="/" end className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center'>
                             Página Inicial
                         </NavLink>
                     </li>
-                    <li className='text-white p-2 w-full text-center hover:bg-cyan-300 hover:text-black'>
-                        <NavLink to="/solicitarCastracao" end>
+                    <li className='w-full' onClick={toggleMenu}>
+                        <NavLink to="/solicitarCastracao" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                             Solicitar Castração
                         </NavLink>
                     </li>
                     {isAutenticated() && <>
-                        <li className='text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center'>
-                            <NavLink to="/gerenciar/filaEspera" end>
+                        <li className='w-full' onClick={toggleMenu}>
+                            <NavLink to="/gerenciar/filaEspera" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                 Lista de Espera
                             </NavLink>
                         </li>
-                        <li className='text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center'>
-                            <NavLink to="/gerenciar/castracoes" end>
+                        <li className='w-full' onClick={toggleMenu}>
+                            <NavLink to="/gerenciar/castracoes" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                 Castrações
                             </NavLink>
                         </li>

@@ -1,7 +1,6 @@
 import dog from '../../assets/cachorro.jpg'
 import cat2 from '../../assets/cat-svgrepo-com.svg'
 import graph from '../../assets/graph.svg'
-import pawBackground from "../../assets/paw.jpg"
 import { FcOvertime } from "react-icons/fc";
 import { TableWaitingList } from '../../components/tablewaitingList/TableWaitingList'
 import { Pawbackground } from '../../components/pawbackground/Pawbackground';

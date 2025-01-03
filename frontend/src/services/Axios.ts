@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { openModalInstance } from "./ModalTrigger";
-import { openAlertSuccess } from "./Alert";
 
 const URL = process.env.REACT_APP_API_URL
 
@@ -34,11 +33,11 @@ api.interceptors.response.use((response) => {
 }, error => {
   let { response } = error;
 
-
+  console.log('deu erro: ',error);
+  
 
   if (error.code === 'ERR_NETWORK') {
     openModalInstance("Erro ao acessar o servidor: " + error.message, () => { });
-    return Promise.resolve(null);
   } else if (response?.status === 401 && response?.data.message?.includes('Jwt expired')) {
     //   openModalInstance("Sessão expirada. Faça login novamente.", () => {
     //   //logout();
@@ -46,16 +45,14 @@ api.interceptors.response.use((response) => {
       
     // });
     refreshToken();
-    return Promise.resolve({});
   } else if (response?.status === 403) {
     openModalInstance("Você não tem permissão para acessar esses dados", () => { });
-    return Promise.resolve(null);
   } else {
     openModalInstance("Erro ao acessar o servidor: " + response?.data?.message, () => { });
   }
-  console.log('erro nao tradado: ',error);
+
   
-  return Promise.reject(error);
+  
 
 })
 
@@ -67,22 +64,35 @@ const createAbortController = (): AbortSignal => {
   return controller.signal;
 };
 
-export const get = async <T>(url: string, params: Record<string, any> = {}): Promise<T | null> => {
+export const get = async <T>(url: string, params: Record<string, any> = {},headers:any={}, callback:(data:T)=>void)=> {
   const signal = createAbortController();
-
-  const config: AxiosRequestConfig = { params, signal };
+  const config: AxiosRequestConfig = { params, signal,headers };
   const response = await api.get<T>(url, config);
-  return response?.data;
-
+  callback(response?.data);
 };
 
 
-export const post = async <T>(url: string, data: any): Promise<T | null> => {
+export const post = async <T>(url: string, data: any, headers:any, callback:(data:T)=>void) => {
   const signal = createAbortController();
 
   const config: AxiosRequestConfig = { signal };
+  if(headers){
+    config.headers = headers;
+  }
   const response = await api.post<T>(url, data, config);
-  return response?.data;
+  callback(response?.data);
+
+};
+export const publicPost = async <T>(url: string, data: any, headers:any, callback:(data:T)=>void) => {
+  const signal = createAbortController();
+
+  const config: AxiosRequestConfig = { signal };
+  if(headers){
+    config.headers = headers;
+  }
+  let api=axios.create({ baseURL: URL});
+  const response = await api.post<T>(url, data, config);
+  callback(response?.data);
 
 };
 

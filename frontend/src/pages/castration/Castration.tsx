@@ -1,17 +1,12 @@
 import DataTable, { TableColumn } from "react-data-table-component"
 import { Pawbackground } from "../../components/pawbackground/Pawbackground"
 import { useNavigate, useParams } from "react-router-dom"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { SubmitHandler, useForm } from "react-hook-form"
 import Input from "../../components/input/Input"
 import { TableWaitingList } from "../../components/tablewaitingList/TableWaitingList"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { fintNextMonday, parseDate } from "../../services/Util"
+import { fintNextMonday, formatDateWithHour, formatSituacao} from "../../services/Util"
 import { HiOutlineCube } from "react-icons/hi";
 import { useEffect, useState } from "react"
-import { getWaitingCastration, getWaitingList } from "../../services/RequestService"
-import { MOCK_CASTRACOES } from "../../services/Constantes"
-import { CastrationFormSchema, CastrationFormType } from "../../schemas/CastrationFormSchema"
 import {  FcOvertime, FcStatistics } from "react-icons/fc"
 import { CastrationModel } from "../../types/CastrationModel"
 import { PiDog } from "react-icons/pi";
@@ -19,6 +14,8 @@ import { Dropdown } from "flowbite-react"
 import { FaSearch } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
+import { get, post } from "../../services/Axios"
+import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 
 
 
@@ -27,27 +24,55 @@ export const Castration = () => {
 
     const navigate = useNavigate();
     const [listsEspera, setListsEspera] = useState<EsperaCastracao[]>([])
+    const [castracoes, setCastracoes] = useState<CastrationModel[]>([])
     const [animais, setAnimais] = useState<EsperaCastracao[]>([])
-    const [castracao, setCastracao] = useState<CastrationModel | null>(null)
+    const [castracao, setCastracao] = useState<CastrationModel>({
+        data: fintNextMonday(),
+        observacao: '',
+        quantidadeAnimais: 0,
+        quantidadeCaixasPequenas: 0,
+        quantidadeCaixasMedias: 0,
+        quantidadeCaixasGrandes: 0
+    })
     useEffect(() => {
-
+        console.log('useEffect castracoes');
+        
         if (id === 'nova') {
-            getWaitingList().then((data) => {
-                setListsEspera(data)
-            })
+            getWaitingList();
         } else if (id) {
-            getWaitingCastration(Number(id)).then((data) => {
-                setCastracao(data)
-            })
+            getCastration(id)
+        }else{
+            getCastrations()
         }
     }, [id])
-    const { register, handleSubmit, formState: { errors }, watch } = useForm<CastrationFormType>({
-        defaultValues: { data: fintNextMonday() }, resolver: zodResolver(CastrationFormSchema)
-    });
-    const values = watch()
+    // const { register, handleSubmit, formState: { errors }, watch } = useForm<CastrationFormType>({
+    //     defaultValues: { data: fintNextMonday() }, resolver: zodResolver(CastrationFormSchema)
+    // });
+    // const values = watch()
+
+    const getWaitingList = ()=>{
+        get<EsperaCastracao[]>('/castration/waitingList',{},{},(response) => {
+            console.log(response)
+            setListsEspera(response)
+        })
+    }
+    const getCastration = (id: string, callback?:()=>void) => {
+        get<CastrationModel>('/castration/' + id,{},{},(response) => {
+            setCastracao(response)
+            if(callback){
+                callback()
+            }
+        })
+    }
+    const getCastrations = () => {
+        get<CastrationModel[]>('/castration',{},{},(response) => {
+            console.log(response);
+            
+            setCastracoes(response)
+        })
+    }
     const handleAbrirCastracao = (row: any) => {
-        getWaitingCastration(row.id).then((data) => {
-            setCastracao(data)
+        getCastration(row.id, ()=>{
             navigate('/gerenciar/castracoes/' + row.id)
         })
 
@@ -55,11 +80,26 @@ export const Castration = () => {
     const generateReport = (row: any) => {
         alert('Gerar relatório da castração ' + row.id)
     }
+    const handleChangeCastracao = <K extends keyof NonNullable<CastrationModel>>(name:K, value: NonNullable<CastrationModel[K]>) => {
+        if(castracao){
+            setCastracao({...castracao, [name]: value})
+        }else{
+            let obj:CastrationModel = {
+                data: '',
+                observacao: '',
+                quantidadeAnimais: 0
+            }
+            obj[name] = value
+            setCastracao(obj)
+        }
+
+    };
     const renderAcoes = (row: any) => {
         return (
             <div>
                 <Dropdown
                     inline
+                    className="mt-3"
                     label={
                         <span
                             className="bg-indigo-500 float-right text-white flex items-center px-2 rounded-md py-1 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -71,8 +111,9 @@ export const Castration = () => {
                 >
 
 
-                    <Dropdown.Item icon={FaSearch} onClick={() => handleAbrirCastracao(row)}>Abrir</Dropdown.Item>
+                   
                     <Dropdown.Item icon={MdOutlineFileDownload} onClick={() => generateReport(row)}>Gerar Relatório</Dropdown.Item>
+                    <Dropdown.Item icon={FaSearch} onClick={() => handleAbrirCastracao(row)}>Abrir</Dropdown.Item>
                 </Dropdown>
             </div>
         )
@@ -81,11 +122,13 @@ export const Castration = () => {
         data: string;
         quantidadeAnimais: number;
         observacao: string;
+        situacao?:string;
     }>[] = [
             {
                 id: 'data',
                 name: 'Data',
                 selector: (row) => row.data,
+                format: (row) => formatDateWithHour(row.data),
                 sortable: true,
             },
             {
@@ -95,25 +138,22 @@ export const Castration = () => {
                 sortable: true,
             },
             {
+                id: 'situacao',
+                name: 'Situação',
+                selector: (row) => formatSituacao(row.situacao),
+                sortable: true,
+            },
+            {
                 id: 'observacao',
                 name: 'Observação',
                 selector: (row) => row.observacao,
                 sortable: true,
             },
-            { name: 'Ações', cell: renderAcoes }
+            { name: 'Ações', cell: renderAcoes},
 
         ]
 
-    const onSubmit: SubmitHandler<CastrationFormType> = data => {
-        let obj = {
-            data: data.data,
-            observacao: data.observacao,
-            quantidadeCaixasPequenas: data.quantidadeCaixasPequenas,
-            quantidadeCaixasMedias: data.quantidadeCaixasMedias,
-            animais: animais
-        }
-        alert(JSON.stringify(obj, null, '\t'));
-    };
+
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
         setAnimais(selectedRows)
         let filaEspera = listsEspera
@@ -125,13 +165,18 @@ export const Castration = () => {
         setListsEspera(filaEspera)
     }
     const selectAnimais = () => {
-        let qttCaixasPequenas = values.quantidadeCaixasPequenas
-        let qttCaixasMedias = values.quantidadeCaixasMedias
-        let qttCaixasGrandes = values.quantidadeCaixasGrandes
+        let qttCaixasPequenas = castracao?.quantidadeCaixasPequenas || 0
+        let qttCaixasMedias = castracao?.quantidadeCaixasMedias || 0
+        let qttCaixasGrandes = castracao?.quantidadeCaixasGrandes || 0
+        if(qttCaixasPequenas === 0 && qttCaixasMedias === 0 && qttCaixasGrandes === 0){
+            openAlertWarning('Informe a quantidade de caixas para selecionar os animais automaticamente')
+            return;
+        }
         let filaEspera = listsEspera
+        
         filaEspera.sort((a, b) => {
-            let dateA = parseDate(a.dataSolicitacao)
-            let dateB = parseDate(b.dataSolicitacao)
+            let dateA = a.dataSolicitacao
+            let dateB = b.dataSolicitacao
             if (dateA > dateB) {
                 return 1
             }
@@ -170,6 +215,25 @@ export const Castration = () => {
         setListsEspera([...filaEspera])
         setAnimais([...animaisCastracao])
     }
+    const postCastration = () => {
+        if (animais.length === 0) {
+            openAlertWarning('Selecione os animais para castração')
+            return
+        }
+        let obj={
+            data: new Date(castracao?.data).toISOString(),
+            observacao: castracao?.observacao,
+            quantidadeAnimais: animais.length,
+            animais: animais
+        }
+       
+        post<CastrationModel>('/castration',obj,{},(response) => {
+            openAlertSuccess('Castração cadastrada com sucesso')
+            navigate('/gerenciar/castracoes')
+            setListsEspera([])
+            setAnimais([])
+        })
+    }
     const renderCadastrarNovaCastracao = () => {
         return (
             <div className="p-3">
@@ -177,7 +241,7 @@ export const Castration = () => {
                     <PiDog size={35} />
                     <h1 className="text-2xl inline font-bold mb-2 ml-2  poppins-semibold">Registrar nova data de castração</h1>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form>
                     <div className="flex flex-col gap-5">
                         <div className="border-b border-gray-900/10 pb-5 mt-5">
                             <div className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
@@ -186,9 +250,9 @@ export const Castration = () => {
                                     <Input id="dataIdx"
                                         label="Data da Castração"
                                         type="datetime-local"
-                                        errors={errors.data}
-                                        {...register('data')}
-
+                                        name='data'
+                                        value={castracao?.data}
+                                        onChange={(e:any) => handleChangeCastracao('data', e.target.value)}
                                     />
 
 
@@ -196,8 +260,10 @@ export const Castration = () => {
                                         label="Observações"
                                         type="textarea"
                                         lines={4}
-                                        errors={errors.observacao}
-                                        {...register('observacao')}
+                                        name='observacao'
+                                        value={castracao?.observacao}
+                                        onChange={(e:any) => handleChangeCastracao('observacao', e.target.value)}
+                                      
 
                                     />
                                     <button type="button"
@@ -217,27 +283,30 @@ export const Castration = () => {
                                         <Input id="quantidadeCaixasPequenasIdx"
                                             label="Quantidade de Caixas Pequenas"
                                             type="number"
-                                            errors={errors.quantidadeCaixasPequenas}
-                                            {...register('quantidadeCaixasPequenas')}
+                                            name="quantidadeCaixasPequenas"
+                                            value={castracao?.quantidadeCaixasPequenas}
+                                            onChange={(e:any) => handleChangeCastracao('quantidadeCaixasPequenas', e.target.value)}
                                         />
                                         <Input id="quantidadeCaixasMediasIdx"
                                             label="Quantidade de Caixas Médias"
                                             type="number"
-                                            errors={errors.quantidadeCaixasMedias}
-                                            {...register('quantidadeCaixasMedias')}
+                                            name= "quantidadeCaixasMedias"
+                                            value={castracao?.quantidadeCaixasMedias}
+                                            onChange={(e:any) => handleChangeCastracao('quantidadeCaixasMedias', e.target.value)}
                                         />
                                         <Input id="quantidadeCaixasGrandesIdx"
                                             label="Quantidade de Caixas Grandes"
                                             type="number"
-                                            errors={errors.quantidadeCaixasGrandes}
-                                            {...register('quantidadeCaixasGrandes')}
+                                            name = 'quantidadeCaixasGrandes'
+                                            value={castracao?.quantidadeCaixasGrandes}
+                                            onChange={(e:any) => handleChangeCastracao('quantidadeCaixasGrandes', e.target.value)}
                                         />
 
                                     </div>
                                 </div>
                             </div>
                             <div className="mt-3 gap-3">
-                                <button type="submit"
+                                <button type="button" onClick={()=>postCastration()}
                                     className="bg-indigo-500 float-right text-white px-4 rounded-xl py-1 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 >
                                     Cadastrar
@@ -255,7 +324,7 @@ export const Castration = () => {
                                 <TableWaitingList dataProps={listsEspera} selectAnimals={true} handleSelectRows={handleSelect} />
                             </div>
                         </div>
-                        <pre className="mt-5">
+                        {/* <pre className="mt-5">
                             <p className="font-bold">
                                 Valores formulário
                             </p>
@@ -270,10 +339,10 @@ export const Castration = () => {
                                 (<p key={index} >{(index + 1) + '-' + animal.nomeRequerente + '-' + animal.nomeAnimal}</p>)
                             )}
 
-                        </pre>
+                        </pre> */}
                     </div>
                 </form>
-                <button type="submit" onClick={() => navigate(-1)}
+                <button type="button" onClick={() => navigate(-1)}
                     className="bg-gray-200 text-gray px-2 rounded-xl py-1 mb-5 rounded"
                 >
                     Voltar
@@ -298,7 +367,8 @@ export const Castration = () => {
                     <div className="grid grid-cols-3 border-b pb-4 border-gray-900/10">
                         <div>
                             <label className="text-sm font-bold">Data</label>
-                            <p>{castracao?.data}</p>
+                            <p>{formatDateWithHour(castracao?.data)}</p>
+                           
                         </div>
                         <div>
                             <label className="text-sm font-bold">Quantidade de Animais</label>
@@ -311,11 +381,11 @@ export const Castration = () => {
                     </div>
                     <div>
                         <p className="text-md inline font-bold poppins-semibold">Lista de animais</p>
-                        <TableWaitingList dataProps={castracao?.animais} />
+                        <TableWaitingList dataProps={castracao?.animais} remote={false} pagination={false} />
                     </div>
                 </div>
                 <button type="submit" onClick={() => navigate(-1)}
-                    className="bg-gray-200 text-gray px-2 rounded-xl py-1 mb-5 rounded"
+                    className="bg-gray-200 text-gray px-2 rounded-xl py-1 mb-3 mt-8 rounded"
                 >
                     Voltar
                 </button>
@@ -330,20 +400,29 @@ export const Castration = () => {
                     <h1 className="text-2xl ml-3  poppins-semibold">Castrações SOS Animais</h1>
                 </div>
                 <button type="submit" onClick={() => {
-                    getWaitingList().then((data) => {
-                        setListsEspera(data)
-                    })
+                    getWaitingList();
                     navigate('/gerenciar/castracoes/nova')
+                    setCastracao({
+                        data: fintNextMonday(),
+                        observacao: '',
+                        quantidadeAnimais: 0,
+                        quantidadeCaixasPequenas: 0,
+                        quantidadeCaixasMedias: 0,
+                        quantidadeCaixasGrandes: 0
+                    })
                 }}
-                    className="bg-indigo-500 mt-2 float-right text-white px-4 rounded-xl py-1  rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="bg-indigo-500 mt-2 mb-5 float-right text-white px-4 rounded-xl py-1  rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                     Nova Castração
                 </button>
                 <DataTable
                     columns={columns}
-                    data={MOCK_CASTRACOES}
+                    data={castracoes}
                     pagination={true}
+                    onRowClicked={(row) => handleAbrirCastracao(row)}
                     defaultSortFieldId='data'
+                    pointerOnHover 
+                    highlightOnHover 
                     paginationComponentOptions={
                         {
                             rowsPerPageText: 'Registros por página',

@@ -13,17 +13,18 @@ export const Home = () => {
         }
         console.log(pathUrl);
         
-        let resp=await get<string>(pathUrl)
-        console.log('RESPOSTA de  '+pathUrl+': ',resp)
-        setData(resp)
+        get<string>(pathUrl,{},{},(response) => {
+            console.log(response)
+            setData(response)
+        })
         
     }
     
     const fazerRequestpublica = async () => {
-        let request = await get<string>('/public')
-
-        console.log(request)
-        setData(request)
+        get<string>('/public',{},{},(response) => {
+            console.log(response)
+            setData(response)
+        })
       
     }
 

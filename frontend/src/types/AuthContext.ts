@@ -3,4 +3,5 @@ export interface AuthContextInterface {
     logout: () => void;
     isAutenticated: () => boolean;
     updateRefreshToken: ()=>void;
+    loading: boolean;
 }

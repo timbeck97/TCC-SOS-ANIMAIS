@@ -1,33 +1,16 @@
 import { Modal } from "flowbite-react"
-import { CastrationRequestInterface } from "../../types/CastrationRequestInterface"
-import { WaitingListFormSchema } from "../../schemas/WaitingListRequestSchema"
+import { EsperaCastracao } from "../../types/EsperaCastracao"
+import { formatPorteAnimal, formatTipoAnimal } from "../../services/Util"
 
-export const WaitListModal = ({ show, handleClose }: {
+export const WaitListModal = ({ show, handleClose, obj }: {
     show: boolean,
     handleClose: () => void,
+    obj: EsperaCastracao|null
 
 }) => {
 
 
-    let obj: WaitingListFormSchema = {
-        nome: 'Tim',
-        sobrenome: 'Morgenstern',
-        cpf: '04263284003',
-        telefone: '51999696596',
-        rua: 'Balduin Brussius',
-        numero: '78',
-        bairro: 'Primavera',
-        tipoAnimal: 'Gato',
-        nomeAnimal: 'Jeremias',
-        racaAnimal: 'Vira-lata',
-        pesoAnimal: '5.5',
-        porteAnimal: 'Pequeno',
-        animalVacinado: true,
-        descricaoAnimal: 'Animal calmo',
-
-
-
-    }
+    
 
     return (
         <Modal show={show} size="3xl" onClose={handleClose}>
@@ -37,34 +20,34 @@ export const WaitListModal = ({ show, handleClose }: {
             <Modal.Body>
                 <div>
                     <div className="grid grid-cols-2">
-                        <p><span className="font-bold">Nome: </span>{obj.nome}</p>
-                        <p><span className="font-bold">Sobrenome: </span>{obj.sobrenome}</p>
+                        <p><span className="font-bold">Nome: </span>{obj?.nome}</p>
+                        <p><span className="font-bold">Sobrenome: </span>{obj?.sobrenome}</p>
                     </div>
                     <div className="grid grid-cols-2">
-                        <p className="mt-3"><span className="font-bold">CPF: </span>{obj.cpf}</p>
-                        <p className="mt-3"><span className="font-bold">Telefone: </span>{obj.telefone}</p>
+                        <p className="mt-3"><span className="font-bold">CPF: </span>{obj?.cpf}</p>
+                        <p className="mt-3"><span className="font-bold">Telefone: </span>{obj?.telefone}</p>
                     </div>
                     <div className="grid grid-cols-2">
-                        <p className="mt-3"><span className="font-bold">Rua: </span>{obj.rua}</p>
-                        <p className="mt-3"><span className="font-bold">Número: </span>{obj.numero}</p>
+                        <p className="mt-3"><span className="font-bold">Rua: </span>{obj?.rua}</p>
+                        <p className="mt-3"><span className="font-bold">Número: </span>{obj?.numero}</p>
                     </div>
-                    <p className="mt-3"><span className="font-bold">Bairro: </span>{obj.bairro}</p>
+                    <p className="mt-3"><span className="font-bold">Bairro: </span>{obj?.bairro}</p>
                     <div className="grid grid-cols-2">
-                        <p className="mt-3"><span className="font-bold">Tipo do Animal: </span>{obj.tipoAnimal}</p>
-                        <p className="mt-3"><span className="font-bold">Nome do Animal: </span>{obj.nomeAnimal}</p>
+                        <p className="mt-3"><span className="font-bold">Tipo do Animal: </span>{formatTipoAnimal(obj?.tipoAnimal)}</p>
+                        <p className="mt-3"><span className="font-bold">Nome do Animal: </span>{obj?.nomeAnimal}</p>
                     </div>
                     <div className="grid grid-cols-2">
-                        <p className="mt-3"><span className="font-bold">Raça do Animal: </span>{obj.racaAnimal}</p>
-                        <p className="mt-3"><span className="font-bold">Peso do Animal: </span>{obj.pesoAnimal}</p>
+                        <p className="mt-3"><span className="font-bold">Raça do Animal: </span>{obj?.racaAnimal}</p>
+                        <p className="mt-3"><span className="font-bold">Peso do Animal: </span>{obj?.pesoAnimal}</p>
                     </div>
-                    <p className="mt-3"><span className="font-bold">Porte do Animal: </span>{obj.porteAnimal}</p>
-                    <p className="mt-3"><span className="font-bold">Animal Vacinado: </span>{obj.animalVacinado ? 'Sim' : 'Não'}</p>
-                    <p className="mt-3"><span className="font-bold">Descrição do Animal: </span>{obj.descricaoAnimal}</p>
+                    <p className="mt-3"><span className="font-bold">Porte do Animal: </span>{formatPorteAnimal(obj?.porteAnimal)}</p>
+                    <p className="mt-3"><span className="font-bold">Animal Vacinado: </span>{obj?.animalVacinado ? 'Sim' : 'Não'}</p>
+                    <p className="mt-3"><span className="font-bold">Descrição do Animal: </span>{obj?.descricaoAnimal}</p>
                     
                     <div className="mt-3 flex justify-center flex-col">
                         {/* <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
                         className="" alt="" /> */}
-                        <img src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                        <img src={obj?.urlImagem?obj?.urlImagem:'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='}
                          alt="" className="scale-90" />
                     </div>
 

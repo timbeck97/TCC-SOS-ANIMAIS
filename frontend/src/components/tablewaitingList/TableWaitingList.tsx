@@ -1,34 +1,37 @@
 import DataTable, { TableColumn } from "react-data-table-component"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
-import { parseDate } from "../../services/Util"
-import { MOCK_FILA_ESPERA } from "../../services/Constantes"
-import { ExpandableRowsComponent } from "react-data-table-component/dist/DataTable/types"
+import { formatDate, formatPorteAnimal, formatTipoAnimal} from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcInfo } from "react-icons/fc"
+import { get } from "../../services/Axios"
 
 
 
 
-export const TableWaitingList = ({handleSelectRows, selectAnimals=false, pagination=true, dataProps}:TableWaitingListInterface) => {
+export const TableWaitingList = ({handleSelectRows, selectAnimals=false, pagination=true, dataProps,remote=true}:TableWaitingListInterface) => {
 
     const [data, setData] = useState<EsperaCastracao[]>([])
-    const [showWaitListDetail, setShowWaitListDetail] = useState(false)
+    const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
 
-    useEffect(() => {
-        setData(MOCK_FILA_ESPERA)
-    }, [])
+  
     useEffect(()=>{
+        console.log('chamou dataprops: ',dataProps);
         if(dataProps){
             setData(dataProps)
         }
-    },[dataProps])
+        if(!dataProps && remote){
+            get<EsperaCastracao[]>('/castration/waitingList',{},{},(response) => {
+                setData(response)
+            })
+        }
+    },[dataProps, remote])
 
       const orderData = useCallback((a:EsperaCastracao, b:EsperaCastracao)=>{
-        const dateA = parseDate(a.dataSolicitacao)
-        const dateB = parseDate(b.dataSolicitacao)
-        
+        const dateA = a.dataSolicitacao
+        const dateB = b.dataSolicitacao
+    
         if(dateA > dateB){
             return 1
         }
@@ -37,14 +40,18 @@ export const TableWaitingList = ({handleSelectRows, selectAnimals=false, paginat
         }
         return 0
     },[])
-    const columns: TableColumn<EsperaCastracao>[] = [
-        { name: 'Nome do Requerente',id:'nomeRequerente',  selector: (row: EsperaCastracao) => row.nomeRequerente, sortField: 'nomeRequerente', },
-        { name: 'Tipo do Animal', id:'tipoAnimal', selector: (row: EsperaCastracao) => row.tipoAnimal, sortable: true },
-        { name: 'Nome do Animal',id:'nomeAnimal', selector: (row: EsperaCastracao) => row.nomeAnimal },
-        { name: 'Porte do Animal', id:'porteAnimal', selector: (row: EsperaCastracao) => row.porteAnimal, sortable: true },
-        { name: 'Data da Solicitação', id:'dataSolicitacao', selector: (row: EsperaCastracao) => row.dataSolicitacao, sortable: true, sortFunction: orderData},
-        { name: 'Ações', cell: (row: EsperaCastracao) => <button type="button" onClick={()=>setShowWaitListDetail(true)}><FcInfo title="Abri detalhes da solicitação" size={30} /></button> }
-    ]
+    const columns: TableColumn<EsperaCastracao>[] = useMemo(() => [
+        { name: 'Nome do Requerente', id: 'nomeRequerente', selector: (row: EsperaCastracao) => row.nomeRequerente, sortField: 'nomeRequerente' },
+        { name: 'Tipo do Animal', id: 'tipoAnimal', selector: (row: EsperaCastracao) => formatTipoAnimal(row.tipoAnimal), sortable: true },
+        { name: 'Nome do Animal', id: 'nomeAnimal', selector: (row: EsperaCastracao) => row.nomeAnimal },
+        { name: 'Porte do Animal', id: 'porteAnimal', selector: (row: EsperaCastracao) => formatPorteAnimal(row.porteAnimal), sortable: true },
+        { name: 'Data da Solicitação', id: 'dataSolicitacao', selector: (row: EsperaCastracao) => formatDate(row.dataSolicitacao), sortable: true, sortFunction: orderData },
+        { name: 'Ações', cell: (row: EsperaCastracao) => (
+            <button type="button" onClick={() => setWaitListSelect(row)}>
+                <FcInfo title="Abri detalhes da solicitação" size={30} />
+            </button>
+        )}
+    ], [setWaitListSelect, orderData]); // Dependências do useMemo
     
     const handleSelect = useCallback(({selectedRows}: {
         allSelected: boolean;
@@ -58,13 +65,13 @@ export const TableWaitingList = ({handleSelectRows, selectAnimals=false, paginat
     } ,[handleSelectRows])
 
     const rowSelectCritera =useCallback( (row: EsperaCastracao) => {
-        return row.selected==true
+        return row.selected===true
     },[])
 
     return (
         <div>
      
-            <WaitListModal show={showWaitListDetail} handleClose={()=>setShowWaitListDetail(false)}/>
+            <WaitListModal show={waitListSelect!==null} handleClose={()=>setWaitListSelect(null)} obj={waitListSelect}/>
             <DataTable
                 columns={columns}
                 data={data}

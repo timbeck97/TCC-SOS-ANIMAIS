@@ -1,13 +1,15 @@
+import { PORTE_ANIMAIS, SITUACOES, TIPO_ANIMAIS } from "./Constantes";
+
 export const formatCpf = (cpf: string) => {
-    return cpf.replace(/\D/g, '') 
-    .replace(/(\d{3})(\d)/, '$1.$2') 
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-    .replace(/(-\d{2})\d+?$/, '$1') ;
+    return cpf.replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1');
 }
 
 
-export const formatNumberInput = (v:string)=>{
+export const formatNumberInput = (v: string) => {
     var negativo = false;
     if (v.charAt(0) === '-') {
         negativo = true;
@@ -33,16 +35,78 @@ export const formatNumberInput = (v:string)=>{
     return (negativo ? "-" : "") + v;
 }
 export const fintNextMonday = () => {
-    var d = new Date();
-    var day = d.getDay();
-    var diff = 8 - day; // days until next monday
-    d.setDate(d.getDate() + diff);
-    d.setUTCHours(7, 30, 0, 0);
-    const isoString = d.toISOString(); // Ex: "2018-06-12T19:30:00.000Z"
-    let result=isoString.slice(0, 16)
-    return result;
+
+    const now = new Date();
+    const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+  
+    const nextMonday = new Date(now);
+    nextMonday.setDate(now.getDate() + daysUntilMonday);
+    nextMonday.setHours(7, 0, 0, 0);
+
+    const year = nextMonday.getFullYear();
+    const month = String(nextMonday.getMonth() + 1).padStart(2, '0'); // Meses começam em 0
+    const day = String(nextMonday.getDate()).padStart(2, '0');
+    const hours = String(nextMonday.getHours()).padStart(2, '0');
+    const minutes = String(nextMonday.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 export const parseDate = (date: string) => {
     const dateArray = date.split('/')
-    return new Date(parseInt(dateArray[2]), parseInt(dateArray[1])-1, parseInt(dateArray[0]))
+    return new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]))
+}
+export const formatDate = (date: Date|string) => {
+    console.log(date)
+    if (!date) {
+        return ''
+    }
+    if (typeof date === 'string') {
+        date = new Date(date)
+    }
+    //format date to dd/mm/yyyy
+    return date.toLocaleDateString('pt-BR')
+}
+export const formatDateWithHour = (date: Date|string) => {
+    if (!date) {
+        return ''
+    }
+    if (typeof date === 'string') {
+        date = new Date(date)
+    }
+    //format date to dd/mm/yyyy hh:mm
+    return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR')
+    
+}
+export const formatPorteAnimal = (porte: string | undefined) => {
+    if (!porte) {
+        return ''
+    }
+    for (let i = 0; i < PORTE_ANIMAIS.length; i++) {
+        if (PORTE_ANIMAIS[i].value === porte) {
+            return PORTE_ANIMAIS[i].label
+        }
+    }
+    return porte;
+}
+export const formatTipoAnimal = (tipo: string | undefined) => {
+    if (!tipo) {
+        return ''
+    }
+    for (let i = 0; i < TIPO_ANIMAIS.length; i++) {
+        if (TIPO_ANIMAIS[i].value === tipo) {
+            return TIPO_ANIMAIS[i].label
+        }
+    }
+    return tipo;
+}
+export const formatSituacao = (situacao?: string) => {
+    if(!situacao){
+        return ''
+    }
+    for(let i = 0; i < SITUACOES.length; i++){
+        if(SITUACOES[i].value === situacao){
+            return SITUACOES[i].label
+        }
+    }
+    return situacao
 }

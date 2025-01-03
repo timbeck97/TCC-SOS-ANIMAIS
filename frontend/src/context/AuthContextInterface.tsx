@@ -1,5 +1,7 @@
-import React, { createContext, useCallback, useContext, useEffect } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { AuthContextInterface } from '../types/AuthContext';
+import { openAlertSuccess } from '../services/Alert';
+import { openModalInstance } from '../services/ModalTrigger';
 
 
 const KEYCLOAK_AUTH_URL = process.env.REACT_APP_KEYCLOAK_AUTH_URL ||'';
@@ -11,20 +13,17 @@ const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI||'';
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
 
-    // const [token, setToken] = React.useState<string | null>(null);
-    // const [refreshToken, setRefreshToken] = React.useState<string | null>(null);
-    // const [tokenId, setTokenId] = React.useState<string | null>(null);
-    const [token, setToken] = React.useState<{
+
+    const [token, setToken] = useState<{
         token: string
         refreshToken: string
         tokenId: string
     }|null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        console.log('montou auth context');
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get("code");
-        console.log('code', code);
         
         if (code) {
             fetchToken(code);
@@ -41,6 +40,7 @@ export const AuthProvider = ({ children }: any) => {
                 }
                 setToken(token);
             }
+            setLoading(false);
 
         }
 
@@ -80,10 +80,20 @@ export const AuthProvider = ({ children }: any) => {
                     refreshToken: data.refresh_token,
                     tokenId: data.id_token
                 }
+                openAlertSuccess('Token atualizado com sucesso');
                 setToken(token);
             } else {
                 console.error("Erro ao atualizar o token de acesso");
-                console.log('response', response);
+                let body = await response.json();
+                console.error('body', body);
+                if(body.error === 'invalid_grant'){
+                    openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
+                        localStorage.removeItem("access_token");
+                        localStorage.removeItem("refresh_token");
+                        localStorage.removeItem("token_id");
+                        login();
+                    });
+                }
                 
             }
         } catch (error) {
@@ -123,13 +133,15 @@ export const AuthProvider = ({ children }: any) => {
                  const userInfo = parseJwt(data.access_token);
                  console.log("Usuário autenticado:", userInfo);
 
-                // Remova o código da URL
+
                 window.history.replaceState({}, document.title, "/");
             } else {
                 console.error("Erro ao obter o token");
             }
         } catch (error) {
             console.error("Erro ao trocar o código pelo token:", error);
+        } finally{
+            setLoading(false);
         }
     };
     const parseJwt = (token: string) => {
@@ -160,7 +172,7 @@ export const AuthProvider = ({ children }: any) => {
 
 
     return (
-        <AuthContext.Provider value={{ login, isAutenticated, logout, updateRefreshToken }}>
+        <AuthContext.Provider value={{ login, isAutenticated, logout, updateRefreshToken, loading }}>
             {children}
         </AuthContext.Provider>
     );
