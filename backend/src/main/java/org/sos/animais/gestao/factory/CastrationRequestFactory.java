@@ -97,6 +97,7 @@ public class CastrationRequestFactory {
         this.castrationRequest.setDescricaoAnimal(dto.getDescricaoAnimal());
         this.castrationRequest.setAnimalVacinado(dto.isAnimalVacinado());
         this.castrationRequest.setSituacao(dto.getSituacao());
+        this.castrationRequest.setFormaPagamento(dto.getFormaPagamento());
         return this;
     }
     public CastrationRequest build(){

@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 
 import { InputNumber } from "../../components/input/InputNumber";
-import { PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
@@ -77,7 +77,7 @@ export const CastrationRequest = () => {
             <div className="border border-gray-300 p-4 mt-5 rounded-md">
                 <div className="mensagem-topo bg-green-100 text-green-800 p-4 rounded mb-6 flex items-center space-x-4">
                     <img src={check} alt="Check logo" className="w-20" />
-                    <p className="font-bold">
+                    <p className="font-bold md:text-md text-sm">
                         Sua solicitação de castração foi registrada e você está na lista de espera. Avisaremos pelo celular assim que a SOS Animais agendar uma nova data.
                     </p>
                 </div>
@@ -238,8 +238,20 @@ export const CastrationRequest = () => {
                     <div className="col-span-full mt-5">
                         <InputFile id="file-upload" name="file-upload" types=".jpeg, .png, .jpg" label="Foto do Animal" value={file} onChange={handleFile} />
                     </div>
+                    <div className="sm:col-span-1 mt-3">
+                        <InputCombobox id="formaPagamentoIdx"
+                            label="Forma de Pagamento"
+                            comboboxValues={FORMA_PAGAMENTO}
+                            errors={errors.formaPagamento}
+                            {...register('formaPagamento')} />
+                    </div>
                 </div>
-
+                <div className="border-b border-t border-gray-900/10 py-5 mt-5">
+                <h2 className="text-lg/7 font-semibold text-gray-900">Orientações</h2>
+                <p className="mt-2 text-gray-700">
+                    A castração é um procedimento cirúrgico que impede a reprodução do animal. A castração é importante para o controle populacional de cães e gatos e também traz benefícios para a saúde do animal.
+                </p>
+                </div>
 
                 {/* <pre className="mt-5">
                         <p className="font-bold">
@@ -261,7 +273,7 @@ export const CastrationRequest = () => {
                         <p>Animal Vacinado: {`${formValues.animalVacinado ? 'Sim' : 'Não'}`}</p>
                         <p>Descricao do Animal: {formValues.descricaoAnimal}</p>
                         <p>FILE: {file?.fileName}</p>
-
+                        <p>Forma de Pagamento: {formValues.formaPagamento}</p>
                     </pre> */}
 
                 <div className="mt-5 flex justify-center">

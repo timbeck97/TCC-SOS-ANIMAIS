@@ -19,4 +19,9 @@ export const SITUACOES = [
     { label: 'Aguardando', value: 'AGUARDANDO' },
     { label: 'Em andamento', value: 'EM_ANDAMENTO' },
     { label: 'Finalizada', value: 'FINALIZADA' }]
-
+export const FORMA_PAGAMENTO = [
+    { label: 'Selecione', value: '' },
+    { label: 'Dinheiro', value: 'DINHEIRO' },
+    { label: 'PIX', value: 'PIX' },
+    { label: 'Castração Solidária', value: 'CASTRACAO_SOLIDARIA' },
+]

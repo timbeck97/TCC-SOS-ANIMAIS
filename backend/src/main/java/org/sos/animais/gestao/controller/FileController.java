@@ -19,9 +19,10 @@ public class FileController {
     @Value("${fileUploadPath}")
     private String localPath;
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
-        Path rootLocation = Paths.get(localPath);
+    @GetMapping("/{folder}/{filename}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename,@PathVariable String folder) {
+        localPath=localPath.endsWith("/")?localPath:localPath+"/";
+        Path rootLocation = Paths.get(localPath+folder);
         try {
             Path file = rootLocation.resolve(filename).normalize();
             Resource resource = new UrlResource(file.toUri());

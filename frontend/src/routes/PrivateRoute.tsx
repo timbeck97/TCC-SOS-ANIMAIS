@@ -18,9 +18,9 @@ export const PrivateRoute = () => {
         </div>
     }
     if (isAutenticated()) {
-        return <div className="flex flex-col min-h-0">
+        return <div className="flex flex-col min-h-0 grow">
             <Menu />
-            <div style={{ overflowY: 'scroll' }}>
+            <div className="flex flex-col grow" style={{ overflowY: 'scroll' }}>
                 <Outlet />
             </div>
         </div>

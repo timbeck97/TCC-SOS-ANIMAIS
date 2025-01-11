@@ -64,18 +64,18 @@ export const Menu = () => {
         return (
             <ul className="flex justify-center items-center gap-x-10">
                 <li>
-                    <NavLink to="/solicitarCastracao" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300'} end>
+                    <NavLink to="/solicitarCastracao" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
                         Solicitar Castração
                     </NavLink>
                 </li>
                 {isAutenticated() && <>
                     <li>
-                        <NavLink to="/gerenciar/filaEspera" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300'} end>
+                        <NavLink to="/gerenciar/filaEspera" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
                             Lista de Espera
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/gerenciar/castracoes" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300'} end>
+                        <NavLink to="/gerenciar/castracoes" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
                             Castrações
                         </NavLink>
                     </li>
@@ -105,16 +105,16 @@ export const Menu = () => {
             </ul>
         )
     }
-    const { isAutenticated, login, logout } = useAuthContext();
+    const { isAutenticated, login, logout, loading } = useAuthContext();
 
     return (
         <nav className='bg-[#464549]'>
             <div className="px-4 py-3  flex justify-between">
                 <NavLink to="/" end className='flex items-center'>
                     <FaPaw className="text-3xl text-white " />
-                    <span className="text-lg font-semibold text-white  ml-2 border-b-2 border-gray-500">SOS Animais</span>
+                    <span className="text-lg  text-white  ml-2 border-b-2 border-gray-500 poppins-semibold">SOS Animais</span>
                 </NavLink>
-                {isMobile ? renderMenusMobile() : renderMenusDesktop()}
+                {loading?<div/>:isMobile ? renderMenusMobile() : renderMenusDesktop()}
             </div>
             <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out transform ${isOpen ? 'max-h-96 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-5'

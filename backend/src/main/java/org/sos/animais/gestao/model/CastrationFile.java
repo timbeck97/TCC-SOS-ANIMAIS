@@ -2,6 +2,7 @@ package org.sos.animais.gestao.model;
 
 import jakarta.persistence.*;
 import org.sos.animais.gestao.enums.EFileOrigin;
+import org.sos.animais.gestao.enums.EFileType;
 
 import java.io.Serializable;
 
@@ -20,6 +21,9 @@ public class CastrationFile implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     private EFileOrigin origin;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(40)")
+    private EFileType tipoArquivo;
     @ManyToOne
     private CastrationRequest castrationRequest;
 
@@ -72,5 +76,13 @@ public class CastrationFile implements Serializable {
 
     public void setOriginalName(String originalName) {
         this.originalName = originalName;
+    }
+
+    public EFileType getTipoArquivo() {
+        return tipoArquivo;
+    }
+
+    public void setTipoArquivo(EFileType tipoArquivo) {
+        this.tipoArquivo = tipoArquivo;
     }
 }

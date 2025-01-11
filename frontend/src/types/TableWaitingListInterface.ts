@@ -1,4 +1,6 @@
+import { TableColumn, TableStyles } from "react-data-table-component"
 import { EsperaCastracao } from "./EsperaCastracao"
+import React from "react"
 
 export interface TableWaitingListInterface {
     dataProps?: EsperaCastracao[],
@@ -6,4 +8,10 @@ export interface TableWaitingListInterface {
     selectAnimals?: boolean
     handleSelectRows?: (selectedRows: EsperaCastracao[]) => void,
     pagination?: boolean
+    handleRemoveAnimal?: (animal: EsperaCastracao) => void,
+    customTableStyle?:TableStyles,
+    title?:string|React.ReactNode,
+    permiteUploadPagamento?:boolean,
+    refresh?:()=>void
+
 }

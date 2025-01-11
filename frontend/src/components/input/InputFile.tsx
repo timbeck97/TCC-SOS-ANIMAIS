@@ -17,7 +17,7 @@ export const InputFile = ({ id, name, label, value, onChange, types}: InputFileI
     }
     return (
         <div>
-            <label htmlFor="cover-photo" className="block text-sm/6 font-medium text-gray-900">Foto do Animal</label>
+            {label && <label htmlFor="cover-photo" className="block text-sm/6 font-medium text-gray-900">{label}</label>}
             <div className="mt-2 flex justify-center flex-col rounded-lg border border-dashed border-gray-900/25 pt-3 pb-2 w-100">
                 <div className="text-center">
                     <div>

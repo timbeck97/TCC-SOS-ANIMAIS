@@ -1,4 +1,4 @@
-import { PORTE_ANIMAIS, SITUACOES, TIPO_ANIMAIS } from "./Constantes";
+import { FORMA_PAGAMENTO, PORTE_ANIMAIS, SITUACOES, TIPO_ANIMAIS } from "./Constantes";
 
 export const formatCpf = (cpf: string) => {
     return cpf.replace(/\D/g, '')
@@ -109,4 +109,15 @@ export const formatSituacao = (situacao?: string) => {
         }
     }
     return situacao
+}
+export const formatFormaPagamento = (formaPagamento: string | undefined) => {
+    if (!formaPagamento) {
+        return ''
+    }
+    for (let i = 0; i < FORMA_PAGAMENTO.length; i++) {
+        if (FORMA_PAGAMENTO[i].value === formaPagamento) {
+            return FORMA_PAGAMENTO[i].label
+        }
+    }
+    return formaPagamento;
 }

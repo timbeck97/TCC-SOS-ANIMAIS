@@ -10,7 +10,7 @@ const Wrapper = (props: any) => {
   const { logout, updateRefreshToken } = useAuthContext();
   setAuthFunctions(logout, updateRefreshToken);
   return (
-    <div className='flex flex-col min-h-0'>
+    <div className='flex flex-col min-h-0 h-full grow'>
       {props.children}
     </div>
   )

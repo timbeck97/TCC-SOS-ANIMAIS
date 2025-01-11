@@ -2,10 +2,11 @@ package org.sos.animais.gestao.controller;
 
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
-import org.sos.animais.gestao.model.Castration;
+import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
 import org.sos.animais.gestao.service.CastrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,6 +32,11 @@ public class CastrationController {
     public ResponseEntity<CastrationDto> findCastration(@PathVariable Long id){
         return ResponseEntity.ok(castrationService.findOne(id));
     }
+    @PostMapping("/waitingList/{id}/paymentReceipt")
+    public ResponseEntity<?> sendPaymentReceipt(@PathVariable Long id, @RequestPart("file") MultipartFile file){
+        castrationService.savePaymentReceipt(id,file);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/waitingList")
     public ResponseEntity<List<CastrationRequestDto>> findAllWaitingList(){
         return ResponseEntity.ok(castrationService.findAllRequest());
@@ -38,6 +44,14 @@ public class CastrationController {
     @GetMapping("/waitingList/{id}")
     public ResponseEntity<CastrationRequestDto> findOne(@PathVariable Long id){
         return ResponseEntity.ok(castrationService.findOneRequest(id));
+    }
+    @GetMapping("/waitingList/totais")
+    public ResponseEntity<CastrationRequestTotalDto> findTotal(){
+        return ResponseEntity.ok(castrationService.getTotal());
+    }
+    @DeleteMapping("/waitingList/{id}")
+    public ResponseEntity<?> deleteWaitingList(@PathVariable Long id){
+        return castrationService.deleteRequest(id);
     }
 
 }

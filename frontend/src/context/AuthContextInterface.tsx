@@ -4,6 +4,7 @@ import { openAlertSuccess } from '../services/Alert';
 import { openModalInstance } from '../services/ModalTrigger';
 
 
+
 const KEYCLOAK_AUTH_URL = process.env.REACT_APP_KEYCLOAK_AUTH_URL ||'';
 const KEYCLOAK_TOKEN_URL = process.env.REACT_APP_KEYCLOAK_TOKEN_URL||'';
 const KEYCLOAK_LOGOUT_URL = process.env.REACT_APP_KEYCLOAK_LOGOUT_URL||'';
@@ -28,18 +29,21 @@ export const AuthProvider = ({ children }: any) => {
         if (code) {
             fetchToken(code);
         } else {
-        
-            let tokenLocalStorage = localStorage.getItem('access_token');
-            let refreshLocalStorage = localStorage.getItem('refresh_token');
-            let tokenIdLocalStorage = localStorage.getItem('token_id');
-            if(tokenLocalStorage && refreshLocalStorage && tokenIdLocalStorage){
-                let token = {
-                    token: tokenLocalStorage,
-                    refreshToken: refreshLocalStorage,
-                    tokenId: tokenIdLocalStorage
+            let stringTk=localStorage.getItem('token')
+            if(stringTk){
+                let tk=JSON.parse(stringTk);
+                if(tk){
+                    let token:any = {
+                        token: tk.token,
+                        refreshToken: tk.refreshToken,
+                        tokenId: tk.tokenId
+                    }
+                    localStorage.setItem("token", JSON.stringify(token))
+                    setToken(token);
                 }
-                setToken(token);
             }
+            
+            
             setLoading(false);
 
         }
@@ -67,19 +71,22 @@ export const AuthProvider = ({ children }: any) => {
                 }),
                 credentials: "omit",
             });
+            console.log('RESPONSE REFRESH TOKEN: ',response);
+            
             if (response.ok) {
                 const data = await response.json();
                 console.log('DATA REFRESHED TOKEN: ',data);
                 
-                localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("refresh_token", data.refresh_token);
-                localStorage.setItem("token_id", data.id_token);
-                
+                const tokenInfo = parseJwt(data.access_token);
+                const refreshTokenInfo = parseJwt(data.refresh_token);
                 let token = {
                     token: data.access_token,
+                    tokenExpiration: tokenInfo.exp,
                     refreshToken: data.refresh_token,
+                    refreshTokenExpiration: refreshTokenInfo.exp,
                     tokenId: data.id_token
                 }
+                localStorage.setItem("token", JSON.stringify(token))
                 openAlertSuccess('Token atualizado com sucesso');
                 setToken(token);
             } else {
@@ -88,9 +95,7 @@ export const AuthProvider = ({ children }: any) => {
                 console.error('body', body);
                 if(body.error === 'invalid_grant'){
                     openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
-                        localStorage.removeItem("access_token");
-                        localStorage.removeItem("refresh_token");
-                        localStorage.removeItem("token_id");
+                        localStorage.removeItem("token");
                         login();
                     });
                 }
@@ -119,19 +124,19 @@ export const AuthProvider = ({ children }: any) => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("refresh_token", data.refresh_token);
-                localStorage.setItem("token_id", data.id_token);
+                console.log('DATA TOKEN: ',data);
+                
+                const tokenInfo = parseJwt(data.access_token);
+                const refreshTokenInfo = parseJwt(data.refresh_token);
                 let token = {
                     token: data.access_token,
+                    tokenExpiration: tokenInfo.exp,
                     refreshToken: data.refresh_token,
+                    refreshTokenExpiration: refreshTokenInfo.exp,
                     tokenId: data.id_token
                 }
+                localStorage.setItem("token", JSON.stringify(token))
                 setToken(token);
-
-                // Opcional: Decodificar e armazenar informações do usuário
-                 const userInfo = parseJwt(data.access_token);
-                 console.log("Usuário autenticado:", userInfo);
 
 
                 window.history.replaceState({}, document.title, "/");
@@ -156,9 +161,7 @@ export const AuthProvider = ({ children }: any) => {
     };
     const logout = () => {
         const logoutUrl = `${KEYCLOAK_LOGOUT_URL}?id_token_hint=${token?.tokenId}&post_logout_redirect_uri=${encodeURIComponent('http://localhost:3000')}`;
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("token_id");
+        localStorage.removeItem("token");
         window.location.href = logoutUrl;
     };
     const isAutenticated = useCallback(() => {

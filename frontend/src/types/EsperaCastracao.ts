@@ -18,6 +18,8 @@ export interface EsperaCastracao {
     animalVacinado?:boolean,
     descricaoAnimal?:string,
     urlImagem?:string,
+    urlComprovante?:string,
+    formaPagamento:string,
 
     
 }

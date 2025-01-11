@@ -11,7 +11,7 @@ const GenericModal = () => {
                  ${isModalOpen ? "visible bg-black/20" : "invisible"}`} >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={` bg-white rounded-xl shadow px-10 pt-5 pb-2 transition-all w-2/6 mt-10  transform
+                className={` bg-white rounded-xl shadow px-10 pt-5 pb-2 transition-all md:w-2/6 w-full mt-10  transform
             ${isModalOpen ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}>
                 <div>
                     <span className='font-bold text-lg'>Atenção</span>

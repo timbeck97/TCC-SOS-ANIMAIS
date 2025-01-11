@@ -3,6 +3,7 @@ package org.sos.animais.gestao.model;
 import jakarta.persistence.*;
 import org.sos.animais.gestao.enums.EAnimalSize;
 import org.sos.animais.gestao.enums.EAnimalType;
+import org.sos.animais.gestao.enums.EPaymentMethod;
 import org.sos.animais.gestao.enums.ERequestSituation;
 
 import java.util.Date;
@@ -49,6 +50,9 @@ public class CastrationRequest {
     private ERequestSituation situacao;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSolicitacao;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(20)")
+    private EPaymentMethod formaPagamento;
 
     @ManyToOne
     private Castration castracao;
@@ -198,5 +202,13 @@ public class CastrationRequest {
 
     public void setDataSolicitacao(Date dataSolicitacao) {
         this.dataSolicitacao = dataSolicitacao;
+    }
+
+    public EPaymentMethod getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(EPaymentMethod formaPagamento) {
+        this.formaPagamento = formaPagamento;
     }
 }

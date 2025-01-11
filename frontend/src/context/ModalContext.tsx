@@ -13,7 +13,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         setOpenModalRef(openModal);
     },[])
-    const openModal = (message: string, callback:any) => {
+    const openModal = (message: string, callback:()=>void) => {
         setModalMessage(message);
         setIsModalOpen(true);
         setOnConfirm(()=>callback);

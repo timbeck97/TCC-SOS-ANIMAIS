@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.sos.animais.gestao.enums.EAnimalSize;
 import org.sos.animais.gestao.enums.EAnimalType;
+import org.sos.animais.gestao.enums.EPaymentMethod;
 import org.sos.animais.gestao.enums.ERequestSituation;
 import org.sos.animais.gestao.model.CastrationRequest;
 
@@ -44,6 +45,9 @@ public class CastrationRequestDto {
     private ERequestSituation situacao;
     private Date dataSolicitacao;
     private String urlImagem;
+    private String urlComprovante;
+    @NotBlank
+    private EPaymentMethod formaPagamento;
 
     public CastrationRequestDto() {
     }
@@ -67,6 +71,7 @@ public class CastrationRequestDto {
         this.situacao = c.getSituacao();
         this.dataSolicitacao = c.getDataSolicitacao();
         this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
+        this.formaPagamento = c.getFormaPagamento();
 
     }
 
@@ -220,5 +225,21 @@ public class CastrationRequestDto {
 
     public void setNomeRequerente(String nomeRequerente) {
         this.nomeRequerente = nomeRequerente;
+    }
+
+    public EPaymentMethod getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(EPaymentMethod formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public String getUrlComprovante() {
+        return urlComprovante;
+    }
+
+    public void setUrlComprovante(String urlComprovante) {
+        this.urlComprovante = urlComprovante;
     }
 }
