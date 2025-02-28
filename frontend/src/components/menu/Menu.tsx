@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { ReactElement, useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContextInterface';
 import { FaPaw } from 'react-icons/fa';
 import user from '../../assets/user.png'
 import { Dropdown } from 'flowbite-react';
+import { isAutenticado, login, logout } from '../../services/AuthRequest';
 export const Menu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -46,7 +47,7 @@ export const Menu = () => {
                     }
                 >
 
-                    {isAutenticated() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
+                    {isAutenticado() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
                 </Dropdown>
                 <div
                     className={`cursor-pointer ml-4`}
@@ -68,7 +69,7 @@ export const Menu = () => {
                         Solicitar Castração
                     </NavLink>
                 </li>
-                {isAutenticated() && <>
+                {isAutenticado() && <>
                     <li>
                         <NavLink to="/gerenciar/filaEspera" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
                             Lista de Espera
@@ -79,7 +80,7 @@ export const Menu = () => {
                             Castrações
                         </NavLink>
                     </li>
-                    </>
+                </>
                 }
                 <li>
 
@@ -96,7 +97,7 @@ export const Menu = () => {
                                 />
                             }
                         >
-                            {isAutenticated() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
+                            {renderItensDropDownUser()}
                         </Dropdown>
                     </div>
                 </li>
@@ -105,7 +106,19 @@ export const Menu = () => {
             </ul>
         )
     }
-    const { isAutenticated, login, logout, loading } = useAuthContext();
+    const renderItensDropDownUser = () => {
+        let itens: ReactElement[] = []
+        if (isAutenticado()) {
+            itens.push(<Dropdown.Item key={1} onClick={logout}>Logout</Dropdown.Item>)
+            itens.push(<Dropdown.Item key={2} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
+        } else {
+            itens.push(<Dropdown.Item key={3} onClick={login}>Login</Dropdown.Item>)
+
+        }
+        return itens;
+    }
+
+    
 
     return (
         <nav className='bg-[#464549]'>
@@ -114,7 +127,7 @@ export const Menu = () => {
                     <FaPaw className="text-3xl text-white " />
                     <span className="text-lg  text-white  ml-2 border-b-2 border-gray-500 poppins-semibold">SOS Animais</span>
                 </NavLink>
-                {loading?<div/>:isMobile ? renderMenusMobile() : renderMenusDesktop()}
+                {isMobile ? renderMenusMobile() : renderMenusDesktop()}
             </div>
             <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out transform ${isOpen ? 'max-h-96 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-5'
@@ -131,7 +144,7 @@ export const Menu = () => {
                             Solicitar Castração
                         </NavLink>
                     </li>
-                    {isAutenticated() && <>
+                    {isAutenticado() && <>
                         <li className='w-full' onClick={toggleMenu}>
                             <NavLink to="/gerenciar/filaEspera" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                 Lista de Espera

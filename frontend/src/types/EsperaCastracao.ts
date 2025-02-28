@@ -20,6 +20,7 @@ export interface EsperaCastracao {
     urlImagem?:string,
     urlComprovante?:string,
     formaPagamento:string,
+    idFaixa?:number
 
     
 }

@@ -5,6 +5,9 @@ import { Home } from "../pages/home/Home";
 import { PublicRoute } from "./PublicRoute";
 import { WaitingList } from "../pages/filaEspera/WaitingList";
 import { Castration } from "../pages/castration/Castration";
+import { Dashboard } from "../pages/dashboard/Dashboard";
+import { Configurations } from "../pages/configuration/Configurations";
+import { CastrationRequestEdit } from "../pages/castrationRequestEdit/CastrationRequestEdit";
 
 
 export const Routes = () => {
@@ -19,8 +22,11 @@ export const Routes = () => {
         <Route path="/gerenciar" element={<PrivateRoute />}>
           <Route path="" element={<Navigate to="filaEspera" />} />
           <Route path="filaEspera" element={<WaitingList />} />
+          <Route path="filaEspera/:id" element={<CastrationRequestEdit />} />
           <Route path="castracoes" element={<Castration />} />
           <Route path="castracoes/:id" element={<Castration />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="configuracoes" element={<Configurations />} />
         </Route>
       </Route>
 

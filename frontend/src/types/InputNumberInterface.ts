@@ -5,7 +5,8 @@ export interface InputNumberInterface {
     name: string;
     label: string;
     value?: string;
-    control: any;
+    control?: any;
     type: string;
+    onChange?:(name:string, value:string)=>void;
     errors?: FieldError | string | undefined;
 }

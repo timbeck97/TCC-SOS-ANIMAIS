@@ -3,7 +3,6 @@ package org.sos.animais.gestao.service;
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
-import org.sos.animais.gestao.enums.EAnimalType;
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.enums.ERequestSituation;
 import org.sos.animais.gestao.factory.CastrationRequestFactory;
@@ -13,6 +12,7 @@ import org.sos.animais.gestao.model.CastrationRequest;
 import org.sos.animais.gestao.repository.CastrationFileRepository;
 import org.sos.animais.gestao.repository.CastrationRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
+import org.sos.animais.gestao.service.file.FileUploadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -74,6 +74,18 @@ public class CastrationService {
         }
         entity = castrationRepository.save(entity);
         return convertCastrationToDto(entity);
+    }
+    public void finishCastration(Long id){
+        Castration entity = castrationRepository.findById(id).orElseThrow(()->new RuntimeException("Castration not found"));
+       if(! entity.getRequisicoes().stream()
+               .allMatch(x->x.getFaixaPreco()!=null)){
+              throw new RuntimeException("Nem todos os animais possuem faixa de preço vinculada");
+       }
+        if(entity.getData().after(new Date())){
+            throw new RuntimeException("Data de castração não pode ser anterior a data atual");
+        }
+        entity.setSituacao(ERequestSituation.FINALIZADA);
+        castrationRepository.save(entity);
     }
     public void savePaymentReceipt(Long id, MultipartFile file){
         CastrationRequest entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));

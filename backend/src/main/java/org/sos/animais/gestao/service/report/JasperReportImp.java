@@ -1,11 +1,10 @@
-package org.sos.animais.gestao.service;
+package org.sos.animais.gestao.service.report;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.sos.animais.gestao.model.Castration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;

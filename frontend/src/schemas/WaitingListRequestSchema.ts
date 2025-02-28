@@ -16,6 +16,7 @@ export const WaitingListRequestSchema = z.object({
     descricaoAnimal: z.string().optional(),
     porteAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
     formaPagamento: z.string().min(1, {message: 'Campo obrigatório'}),
+    idFaixa:z.string().optional(),
 })
 function validarCPF(cpf:string) {
     cpf = cpf.replace(/[^\d]/g, "");

@@ -12,6 +12,7 @@ export interface TableWaitingListInterface {
     customTableStyle?:TableStyles,
     title?:string|React.ReactNode,
     permiteUploadPagamento?:boolean,
+    permiteAlterarFaixaPreco?:boolean,
     refresh?:()=>void
 
 }

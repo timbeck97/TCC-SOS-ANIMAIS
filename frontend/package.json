@@ -24,6 +24,7 @@
     "sweetalert2": "^11.14.5",
     "typescript": "^4.9.5",
     "use-mask-input": "^3.4.2",
+    "victory": "^37.3.6",
     "web-vitals": "^2.1.4",
     "zod": "^3.23.8"
   },

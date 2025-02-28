@@ -1,5 +1,4 @@
 import DataTable, { TableColumn, TableStyles } from "react-data-table-component"
-import { Pawbackground } from "../../components/pawbackground/Pawbackground"
 import { useNavigate, useParams } from "react-router-dom"
 import Input from "../../components/input/Input"
 import { TableWaitingList } from "../../components/tablewaitingList/TableWaitingList"
@@ -10,11 +9,11 @@ import { useEffect, useState } from "react"
 import { FcList, FcOvertime, FcStatistics } from "react-icons/fc"
 import { CastrationModel } from "../../types/CastrationModel"
 import { PiDog } from "react-icons/pi";
-import { Dropdown } from "flowbite-react"
-import { FaRegFilePdf, FaSearch } from "react-icons/fa"
+import { Dropdown, Modal } from "flowbite-react"
+import { FaCheck, FaRegFilePdf, FaSearch } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
-import api, { deleteRequest, get, post } from "../../services/Axios"
+import api, { deleteRequest, get, post, put } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
 import { ConfirmModal } from "../../components/modal/ConfirmModal"
@@ -22,16 +21,31 @@ import { Label } from "../../components/label/Label"
 import { Title } from "../../components/title/Title"
 import { Button } from "../../components/button/Button"
 import { FiPlus } from "react-icons/fi";
+import { SubmitHandler, useForm } from "react-hook-form"
+import { CastrationFormSchema, CastrationFormType } from "../../schemas/CastrationFormSchema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Subtitle } from "../../components/title/Subtitle"
 
 
 
 export const Castration = () => {
     const { id } = useParams<{ id: string | undefined }>()
+    const { register, handleSubmit, formState: { errors }, control, watch } = useForm<CastrationFormType>({
+        defaultValues: {
+            data: fintNextMonday()
+        },
+        resolver: zodResolver(CastrationFormSchema)
+    });
 
     const navigate = useNavigate();
     const [listsEspera, setListsEspera] = useState<EsperaCastracao[]>([])
     const [castracoes, setCastracoes] = useState<CastrationModel[]>([])
     const [animais, setAnimais] = useState<EsperaCastracao[]>([])
+
+
+    const [showSelecionarCaixas, setShowSelecionarCaixas] = useState<boolean>(false)
+    const [confirmFinalizarCastracao, setConfirmFinalizarCastracao] = useState<boolean>(false)
+
     const [castracao, setCastracao] = useState<CastrationModel>({
         data: fintNextMonday(),
         observacao: '',
@@ -53,13 +67,13 @@ export const Castration = () => {
                 border: 'none'
             }
         },
-        
+
         cells: {
             style: {
                 padding: '0.5rem',
             }
         },
-        
+
         headCells: {
             style: {
                 padding: '0.5rem',
@@ -79,7 +93,7 @@ export const Castration = () => {
             }
         },
         head: {
-            style:{
+            style: {
                 backgroundColor: '#f3f4f6',
             }
         },
@@ -93,8 +107,6 @@ export const Castration = () => {
     }
 
     useEffect(() => {
-        console.log('useEffect castracoes');
-
         if (id === 'nova') {
             getWaitingList();
         } else if (id) {
@@ -103,34 +115,63 @@ export const Castration = () => {
             getCastrations()
         }
     }, [id])
-    // const { register, handleSubmit, formState: { errors }, watch } = useForm<CastrationFormType>({
-    //     defaultValues: { data: fintNextMonday() }, resolver: zodResolver(CastrationFormSchema)
-    // });
-    // const values = watch()
 
-    const getWaitingList = () => {
-        get<EsperaCastracao[]>('/castration/waitingList', {}, {}, (response) => {
-            console.log(response)
-            setListsEspera(response)
-        })
+
+    const getWaitingList = async() => {
+        let response=await get<EsperaCastracao[]>('/castration/waitingList', {}, {})
+        setListsEspera(response.data)
     }
-    const getCastration = (id: string | number | undefined, callback?: () => void) => {
-        if(!id){
+    const getCastration = async (id: string | number | undefined, callback?: () => void) => {
+        if (!id) {
             return;
         }
-        get<CastrationModel>('/castration/' + id, {}, {}, (response) => {
-            setCastracao(response)
+        let response = await get<CastrationModel>('/castration/' + id, {}, {})
+        setCastracao(response?.data)
             if (callback) {
                 callback()
             }
+    }
+    const getCastrations = async () => {
+        let response=await get<CastrationModel[]>('/castration', {}, {})
+        setCastracoes(response?.data)
+    }
+    const concluirCastracao = () => {
+        put('/castration/concluir/' + id, {}, {}, {}).then(data => {
+            getCastration(id);
+            setConfirmFinalizarCastracao(false)
+            openAlertSuccess('Castracao Concluida')
         })
     }
-    const getCastrations = () => {
-        get<CastrationModel[]>('/castration', {}, {}, (response) => {
-            console.log(response);
-
-            setCastracoes(response)
-        })
+    const validarConclusao = ()=>{
+        if(!permitidoConcluir(true)){
+            return;
+        }
+        setConfirmFinalizarCastracao(true)
+    }
+    const permitidoConcluir = (showAlert:boolean)=>{
+        if(castracao && castracao.animais && castracao.animais.length>0){
+            if(!castracao.animais.every(a=>a.idFaixa && a.idFaixa!=0)){
+                if(showAlert){
+                    openAlertWarning('Para finalizar a castração é necessário informar as faixas de valores')
+                }
+                return false;
+            }
+            if(castracao.data){
+                let objData=new Date(castracao.data)
+                if(objData.getTime()>new Date().getTime()){
+                    if(showAlert){
+                        openAlertWarning('Não é possível concluir uma castração que ainda nao ocorreu')
+                    }
+                    return false;
+                }
+            }else{
+                return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
+        
     }
     const handleAbrirCastracao = (row: any) => {
         getCastration(row.id, () => {
@@ -191,8 +232,6 @@ export const Castration = () => {
                         </span>
                     }
                 >
-
-
 
                     <Dropdown.Item icon={MdOutlineFileDownload} onClick={() => generateReport(row)}>Gerar Relatório</Dropdown.Item>
                     <Dropdown.Item icon={FaSearch} onClick={() => handleAbrirCastracao(row)}>Abrir</Dropdown.Item>
@@ -294,17 +333,20 @@ export const Castration = () => {
                 animaisCastracao.push(animal)
             }
         })
+        console.log('on select animais');
+
         setListsEspera([...filaEspera])
         setAnimais([...animaisCastracao])
     }
-    const postCastration = () => {
+    const postCastration = (data: CastrationFormType) => {
         if (animais.length === 0) {
             openAlertWarning('Selecione os animais para castração')
             return
         }
+
         let obj = {
-            data: new Date(castracao?.data).toISOString(),
-            observacao: castracao?.observacao,
+            data: new Date(data?.data).toISOString(),
+            observacao: data?.observacao,
             quantidadeAnimais: animais.length,
             animais: animais
         }
@@ -326,24 +368,75 @@ export const Castration = () => {
             }
         })
     }
+
+    const renderModalSelecionarCaixas = () => {
+        return (
+            <Modal show={showSelecionarCaixas} onClose={() => setShowSelecionarCaixas(false)}>
+                <Modal.Header >
+                    Selecionar Caixas Disponíveis
+                </Modal.Header>
+                <Modal.Body>
+                    <div>
+                        <Input id="quantidadeCaixasPequenasIdx"
+                            label="Quantidade de Caixas Pequenas"
+                            type="number"
+                            name="quantidadeCaixasPequenas"
+                            value={castracao?.quantidadeCaixasPequenas}
+                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasPequenas', e.target.value)}
+
+                        />
+                        <Input id="quantidadeCaixasMediasIdx"
+                            label="Quantidade de Caixas Médias"
+                            type="number"
+                            name="quantidadeCaixasMedias"
+                            value={castracao?.quantidadeCaixasMedias}
+                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasMedias', e.target.value)}
+
+                        />
+                        <Input id="quantidadeCaixasGrandesIdx"
+                            label="Quantidade de Caixas Grandes"
+                            type="number"
+                            name='quantidadeCaixasGrandes'
+                            value={castracao?.quantidadeCaixasGrandes}
+                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasGrandes', e.target.value)}
+
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="w-full space-x-2 flex justify-end">
+
+                        <Button text="Fechar" onClick={() => setShowSelecionarCaixas(false)} type="neutral" />
+                        <Button text="Confirmar" onClick={() => {
+                            setShowSelecionarCaixas(false)
+                            selectAnimais()
+                        }} type="default" />
+                    </div>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+    const onSubmit: SubmitHandler<CastrationFormType> = data => {
+        postCastration(data)
+    }
     const renderCadastrarNovaCastracao = () => {
         return (
             <div className="p-3">
                 <div className="flex  border-b border-gray-900/10 pb-5 mt-3">
                     <Title text="Registrar nova data de castração" icon={<PiDog size={35} />} />
                 </div>
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-5">
                         <div className="border-b border-gray-900/10 pb-5 mt-5">
                             <div className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
-                                <div className="sm:col-span-2 space-y-4">
-
+                                <div className="sm:col-span-1 space-y-4">
+                                    <Subtitle text="Dados da Castração" extraClasses="mb-3" />
+                                    <hr />
                                     <Input id="dataIdx"
                                         label="Data da Castração"
                                         type="datetime-local"
-                                        name='data'
-                                        value={castracao?.data}
-                                        onChange={(e: any) => handleChangeCastracao('data', e.target.value)}
+                                        errors={errors.data}
+                                        {...register('data')}
                                     />
 
 
@@ -351,47 +444,21 @@ export const Castration = () => {
                                         label="Observações"
                                         type="textarea"
                                         lines={4}
-                                        name='observacao'
-                                        value={castracao?.observacao}
-                                        onChange={(e: any) => handleChangeCastracao('observacao', e.target.value)}
+                                        errors={errors.observacao}
+                                        {...register('observacao')}
 
 
                                     />
-                            
-                                    <Button text="Selecionar Animais Automaticamente" onClick={selectAnimais} icon={<HiOutlineCube />} class="bg-gray-600 text-white ml-2 px-4 rounded-xl py-1 rounded flex justify-center items-center focus:outline-none focus:ring-2"/>
+
                                 </div>
 
-                                <div className="sm:col-span-2">
 
-                                    <div className="h-full">
 
-                                        <Input id="quantidadeCaixasPequenasIdx"
-                                            label="Quantidade de Caixas Pequenas"
-                                            type="number"
-                                            name="quantidadeCaixasPequenas"
-                                            value={castracao?.quantidadeCaixasPequenas}
-                                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasPequenas', e.target.value)}
-                                        />
-                                        <Input id="quantidadeCaixasMediasIdx"
-                                            label="Quantidade de Caixas Médias"
-                                            type="number"
-                                            name="quantidadeCaixasMedias"
-                                            value={castracao?.quantidadeCaixasMedias}
-                                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasMedias', e.target.value)}
-                                        />
-                                        <Input id="quantidadeCaixasGrandesIdx"
-                                            label="Quantidade de Caixas Grandes"
-                                            type="number"
-                                            name='quantidadeCaixasGrandes'
-                                            value={castracao?.quantidadeCaixasGrandes}
-                                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasGrandes', e.target.value)}
-                                        />
-
-                                    </div>
-                                </div>
                             </div>
-                            <div className="mt-3 gap-3">
-                                <Button text='Cadastrar' onClick={postCastration} icon={<FiPlus />} type="default" class="float-right"/>
+                            <div className="mt-3 gap-3 flex">
+                                <Button buttonType="submit" text='Cadastrar' icon={<FiPlus />} type="default" />
+                                <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} class="bg-gray-600 text-white px-4 rounded-xl py-1 rounded flex justify-center items-center focus:outline-none focus:ring-2 mb-3 mt-3 " />
+
                             </div>
                         </div>
                         <div className="pb-5 mt-5">
@@ -403,27 +470,13 @@ export const Castration = () => {
                                 <TableWaitingList customTableStyle={customTableStyle} dataProps={listsEspera} selectAnimals={true} handleSelectRows={handleSelect} />
                             </div>
                         </div>
-                        {/* <pre className="mt-5">
-                            <p className="font-bold">
-                                Valores formulário
-                            </p>
 
-                            <p>Data: {values.data.toString()}</p>
-                            <p>Observacao: {values.observacao}</p>
-                            <p>Quantidade de Caixas Pequenas: {values.quantidadeCaixasPequenas}</p>
-                            <p>Quantidade de Caixas Médias: {values.quantidadeCaixasMedias}</p>
-                            <p>Quantidade de Caixas Grandes: {values.quantidadeCaixasGrandes}</p>
-                            <p>Animais: </p>
-                            {animais.length > 0 && animais.map((animal, index) =>
-                                (<p key={index} >{(index + 1) + '-' + animal.nomeRequerente + '-' + animal.nomeAnimal}</p>)
-                            )}
-
-                        </pre> */}
                     </div>
                 </form>
                 <div>
                     <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} type="neutral" />
                 </div>
+                {renderModalSelecionarCaixas()}
             </div>
         )
     }
@@ -437,11 +490,11 @@ export const Castration = () => {
             <div className="pt-3">
                 <div className="flex items-center  border-b border-gray-900/10 pb-3 mt-3">
                     <Title text="Detalhes da Castração" icon={<PiDog size={35} />} />
-                   
+
                 </div>
 
                 <div className="flex flex-col gap-5 mt-2 ">
-                    <div className="grid grid-cols-1 md:grid-cols-3 space-y-2 border-b pb-4 border-gray-900/10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 space-y-2">
                         <div>
                             <Label text="Data" />
                             <p>{formatDateWithHour(castracao?.data)}</p>
@@ -457,19 +510,29 @@ export const Castration = () => {
                         </div>
                     </div>
                     <div>
-                        <Title text='Detalhes da Castração'  icon={<FcList size={30} />}/>
+                        <div>
+                            <Label text="Situação" />
+                            <p>{formatSituacao(castracao.situacao)}</p>
+
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <Title text='Lista de animais' icon={<FcList size={30} />} />
                         <TableWaitingList
                             dataProps={castracao?.animais}
                             customTableStyle={customTableStyle}
                             remote={false}
                             permiteUploadPagamento
                             pagination={false}
+                            permiteAlterarFaixaPreco={true}
                             refresh={() => getCastration(castracao.id)}
                             handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)} />
                     </div>
                 </div>
                 <div className="space-x-2">
                     <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} icon={<FaRegFilePdf />} type="default" />
+                   {castracao && castracao.situacao==='EM_ANDAMENTO' &&  <Button text="Concluir Castração" onClick={validarConclusao} icon={<FaCheck />} type="success" />}
                     <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} type="neutral" />
                 </div>
 
@@ -480,6 +543,14 @@ export const Castration = () => {
                     title="Remover Animal"
                     text="Deseja realmente remover este animal da lista de castração?"
                 />
+                <ConfirmModal
+                    show={confirmFinalizarCastracao}
+                    confirm={() => concluirCastracao()}
+                    close={() => setConfirmFinalizarCastracao(false)}
+
+                    text="Deseja realmente concluir esta castração?"
+                />
+
 
             </div>
         )
@@ -502,7 +573,7 @@ export const Castration = () => {
                         quantidadeCaixasMedias: 0,
                         quantidadeCaixasGrandes: 0
                     })
-                }} icon={<FiPlus />} type="default" />    
+                }} icon={<FiPlus />} type="default" />
                 <DataTable
                     columns={columns}
                     data={castracoes}

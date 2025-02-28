@@ -20,12 +20,11 @@ export const WaitingList = () => {
 
     const [totais, setTotais] = useState<CastrationRequestTotal>({ total: 0, totalCats: 0, totalDogs: 0 });
 
-    const getTotais = () => {
-        get<CastrationRequestTotal>('/castration/waitingList/totais', {}, {}, (data) => {
-            if(data){
-                setTotais(data);
-            }
-        })
+    const getTotais = async () => {
+        let response = await get<CastrationRequestTotal>('/castration/waitingList/totais', {}, {})
+        if(response.data){
+            setTotais(response.data); 
+        }
     }
     return (
         <Pawbackground>

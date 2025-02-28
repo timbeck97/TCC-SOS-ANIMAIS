@@ -1,58 +1,62 @@
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import imagem from '../../assets/family2.jpg'
-import check from '../../assets/check.png'
-import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
-import Input from "../../components/input/Input"
-import { InputCombobox } from "../../components/input/InputCombobox";
-import { InputBoolean } from "../../components/input/InputBoolean";
-import { InputFile } from "../../components/input/InputFile";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useHookFormMask } from "use-mask-input";
-
-import { InputNumber } from "../../components/input/InputNumber";
-import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
-import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
-import {publicPost } from "../../services/Axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
+import { useHookFormMask } from "use-mask-input";
+import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
+import { useParams } from "react-router-dom";
+import { get } from "../../services/Axios";
+import { InputFile } from "../../components/input/InputFile";
+import { InputCombobox } from "../../components/input/InputCombobox";
+import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import { InputBoolean } from "../../components/input/InputBoolean";
+import { InputNumber } from "../../components/input/InputNumber";
+import Input from "../../components/input/Input";
+import { FaixaValor } from "../../types/FaixaValor";
 
+export const CastrationRequestEdit = () => {
 
-
-
-export const CastrationRequest = () => {
-
-
-    const { register, handleSubmit, formState: { errors, isValid, isSubmitted }, control, watch } = useForm<WaitingListFormSchema>({
-        defaultValues: {
-            nome: "Tim",
-            sobrenome: "Maia",
-            cpf: "04263284003",
-            telefone: "51999696596",
-            rua: "Rua das Flores",
-            numero: "123",
-            bairro: "Centro",
-            tipoAnimal: "CACHORRO",
-            nomeAnimal: "Rex",
-            racaAnimal: "Vira-lata",
-            pesoAnimal: '4.5',
-            descricaoAnimal: "Animal dócil e brincalhão",
-
-            animalVacinado: true,
-            porteAnimal: "PEQUENO",
-        },
+    const { register, handleSubmit, formState: { errors, isValid, isSubmitted }, reset, control, watch } = useForm<WaitingListFormSchema>({
         resolver: zodResolver(WaitingListRequestSchema),
         mode: "onChange"
     });
-
+    const { id } = useParams<{ id: string | undefined }>()
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
     const [submittedData, setSubmittedData] = useState<EsperaCastracao | null>(null);
+    const [faixaValores, setFaixaValores] = useState<FaixaValor[]>([])
     const formValues = watch();
 
     const registerWithMask = useHookFormMask(register);
-
-    // const { openModal } = useModal();
-
+    useEffect(() => {
+        getData();
+        getFaixasPreco();
+    }, [reset, id])
+    const getData = async() => {
+        let response=await get<EsperaCastracao>('/castration/waitingList/' + id, {}, {})
+        reset({
+            nome: response.data.nome,
+            sobrenome: response.data.sobrenome,
+            cpf: response.data.cpf,
+            telefone: response.data.telefone,
+            rua: response.data.rua,
+            numero: response.data.numero,
+            bairro: response.data.bairro,
+            tipoAnimal: response.data.tipoAnimal,
+            nomeAnimal: response.data.nomeAnimal,
+            racaAnimal: response.data.racaAnimal,
+            pesoAnimal: String(response.data.pesoAnimal),
+            descricaoAnimal: response.data.descricaoAnimal,
+            animalVacinado: response.data.animalVacinado,
+            porteAnimal: response.data.porteAnimal,
+        })
+    }
+    const getFaixasPreco = async () => {
+        let response = await get<FaixaValor[]>('/faixapreco', {}, {})
+        let data=response?.data;
+        data.unshift({ id: 0, descricao: 'Não Informado', valor: '0' })
+        setFaixaValores(data)
+    }
     const onSubmit: SubmitHandler<CastrationRequestInterface> = data => {
         let headers = {
             'Content-Type': 'multipart/form-data'
@@ -62,9 +66,7 @@ export const CastrationRequest = () => {
             formData.append("file", file?.file);
         }
         formData.append("dto", new Blob([JSON.stringify(data)], { type: "application/json" }));
-        publicPost<EsperaCastracao>('/public/castration', formData, headers, (resp) => {
-            setSubmittedData(resp);
-        })
+
     };
     const handleFile = (name: string, files: FileList | null) => {
         if (files && files.length > 0) {
@@ -73,46 +75,15 @@ export const CastrationRequest = () => {
             setFile(null);
         }
     }
-    const renderConfirmacaoCastracao = () => {
-        return (
-            <div className="border border-gray-300 p-4 mt-5 rounded-md">
-                <div className="mensagem-topo bg-green-100 text-green-800 p-4 rounded mb-6 flex items-center space-x-4">
-                    <img src={check} alt="Check logo" className="w-20" />
-                    <p className="font-bold md:text-md text-sm">
-                        Sua solicitação de castração foi registrada e você está na lista de espera. Avisaremos pelo celular assim que a SOS Animais agendar uma nova data.
-                    </p>
-                </div>
-                <h3 className="text-lg/7 font-semibold text-gray-900 border-b border-gray-900/10 pb-5 mt-10">
-                    Resumo da solicitação
-                </h3>
-                <ul className="mt-2 space-y-2">
-                    <li><strong>Nome:</strong> {submittedData?.nome}</li>
-                    <li><strong>Sobrenome:</strong> {submittedData?.sobrenome}</li>
-                    <li><strong>CPF:</strong> {submittedData?.cpf}</li>
-                    <li><strong>Telefone:</strong> {submittedData?.telefone}</li>
-                    <li><strong>Rua:</strong> {submittedData?.rua}</li>
-                    <li><strong>Número:</strong> {submittedData?.numero}</li>
-                    <li><strong>Bairro:</strong> {submittedData?.bairro}</li>
-                    <li><strong>Tipo de Animal:</strong> {submittedData?.tipoAnimal}</li>
-                    <li><strong>Nome do Animal:</strong> {submittedData?.nomeAnimal}</li>
-                    <li><strong>Raça do Animal:</strong> {submittedData?.racaAnimal}</li>
-                    <li><strong>Peso do Animal:</strong> {submittedData?.pesoAnimal}</li>
-                    <li><strong>Animal Vacinado:</strong> {submittedData?.animalVacinado ? "Sim" : "Não"}</li>
-                    <li><strong>Descrição:</strong> {submittedData?.descricaoAnimal}</li>
-                </ul>
-         
 
-            </div>
-        );
-    };
-    const renderFormCastracao = () => {
-        return (
+    return (
+        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="border-b border-gray-900/10 pb-5 mt-5">
 
                     <h2 className="text-lg/7 font-semibold text-gray-900">Informações Pessoais</h2>
                     <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-1">
 
                             <Input id="nomeidx"
                                 label="Nome"
@@ -123,7 +94,7 @@ export const CastrationRequest = () => {
                             />
 
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-1">
 
                             <Input id="sobrenomeidx"
                                 label="Sobrenome"
@@ -131,7 +102,7 @@ export const CastrationRequest = () => {
                                 errors={errors.sobrenome}
                                 {...register('sobrenome')} />
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-1">
                             <Input id="cpfidx"
                                 label="CPF"
                                 type="text"
@@ -139,7 +110,7 @@ export const CastrationRequest = () => {
                                 errors={errors.cpf}
                             />
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-1">
                             <Input id="telefoneIdx"
                                 label="Telefone"
                                 type="text"
@@ -152,7 +123,7 @@ export const CastrationRequest = () => {
                 </div>
                 <div className="border-b border-gray-900/10 pb-5 mt-5">
                     <h2 className="text-lg/7 font-semibold text-gray-900">Endereço</h2>
-                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 ">
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-1 ">
                         <div className="sm:col-span-2">
                             <Input id="ruaidx"
                                 label="Rua"
@@ -167,7 +138,7 @@ export const CastrationRequest = () => {
                                 errors={errors.numero}
                                 {...register('numero')} />
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-1">
                             <Input id="bairroidx"
                                 label="Bairro"
                                 type="text"
@@ -178,7 +149,7 @@ export const CastrationRequest = () => {
                 </div>
                 <div className="boder-b border-gray-900/10 pb-5 mt-5">
                     <h2 className="text-lg/7 font-semibold text-gray-900">Dados do Animal</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-x-6 gap-y-1 mt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 gap-y-1 mt-3">
                         <div className="sm:col-span-1">
 
                             <InputCombobox id="tipoAnimalidx"
@@ -194,7 +165,6 @@ export const CastrationRequest = () => {
                             <Input id="nomeAnimalidx"
                                 label="Nome do Animal"
                                 type="text"
-                                //onChange={(name, value)=>console.log(name,value)}
                                 errors={errors.nomeAnimal}
                                 {...register('nomeAnimal')} />
                         </div>
@@ -206,7 +176,7 @@ export const CastrationRequest = () => {
                                 {...register('racaAnimal')} />
 
                         </div>
-                        <div className="sm:col-span-1">
+                        <div className="sm:col-span-2">
                             <InputNumber id="pesoIdx"
                                 name="pesoAnimal"
                                 value={formValues.pesoAnimal}
@@ -215,7 +185,7 @@ export const CastrationRequest = () => {
                                 control={control}
                                 errors={errors.pesoAnimal} />
                         </div>
-                        <div className="sm:col-span-1">
+                        <div className="sm:col-span-2">
                             <InputCombobox id="porteAnimalIdx"
                                 label="Porte do Animal"
                                 comboboxValues={PORTE_ANIMAIS}
@@ -225,41 +195,67 @@ export const CastrationRequest = () => {
                                 //register={register} />
                                 {...register('porteAnimal')} />
                         </div>
-                        <div className="sm:col-span-5">
-                            <Input id="descricaoAnimalIdx"
-                                label="Descrição do Animal (comportamento)"
-                                type="textarea"
-                                lines={4}
-                                errors={errors.descricaoAnimal}
-                                {...register('descricaoAnimal')}
-                            />
 
-                        </div>
                         <div className="sm:col-span-2">
                             <InputBoolean id='animalVacinadoIdx' name='animalVacinado' label='Animal é vacinado' control={control} />
                         </div>
                     </div>
-                    <div className="col-span-full mt-5">
-                        <InputFile id="file-upload" name="file-upload" types=".jpeg, .png, .jpg" label="Foto do Animal" value={file} onChange={handleFile} />
-                    </div>
-                    <div className="sm:col-span-1 mt-3">
-                        <InputCombobox id="formaPagamentoIdx"
-                            label="Forma de Pagamento"
-                            valueKey="value"
-                            arrayKey="label"
-                            comboboxValues={FORMA_PAGAMENTO}
-                            errors={errors.formaPagamento}
-                            {...register('formaPagamento')} />
-                    </div>
-                </div>
-                <div className="border-b border-t border-gray-900/10 py-5 mt-5">
-                <h2 className="text-lg/7 font-semibold text-gray-900">Orientações</h2>
-                <p className="mt-2 text-gray-700">
-                    A castração é um procedimento cirúrgico que impede a reprodução do animal. A castração é importante para o controle populacional de cães e gatos e também traz benefícios para a saúde do animal.
-                </p>
-                </div>
+                    <div className="border-b border-gray-900/10 pb-5 mt-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 gap-y-1 mt-3">
+                            <div className="sm:col-span-5">
+                                <Input id="descricaoAnimalIdx"
+                                    label="Descrição do Animal (comportamento)"
+                                    type="textarea"
+                                    lines={4}
+                                    errors={errors.descricaoAnimal}
+                                    {...register('descricaoAnimal')}
+                                />
 
-                {/* <pre className="mt-5">
+                            </div>
+                        </div>
+                        <div className="col-span-full mt-5">
+                            {/* <InputFile id="file-upload" name="file-upload" types=".jpeg, .png, .jpg" label="Foto do Animal" value={file} onChange={handleFile} /> */}
+                            <div className="relative">
+
+                                <svg className="size-60  text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                    <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />
+
+                                </svg>
+                                <span className="absolute top-0">teste</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="boder-b border-gray-900/10 pb-5 mt-5">
+
+                        <h2 className="text-lg/7 font-semibold text-gray-900">Dados do Animal</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-1 mt-3">
+
+                            <div className="sm:col-span-1">
+                                <InputCombobox id="formaPagamentoIdx"
+                                    label="Forma de Pagamento"
+                                    valueKey="value"
+                                    arrayKey="label"
+                                    comboboxValues={FORMA_PAGAMENTO}
+                                    errors={errors.formaPagamento}
+                                    {...register('formaPagamento')} />
+
+                            </div>
+                            <div className="sm:col-span-1">
+                                <InputCombobox
+                                    id="faixaValorIdx"
+                                    comboboxValues={faixaValores}
+                                    label="Faixa de preço"
+                                    {...register('idFaixa')}
+                                    valueKey="id"
+                                    arrayKey="descricao"
+
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                 <pre className="mt-5">
                         <p className="font-bold">
                             Valores formulário
                         </p>
@@ -280,10 +276,12 @@ export const CastrationRequest = () => {
                         <p>Descricao do Animal: {formValues.descricaoAnimal}</p>
                         <p>FILE: {file?.fileName}</p>
                         <p>Forma de Pagamento: {formValues.formaPagamento}</p>
-                    </pre> */}
+                        <p>ID faixa valor: {formValues.idFaixa}</p>
+                    </pre>
+               
                 {!isValid && isSubmitted && (
                     <div className="mb-4 p-3 bg-red-50 text-red-700 mt-3 border border-red-200 rounded-lg">
-                    ⚠️ Por favor, preencha todos os campos corretamente antes de enviar.
+                        ⚠️ Por favor, preencha todos os campos corretamente antes de enviar.
                     </div>
                 )}
                 <div className="mt-3 flex justify-center">
@@ -292,17 +290,6 @@ export const CastrationRequest = () => {
                     </button>
                 </div>
             </form>
-        )
-    }
-    return (
-        <Pawbackground>
-            <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white">
-                <div className="pt-5">
-                    <img src={imagem} alt="Imagem logo SOS Animais" className="size-1/4  rounded-full mx-auto" />
-                </div>
-                {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
-            </div>
-        </Pawbackground>
-
+        </div>
     )
 }

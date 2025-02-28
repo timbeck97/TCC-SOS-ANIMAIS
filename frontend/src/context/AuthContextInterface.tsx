@@ -22,6 +22,9 @@ export const AuthProvider = ({ children }: any) => {
     }|null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
+    let refreshPromise: Promise<any> | null = null;
+
+
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get("code");
@@ -57,53 +60,66 @@ export const AuthProvider = ({ children }: any) => {
         window.location.href = authUrl;
     }
     const updateRefreshToken = async () => {
-        try {
-            const response = await fetch(KEYCLOAK_TOKEN_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
-                    grant_type: "refresh_token",
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET,
-                    refresh_token: token?.refreshToken || "",
-                }),
-                credentials: "omit",
-            });
-            console.log('RESPONSE REFRESH TOKEN: ',response);
+        console.log('refreshh promisse: ',refreshPromise);
+        
+        if (refreshPromise) return refreshPromise;
+        
+        refreshPromise = (async () => {
+            try {
             
-            if (response.ok) {
-                const data = await response.json();
-                console.log('DATA REFRESHED TOKEN: ',data);
+                const response = await fetch(KEYCLOAK_TOKEN_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        grant_type: "refresh_token",
+                        client_id: CLIENT_ID,
+                        client_secret: CLIENT_SECRET,
+                        refresh_token: token?.refreshToken || "",
+                    }),
+                   
+                });
+             
                 
-                const tokenInfo = parseJwt(data.access_token);
-                const refreshTokenInfo = parseJwt(data.refresh_token);
-                let token = {
-                    token: data.access_token,
-                    tokenExpiration: tokenInfo.exp,
-                    refreshToken: data.refresh_token,
-                    refreshTokenExpiration: refreshTokenInfo.exp,
-                    tokenId: data.id_token
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    console.log('data refresj: ',data)
+                    
+                    const tokenInfo = parseJwt(data.access_token);
+                    const refreshTokenInfo = parseJwt(data.refresh_token);
+                    let token = {
+                        token: data.access_token,
+                        tokenExpiration: tokenInfo.exp,
+                        refreshToken: data.refresh_token,
+                        refreshTokenExpiration: refreshTokenInfo.exp,
+                        tokenId: data.id_token
+                    }
+                    localStorage.setItem("token", JSON.stringify(token))
+                    console.log('new token exp: ',tokenInfo.exp)
+                    openAlertSuccess('Token atualizado com sucesso');
+                    // setToken(token);
+                     return token
+                } else {
+                    console.error("Erro ao atualizar o token de acesso");
+                    let body = await response.json();
+                    console.error('body', body);
+                    if(body.error === 'invalid_grant'){
+                        openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
+                            localStorage.removeItem("token");
+                            login();
+                        });
+                    }
+                    
                 }
-                localStorage.setItem("token", JSON.stringify(token))
-                openAlertSuccess('Token atualizado com sucesso');
-                setToken(token);
-            } else {
-                console.error("Erro ao atualizar o token de acesso");
-                let body = await response.json();
-                console.error('body', body);
-                if(body.error === 'invalid_grant'){
-                    openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
-                        localStorage.removeItem("token");
-                        login();
-                    });
-                }
-                
+            } catch (error) {
+                console.error("Erro ao atualizar o token de acesso:", error);
+            }finally{
+                refreshPromise=null;
             }
-        } catch (error) {
-            console.error("Erro ao atualizar o token de acesso:", error);
-        }
+        })();
+        return refreshPromise;
     }
     const fetchToken = async (code: string) => {
         try {

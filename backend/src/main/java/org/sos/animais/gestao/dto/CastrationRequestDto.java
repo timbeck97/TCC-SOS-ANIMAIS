@@ -48,6 +48,7 @@ public class CastrationRequestDto {
     private String urlComprovante;
     @NotBlank
     private EPaymentMethod formaPagamento;
+    private Long idFaixa;
 
     public CastrationRequestDto() {
     }
@@ -72,7 +73,9 @@ public class CastrationRequestDto {
         this.dataSolicitacao = c.getDataSolicitacao();
         this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
         this.formaPagamento = c.getFormaPagamento();
-
+        if(c.getFaixaPreco()!=null){
+            this.idFaixa=c.getFaixaPreco().getId();
+        }
     }
 
     public long getId() {
@@ -241,5 +244,13 @@ public class CastrationRequestDto {
 
     public void setUrlComprovante(String urlComprovante) {
         this.urlComprovante = urlComprovante;
+    }
+
+    public Long getIdFaixa() {
+        return idFaixa;
+    }
+
+    public void setIdFaixa(Long idFaixa) {
+        this.idFaixa = idFaixa;
     }
 }

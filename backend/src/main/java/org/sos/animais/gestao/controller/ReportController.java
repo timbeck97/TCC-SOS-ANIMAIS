@@ -2,10 +2,9 @@ package org.sos.animais.gestao.controller;
 
 import org.sos.animais.gestao.model.Castration;
 import org.sos.animais.gestao.repository.CastrationRepository;
-import org.sos.animais.gestao.service.ReportService;
+import org.sos.animais.gestao.service.report.ReportService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

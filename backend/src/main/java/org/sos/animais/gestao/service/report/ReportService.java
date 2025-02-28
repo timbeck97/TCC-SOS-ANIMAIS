@@ -1,7 +1,6 @@
-package org.sos.animais.gestao.service;
+package org.sos.animais.gestao.service.report;
 
 import org.sos.animais.gestao.model.Castration;
-import org.springframework.core.io.Resource;
 
 public interface ReportService {
 

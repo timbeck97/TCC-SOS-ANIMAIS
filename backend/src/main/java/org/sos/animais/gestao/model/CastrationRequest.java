@@ -57,6 +57,9 @@ public class CastrationRequest {
     @ManyToOne
     private Castration castracao;
 
+    @ManyToOne
+    private PriceRange faixaPreco;
+
     public CastrationRequest() {
     }
 
@@ -210,5 +213,13 @@ public class CastrationRequest {
 
     public void setFormaPagamento(EPaymentMethod formaPagamento) {
         this.formaPagamento = formaPagamento;
+    }
+
+    public PriceRange getFaixaPreco() {
+        return faixaPreco;
+    }
+
+    public void setFaixaPreco(PriceRange faixaPreco) {
+        this.faixaPreco = faixaPreco;
     }
 }

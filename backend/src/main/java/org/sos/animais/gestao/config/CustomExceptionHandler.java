@@ -33,9 +33,9 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<?> ApiErrorAccessDenied(MethodArgumentNotValidException ex)
+    public ResponseEntity<?> ApiErrorAccessDenied(Exception ex)
     {
-        ex.printStackTrace();
+        //ex.printStackTrace();
         List<String> details = Arrays.asList(ex.getMessage());
 
         ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.FORBIDDEN,HttpStatus.FORBIDDEN.value(), "r" ,details);
@@ -46,7 +46,7 @@ public class CustomExceptionHandler {
         ex.printStackTrace();
         List<String> details = new ArrayList<>();
         details.add(ex.getMessage());
-        ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro interno" ,details);
+        ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage() ,details);
         return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -24,6 +24,11 @@ public class CastrationController {
     public ResponseEntity<CastrationDto> save(@RequestBody CastrationDto dto ){
         return ResponseEntity.ok(castrationService.saveCastration(dto));
     }
+    @PutMapping("/concluir/{id}")
+    public  ResponseEntity<Void> finishCastration(@PathVariable Long id){
+        castrationService.finishCastration(id);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping
     public ResponseEntity<List<CastrationDto>> findAll(){
         return ResponseEntity.ok(castrationService.findAll());

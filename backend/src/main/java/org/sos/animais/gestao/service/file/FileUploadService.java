@@ -1,4 +1,4 @@
-package org.sos.animais.gestao.service;
+package org.sos.animais.gestao.service.file;
 
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.model.CastrationFile;

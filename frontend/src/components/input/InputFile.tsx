@@ -27,7 +27,7 @@ export const InputFile = ({ id, name, label, value, onChange, types}: InputFileI
                         </svg>
                         <div className="mt-4 flex text-sm/6 text-gray-600 justify-center">
                             <label htmlFor="file-upload" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                <span>Clique aqui para enviar uma imagem</span>
+                                <span>Clique aqui para enviar um arquivo</span>
                                 <input id="file-upload" name="file-upload" type="file" accept={types} className="sr-only" onChange={handleChange} />
                             </label>
                         </div>

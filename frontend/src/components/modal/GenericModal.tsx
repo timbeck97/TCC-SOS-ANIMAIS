@@ -7,7 +7,8 @@ const GenericModal = () => {
     return (
         <div
             onClick={closeModal}
-            className={`fixed inset-0 flex justify-center items-start transition-colors
+            style={{zIndex:'999'}}
+            className={`fixed inset-0 flex justify-center items-start transition-colors 
                  ${isModalOpen ? "visible bg-black/20" : "invisible"}`} >
             <div
                 onClick={(e) => e.stopPropagation()}
