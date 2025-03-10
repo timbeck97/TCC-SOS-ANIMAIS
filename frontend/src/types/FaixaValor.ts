@@ -1,5 +1,5 @@
 export interface FaixaValor {
-    id?:number,
+    id?:number|null,
     descricao: string,
     valor: string
 }

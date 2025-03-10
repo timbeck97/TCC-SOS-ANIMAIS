@@ -53,7 +53,8 @@ public class CastrationRequest {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     private EPaymentMethod formaPagamento;
-
+    @Column(columnDefinition = "boolean not null default false")
+    private boolean paga;
     @ManyToOne
     private Castration castracao;
 
@@ -221,5 +222,13 @@ public class CastrationRequest {
 
     public void setFaixaPreco(PriceRange faixaPreco) {
         this.faixaPreco = faixaPreco;
+    }
+
+    public boolean isPaga() {
+        return paga;
+    }
+
+    public void setPaga(boolean paga) {
+        this.paga = paga;
     }
 }

@@ -5,7 +5,7 @@ import { TableWaitingListInterface } from "../../types/TableWaitingListInterface
 import { formatDate, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
-import { get, post, put } from "../../services/Axios"
+import { get, post, put, request } from "../../services/Axios"
 import { Modal } from "flowbite-react"
 import { InputFile } from "../input/InputFile"
 import { Button } from "../button/Button"
@@ -38,10 +38,10 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
 
     useEffect(() => {
         let fetchCastracoes = async ()=>{
-            let response=await get<EsperaCastracao[]>('/castration/waitingList', {}, {})
-            setData(response?.data)
+            let response=await request<EsperaCastracao[]>('get','/castration/waitingList')
+            setData(response||[])
         }
-        console.log('chamou dataprops: ', dataProps);
+        console.log('montou table wait list')
         if (dataProps) {
             setData(dataProps)
         }
@@ -51,7 +51,7 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         if (permiteAlterarFaixaPreco && faixaValores.length===0) {
             getFaixasPreco()
         }
-    }, [dataProps, remote])
+    }, [dataProps, remote, permiteAlterarFaixaPreco])
     const atualizarSituacaoFaixaPreco = (idSolicitacao:number, idFaixa:number) =>{
         put('/faixapreco/solicitacaoCastracao/'+idSolicitacao,{},{},{idFaixa:idFaixa}).then(x=>{
             refresh && refresh()
@@ -70,8 +70,8 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         return 0
     }, [])
     const getFaixasPreco = async () => {
-        let response=await get<FaixaValor[]>('/faixapreco', {}, {})
-        let data=response?.data;
+        let response=await request<FaixaValor[]>('get','/faixapreco')
+        let data=response || []
         data.unshift({id:0,descricao:'Não Informado', valor:'0'})
         setFaixaValores(data)
     }
@@ -125,7 +125,6 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         }
     }
     const renderPriceRange = (row: EsperaCastracao) => {
-        console.log('idfaixa: ',row.idFaixa);
         
         return (
             <InputCombobox 

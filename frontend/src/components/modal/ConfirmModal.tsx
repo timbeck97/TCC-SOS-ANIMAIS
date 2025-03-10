@@ -8,10 +8,7 @@ export const ConfirmModal = ({ show, confirm, close, title, text }: {
     title?: string,
     text?: string
 }) => {
-    useEffect(()=>{
-        console.log('alterou valor de show');
-        
-    },[show])
+   
     return (
         <Modal show={show} size="3xl" onClose={()=>close()} position="top-center">
             <Modal.Header >

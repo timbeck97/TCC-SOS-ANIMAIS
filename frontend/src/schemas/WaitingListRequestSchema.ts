@@ -4,7 +4,7 @@ export const WaitingListRequestSchema = z.object({
     nome: z.string().min(1, {message: 'Campo obrigatório'}),
     sobrenome: z.string().min(1, {message: 'Campo obrigatório'}),
     cpf: z.string().refine((cpf) => validarCPF(cpf), {message: "CPF inválido"}),
-    telefone: z.string().min(1, {message: 'Campo obrigatório'}),
+    telefone: z.string().min(1, {message: 'O telefone deve ter 11 dígitos.'}).regex(/^\d{11}$/,'Número de telefone inválido.',),
     rua: z.string().min(1, {message: 'Campo obrigatório'}),
     numero: z.string().min(1, {message: 'Campo obrigatório'}),
     bairro: z.string().min(1, {message: 'Campo obrigatório'}),
@@ -16,7 +16,8 @@ export const WaitingListRequestSchema = z.object({
     descricaoAnimal: z.string().optional(),
     porteAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
     formaPagamento: z.string().min(1, {message: 'Campo obrigatório'}),
-    idFaixa:z.string().optional(),
+    idFaixa:z.string().nullable().optional(),
+    urlImagem:z.string().nullable().optional()
 })
 function validarCPF(cpf:string) {
     cpf = cpf.replace(/[^\d]/g, "");

@@ -37,9 +37,9 @@ public class CastrationController {
     public ResponseEntity<CastrationDto> findCastration(@PathVariable Long id){
         return ResponseEntity.ok(castrationService.findOne(id));
     }
-    @PostMapping("/waitingList/{id}/paymentReceipt")
-    public ResponseEntity<?> sendPaymentReceipt(@PathVariable Long id, @RequestPart("file") MultipartFile file){
-        castrationService.savePaymentReceipt(id,file);
+    @PostMapping("/waitingList/{id}/payment")
+    public ResponseEntity<?> sendPaymentReceipt(@PathVariable Long id, @RequestPart(value = "file", required = false) MultipartFile file){
+        castrationService.savePayment(id,file);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/waitingList")
@@ -57,6 +57,10 @@ public class CastrationController {
     @DeleteMapping("/waitingList/{id}")
     public ResponseEntity<?> deleteWaitingList(@PathVariable Long id){
         return castrationService.deleteRequest(id);
+    }
+    @PutMapping("/waitingList/{id}")
+    public ResponseEntity<CastrationRequestDto> update(@PathVariable Long id, @RequestBody CastrationRequestDto dto){
+        return ResponseEntity.ok(castrationService.saveCastrationRequest(dto, id, null));
     }
 
 }

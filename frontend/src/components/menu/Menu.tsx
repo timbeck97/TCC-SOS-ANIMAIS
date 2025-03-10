@@ -1,33 +1,19 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContextInterface';
-import { FaPaw } from 'react-icons/fa';
+import { FaChartLine, FaList, FaPaw, FaRegClock } from 'react-icons/fa';
 import user from '../../assets/user.png'
 import { Dropdown } from 'flowbite-react';
 import { isAutenticado, login, logout } from '../../services/AuthRequest';
+import { LuDog } from 'react-icons/lu';
+import { useDevice } from '../../context/DeviceContext';
 export const Menu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const { isMobile } = useDevice();
     const navigate = useNavigate();
 
-    useEffect(() => {
-
-        const handleResize = () => {
-            if (window.innerWidth < 768) {
-                setIsMobile(true);
-            } else {
-                setIsMobile(false);
-                setIsOpen(false)
-            }
-
-        }
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+   
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -62,22 +48,29 @@ export const Menu = () => {
         )
     }
     const renderMenusDesktop = () => {
+        let defaultCss='text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium flex items-center gap-1'
+        let active='border-b-2 border-gray-400'
         return (
             <ul className="flex justify-center items-center gap-x-10">
                 <li>
-                    <NavLink to="/solicitarCastracao" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
-                        Solicitar Castração
+                    <NavLink to="/solicitarCastracao" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
+                    <LuDog/>Solicitar Castração
                     </NavLink>
                 </li>
                 {isAutenticado() && <>
                     <li>
-                        <NavLink to="/gerenciar/filaEspera" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
-                            Lista de Espera
+                        <NavLink to="/gerenciar/filaEspera" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
+                            <FaRegClock/>Lista de Espera
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/gerenciar/castracoes" className={'text-md text-white font-bold hover:scale-105 transition-transform duration-300 poppins-medium'} end>
-                            Castrações
+                        <NavLink to="/gerenciar/castracoes" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
+                            <FaList />Castrações
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/gerenciar/dashboard" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
+                            <FaChartLine/>Indicadores
                         </NavLink>
                     </li>
                 </>
@@ -109,8 +102,8 @@ export const Menu = () => {
     const renderItensDropDownUser = () => {
         let itens: ReactElement[] = []
         if (isAutenticado()) {
-            itens.push(<Dropdown.Item key={1} onClick={logout}>Logout</Dropdown.Item>)
             itens.push(<Dropdown.Item key={2} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
+            itens.push(<Dropdown.Item key={1} onClick={logout}>Sair</Dropdown.Item>)
         } else {
             itens.push(<Dropdown.Item key={3} onClick={login}>Login</Dropdown.Item>)
 

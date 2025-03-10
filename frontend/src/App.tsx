@@ -5,6 +5,7 @@ import { AuthProvider, useAuthContext } from './context/AuthContextInterface';
 import { ModalProvider } from './context/ModalContext';
 import GenericModal from './components/modal/GenericModal';
 import { fetchToken } from './services/AuthRequest';
+import { DeviceProvider } from './context/DeviceContext';
 
 const Wrapper = (props: any) => {
    useEffect(() => {
@@ -13,20 +14,6 @@ const Wrapper = (props: any) => {
           
           if (code) {
               fetchToken(code);
-          } else {
-              let stringTk=localStorage.getItem('token')
-              if(stringTk){
-                  let tk=JSON.parse(stringTk);
-                  if(tk){
-                      let token:any = {
-                          token: tk.token,
-                          refreshToken: tk.refreshToken,
-                          tokenId: tk.tokenId
-                      }
-                      localStorage.setItem("token", JSON.stringify(token))
-
-                  }
-              }
           }
   
       }, []);
@@ -40,14 +27,16 @@ const Wrapper = (props: any) => {
 function App() {
   return (
     <div className="App">
-      <ModalProvider>
-        {/* <AuthProvider> */}
-          <Wrapper>
-            <Routes />
-          </Wrapper>
-        {/* </AuthProvider> */}
-        <GenericModal />
-      </ModalProvider>
+      <DeviceProvider>
+        <ModalProvider>
+          {/* <AuthProvider> */}
+            <Wrapper>
+              <Routes />
+            </Wrapper>
+          {/* </AuthProvider> */}
+          <GenericModal />
+        </ModalProvider>
+      </DeviceProvider>
     </div>
   );
 }

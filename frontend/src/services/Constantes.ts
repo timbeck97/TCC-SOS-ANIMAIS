@@ -20,7 +20,7 @@ export const SITUACOES = [
     { label: 'Em andamento', value: 'EM_ANDAMENTO' },
     { label: 'Finalizada', value: 'FINALIZADA' }]
 export const FORMA_PAGAMENTO = [
-    { label: 'Selecione', value: '' },
+    { label: 'Selecione', value: null },
     { label: 'Dinheiro', value: 'DINHEIRO' },
     { label: 'PIX', value: 'PIX' },
     { label: 'Castração Solidária', value: 'CASTRACAO_SOLIDARIA' },

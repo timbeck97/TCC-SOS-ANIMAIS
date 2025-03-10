@@ -9,9 +9,11 @@ import org.sos.animais.gestao.factory.CastrationRequestFactory;
 import org.sos.animais.gestao.model.Castration;
 import org.sos.animais.gestao.model.CastrationFile;
 import org.sos.animais.gestao.model.CastrationRequest;
+import org.sos.animais.gestao.model.PriceRange;
 import org.sos.animais.gestao.repository.CastrationFileRepository;
 import org.sos.animais.gestao.repository.CastrationRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
+import org.sos.animais.gestao.repository.PriceRangeRepository;
 import org.sos.animais.gestao.service.file.FileUploadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +31,15 @@ public class CastrationService {
     private final CastrationRepository castrationRepository;
     private final FileUploadService fileUpload;
     private final CastrationFileRepository castrationFileRepository;
+    private final PriceRangeRepository priceRangeRepository;
 
 
-    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileUploadService fileUpload, CastrationFileRepository castrationFileRepository) {
+    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileUploadService fileUpload, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository) {
         this.castrationRequestRepository = castrationRequestRepository;
         this.castrationRepository = castrationRepository;
         this.fileUpload = fileUpload;
         this.castrationFileRepository = castrationFileRepository;
+        this.priceRangeRepository = priceRangeRepository;
     }
     public List<CastrationDto> findAll(){
         return castrationRepository.findAll().stream().map(this::convertCastrationToDto).toList();
@@ -47,7 +51,7 @@ public class CastrationService {
         return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIs(ERequestSituation.AGUARDANDO).stream().map(this::convertCastrationRequestToDto).toList();
     }
     public CastrationRequestDto findOneRequest(Long id){
-        return castrationRequestRepository.findById(id).map(CastrationRequestDto::new).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        return castrationRequestRepository.findById(id).map(this::convertCastrationRequestToDto).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
     }
     public CastrationRequestTotalDto getTotal(){
         return castrationRequestRepository.countAll();
@@ -87,9 +91,15 @@ public class CastrationService {
         entity.setSituacao(ERequestSituation.FINALIZADA);
         castrationRepository.save(entity);
     }
-    public void savePaymentReceipt(Long id, MultipartFile file){
+    public void savePayment(Long id, MultipartFile file){
         CastrationRequest entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
-        fileUpload.uploadFile(file, Constantes.PAYMENT_RECEIPT_FOLDER, entity, EFileType.COMPROVANTE_PAGAMENTO);
+        if(file!=null){
+            fileUpload.uploadFile(file, Constantes.PAYMENT_RECEIPT_FOLDER, entity, EFileType.COMPROVANTE_PAGAMENTO);
+            entity.setPaga(true);
+        }else{
+            entity.setPaga(true);
+        }
+        castrationRequestRepository.save(entity);
     }
     public CastrationDto convertCastrationToDto(Castration entity){
         CastrationDto dto = new CastrationDto();
@@ -115,17 +125,26 @@ public class CastrationService {
         return dto;
     }
     public CastrationRequestDto saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
-        CastrationRequest entity;
+        CastrationRequest entity=new CastrationRequest();
         if(id!=null){
             entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
-        }else{
-            entity = CastrationRequestFactory.init().withDto(castrationRequestDto).build();
         }
-        entity.setSituacao(ERequestSituation.AGUARDANDO);
-        entity.setDataSolicitacao(new Date());
+        entity = CastrationRequestFactory.init().withEntity(entity).withDto(castrationRequestDto).build();
+        if(castrationRequestDto.getIdFaixa()!=null && castrationRequestDto.getIdFaixa()>0l){
+            PriceRange priceRange = priceRangeRepository.findById(castrationRequestDto.getIdFaixa()).orElseThrow(()->new RuntimeException("PriceRange not found"));
+            entity.setFaixaPreco(priceRange);
+        }
+        if(id==null){
+            entity.setSituacao(ERequestSituation.AGUARDANDO);
+            entity.setDataSolicitacao(new Date());
+        }
         entity = castrationRequestRepository.save(entity);
         if(id==null && file!=null){
-            fileUpload.uploadFile(file,Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
+            CastrationFile castrationFile = fileUpload.uploadFile(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
+            if(castrationFile!=null){
+                entity.setPaga(true);
+                entity = castrationRequestRepository.save(entity);
+            }
         }
         return convertCastrationRequestToDto(entity);
     }

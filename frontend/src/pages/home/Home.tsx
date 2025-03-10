@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "../../services/Axios"
+import { get, request } from "../../services/Axios"
 
 
 export const Home = () => {
@@ -18,8 +18,10 @@ export const Home = () => {
     }
     
     const fazerRequestpublica = async () => {
-        let response=await get<string>('/public',{},{})
-        setData(response?.data)        
+        // let response=await get<string>('/public',{},{})
+        // setData(response?.data)  
+        let response=await request<string>("get",'/public')  
+        setData(response)       
       
     }
 

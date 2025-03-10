@@ -13,7 +13,7 @@ import { Dropdown, Modal } from "flowbite-react"
 import { FaCheck, FaRegFilePdf, FaSearch } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
-import api, { deleteRequest, get, post, put } from "../../services/Axios"
+import api, { deleteRequest, get, post, put, request } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
 import { ConfirmModal } from "../../components/modal/ConfirmModal"
@@ -25,6 +25,8 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { CastrationFormSchema, CastrationFormType } from "../../schemas/CastrationFormSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Subtitle } from "../../components/title/Subtitle"
+import { CastrationAnimals } from "../../components/castrationAnimals/CastrationAnimals"
+import { customTableStyle } from "../../components/castrationAnimals/TableStyle"
 
 
 
@@ -55,56 +57,6 @@ export const Castration = () => {
         quantidadeCaixasGrandes: 0
     })
     const [saveAnimalRemover, setSaveAnimalRemover] = useState<EsperaCastracao | null>(null)
-    const customTableStyle: TableStyles =
-    {
-        rows: {
-            style: {
-                backgroundColor: '#f3f4f6',
-            },
-            highlightOnHoverStyle: {
-                backgroundColor: '#e1e1e1',
-                color: '#000',
-                border: 'none'
-            }
-        },
-
-        cells: {
-            style: {
-                padding: '0.5rem',
-            }
-        },
-
-        headCells: {
-            style: {
-                padding: '0.5rem',
-            }
-        },
-        pagination: {
-            style: {
-                backgroundColor: '#f3f4f6',
-                borderBottom: '1px solid #d2d6dc',
-
-            }
-        },
-        headRow: {
-            style: {
-                backgroundColor: '#f3f4f6',
-
-            }
-        },
-        head: {
-            style: {
-                backgroundColor: '#f3f4f6',
-            }
-        },
-        header: {
-            style: {
-                backgroundColor: '#f3f4f6',
-                padding: '0.5rem',
-            }
-        }
-
-    }
 
     useEffect(() => {
         if (id === 'nova') {
@@ -118,22 +70,22 @@ export const Castration = () => {
 
 
     const getWaitingList = async() => {
-        let response=await get<EsperaCastracao[]>('/castration/waitingList', {}, {})
-        setListsEspera(response.data)
+        let response=await request<EsperaCastracao[]>('get','/castration/waitingList')
+        setListsEspera(response||[])
     }
     const getCastration = async (id: string | number | undefined, callback?: () => void) => {
         if (!id) {
             return;
         }
-        let response = await get<CastrationModel>('/castration/' + id, {}, {})
-        setCastracao(response?.data)
+        let response = await request<CastrationModel>('get','/castration/' + id)
+        setCastracao(response||{} as CastrationModel)
             if (callback) {
                 callback()
             }
     }
     const getCastrations = async () => {
-        let response=await get<CastrationModel[]>('/castration', {}, {})
-        setCastracoes(response?.data)
+        let response=await request<CastrationModel[]>('get','/castration', {}, {})
+        setCastracoes(response||[])
     }
     const concluirCastracao = () => {
         put('/castration/concluir/' + id, {}, {}, {}).then(data => {
@@ -455,9 +407,9 @@ export const Castration = () => {
 
 
                             </div>
-                            <div className="mt-3 gap-3 flex">
+                            <div className="mt-3 space-x-2">
                                 <Button buttonType="submit" text='Cadastrar' icon={<FiPlus />} type="default" />
-                                <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} class="bg-gray-600 text-white px-4 rounded-xl py-1 rounded flex justify-center items-center focus:outline-none focus:ring-2 mb-3 mt-3 " />
+                                <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} class="bg-gray-600 text-white px-4 rounded-xl py-1 rounded focus:outline-none focus:ring-2 mb-3 mt-3 " />
 
                             </div>
                         </div>
@@ -519,7 +471,7 @@ export const Castration = () => {
                     <hr />
                     <div>
                         <Title text='Lista de animais' icon={<FcList size={30} />} />
-                        <TableWaitingList
+                        {/* <TableWaitingList
                             dataProps={castracao?.animais}
                             customTableStyle={customTableStyle}
                             remote={false}
@@ -527,13 +479,18 @@ export const Castration = () => {
                             pagination={false}
                             permiteAlterarFaixaPreco={true}
                             refresh={() => getCastration(castracao.id)}
-                            handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)} />
+                            handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)} /> */}
+                            <CastrationAnimals 
+                            dataProps={castracao?.animais}
+                            refresh={() => getCastration(castracao.id)}
+                            handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)}
+                            />
                     </div>
                 </div>
-                <div className="space-x-2">
-                    <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} icon={<FaRegFilePdf />} type="default" />
-                   {castracao && castracao.situacao==='EM_ANDAMENTO' &&  <Button text="Concluir Castração" onClick={validarConclusao} icon={<FaCheck />} type="success" />}
-                    <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} type="neutral" />
+                <div className="space-x-0 sm:space-x-2">
+                    {castracao && castracao.situacao==='EM_ANDAMENTO' &&  <Button text="Concluir Castração" onClick={validarConclusao} class="w-full sm:w-60 mt-1" icon={<FaCheck />} type="success" />}
+                    <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-60 mt-1" icon={<FaRegFilePdf />} type="default" />
+                    <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
                 </div>
 
                 <ConfirmModal
@@ -562,7 +519,7 @@ export const Castration = () => {
                     <Title text="Castrações SOS Animais" icon={<FcStatistics size={35} />} />
                 </div>
 
-                <Button text="Nova Castração" class="float-right" onClick={() => {
+                <Button text="Nova Castração" class="float-right mt-3" onClick={() => {
                     getWaitingList();
                     navigate('/gerenciar/castracoes/nova')
                     setCastracao({

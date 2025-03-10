@@ -9,14 +9,13 @@ import { InputBoolean } from "../../components/input/InputBoolean";
 import { InputFile } from "../../components/input/InputFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
-
 import { InputNumber } from "../../components/input/InputNumber";
 import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
-
+import { openAlertWarning } from "../../services/Alert";
 
 
 
@@ -143,7 +142,7 @@ export const CastrationRequest = () => {
                             <Input id="telefoneIdx"
                                 label="Telefone"
                                 type="text"
-                                {...register('telefone')}
+                                {...registerWithMask('telefone', '(99) 99999-9999', { autoUnmask: true })}
                                 errors={errors.telefone}
                             />
                         </div>
@@ -255,10 +254,11 @@ export const CastrationRequest = () => {
                 <div className="border-b border-t border-gray-900/10 py-5 mt-5">
                 <h2 className="text-lg/7 font-semibold text-gray-900">Orientações</h2>
                 <p className="mt-2 text-gray-700">
-                    A castração é um procedimento cirúrgico que impede a reprodução do animal. A castração é importante para o controle populacional de cães e gatos e também traz benefícios para a saúde do animal.
+                Confira atentamente os dados antes de enviar a solicitação, especialmente as informações de contato (telefone). 
+                Sua solicitação será adicionada à fila de espera e, assim que uma data for definida para a castração do seu animal, a <strong>SOS Animais entrará em contato por esse número</strong> para fornecer as novas orientações
                 </p>
                 </div>
-
+            
                 {/* <pre className="mt-5">
                         <p className="font-bold">
                             Valores formulário
@@ -287,7 +287,7 @@ export const CastrationRequest = () => {
                     </div>
                 )}
                 <div className="mt-3 flex justify-center">
-                    <button type="submit" className="bg-indigo-500 text-white w-60 px-4 rounded-xl py-2 mb-5 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="submit" className="bg-indigo-500 text-white w-60 px-4 rounded-xl py-2 mb-5 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:w-1/5 w-full">
                         Enviar
                     </button>
                 </div>

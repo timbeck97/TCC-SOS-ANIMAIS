@@ -16,6 +16,6 @@ public interface CastrationRequestRepository extends JpaRepository<CastrationReq
 
     List<CastrationRequest> findAllByCastracaoIsNullAndSituacaoIs(ERequestSituation situacao);
 
-    @Query("SELECT new org.sos.animais.gestao.dto.CastrationRequestTotalDto(count(*), count(case when c.tipoAnimal = 'CACHORRO' then 1  end) as dogs, count(case when c.tipoAnimal = 'GATO' then 1 end) as cats) FROM CastrationRequest c")
+    @Query("SELECT new org.sos.animais.gestao.dto.CastrationRequestTotalDto(count(*), count(case when c.tipoAnimal = 'CACHORRO' then 1  end) as dogs, count(case when c.tipoAnimal = 'GATO' then 1 end) as cats) FROM CastrationRequest c where c.castracao is null")
     CastrationRequestTotalDto countAll();
 }

@@ -49,6 +49,7 @@ public class CastrationRequestDto {
     @NotBlank
     private EPaymentMethod formaPagamento;
     private Long idFaixa;
+    private boolean paga;
 
     public CastrationRequestDto() {
     }
@@ -76,6 +77,7 @@ public class CastrationRequestDto {
         if(c.getFaixaPreco()!=null){
             this.idFaixa=c.getFaixaPreco().getId();
         }
+        this.paga=c.isPaga();
     }
 
     public long getId() {
@@ -252,5 +254,13 @@ public class CastrationRequestDto {
 
     public void setIdFaixa(Long idFaixa) {
         this.idFaixa = idFaixa;
+    }
+
+    public boolean isPaga() {
+        return paga;
+    }
+
+    public void setPaga(boolean paga) {
+        this.paga = paga;
     }
 }

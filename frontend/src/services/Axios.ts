@@ -106,7 +106,8 @@ export const publicPost = async <T>(url: string, data: any, headers: any, callba
     const response = await api.post<T>(url, data, config);
     callback(response?.data);
   } catch (error: any) {
-    if (error.code === "ERR_NETWORK") {
+    console.log(error)
+    if (error.code === "ERR_NETWORK" || error.code=='ERR_BAD_RESPONSE') {
       openModalInstance("Erro na comunicação com o servidor", () => { });
     }
 
@@ -135,6 +136,30 @@ export const deleteRequest = async <T>(url: string, callback: (data: T | undefin
   const response = await api.delete<T>(url, config);
   callback(response?.data);
 }
+export async function request<T>(
+  method: "get" | "post" | "put" | "delete",
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+): Promise<T | null> {
+  try {
+    const response = await api.request<T>({
+      method,
+      url,
+      data,
+      ...config,
+    });
 
+    return response.data;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.warn("Requisição cancelada:", error.message);
+    } else {
+      console.error("Erro na requisição:", error);
+    }
+
+    return null; // Pode retornar null ou lançar um erro, dependendo do seu caso
+  }
+}
 
 export default api;

@@ -4,7 +4,7 @@ import graph from '../../assets/graph.svg'
 import { FcOvertime } from "react-icons/fc";
 import { TableWaitingList } from '../../components/tablewaitingList/TableWaitingList'
 import { Pawbackground } from '../../components/pawbackground/Pawbackground';
-import { get } from '../../services/Axios';
+import { request } from '../../services/Axios';
 import { useEffect, useState } from 'react';
 import { CastrationRequestTotal } from '../../types/CastrationRequestTotal';
 import { Title } from '../../components/title/Title';
@@ -21,9 +21,9 @@ export const WaitingList = () => {
     const [totais, setTotais] = useState<CastrationRequestTotal>({ total: 0, totalCats: 0, totalDogs: 0 });
 
     const getTotais = async () => {
-        let response = await get<CastrationRequestTotal>('/castration/waitingList/totais', {}, {})
-        if(response.data){
-            setTotais(response.data); 
+        let response = await request<CastrationRequestTotal>('get','/castration/waitingList/totais')
+        if(response){
+            setTotais(response); 
         }
     }
     return (

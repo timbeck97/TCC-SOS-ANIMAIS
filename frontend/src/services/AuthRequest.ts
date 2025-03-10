@@ -54,7 +54,7 @@ const updateRefreshToken = async () => {
                     tokenId: data.id_token
                 }
                 localStorage.setItem("token", JSON.stringify(token))
-                console.log('new token exp: ', tokenInfo.exp)
+                console.log('refresh token: new token exp: ', tokenInfo.exp)
                 openAlertSuccess('Token atualizado com sucesso');
 
                 return token
@@ -97,9 +97,10 @@ const fetchToken = async (code: string) => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('DATA TOKEN: ', data);
+            
 
             const tokenInfo = parseJwt(data.access_token);
+            console.log('DATA TOKEN: ', JSON.stringify(tokenInfo));
             const refreshTokenInfo = parseJwt(data.refresh_token);
             let token = {
                 token: data.access_token,
@@ -108,6 +109,7 @@ const fetchToken = async (code: string) => {
                 refreshTokenExpiration: refreshTokenInfo.exp,
                 tokenId: data.id_token
             }
+            console.log('fetch token: token ex: ',JSON.stringify(token))
             localStorage.setItem("token", JSON.stringify(token))
 
             window.history.replaceState({}, document.title, "/");

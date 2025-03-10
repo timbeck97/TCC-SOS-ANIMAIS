@@ -34,9 +34,9 @@ export const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxIn
                  onChange={(e) => {
                     handleChange(e); // Dispara o onChange customizado
                   }}
-                 className="block w-full bg-bgWhite pl-2 py-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm/6 outline-none">
+                 className="block w-full bg-bgWhite pl-2 py-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs  text-sm sm:text-sm/6 outline-none">
                     {comboboxValues?.map((obj, index) => {
-                        return <option key={index} value={obj[valueKey]}>{obj[arrayKey]}</option>
+                        return <option key={index} value={obj[valueKey]?obj[valueKey]:''}>{obj[arrayKey]}</option>
                     })}
                 </select>
                 <p className="text-red-500 text-xs mt-1">
