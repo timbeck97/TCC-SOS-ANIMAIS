@@ -2,7 +2,7 @@ import DataTable, { TableColumn } from "react-data-table-component"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
-import { formatDate, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal } from "../../services/Util"
+import { formatDate, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal, isEmpty } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
 import { post, put, request } from "../../services/Axios"
@@ -16,6 +16,11 @@ import { InputCombobox } from "../input/InputCombobox"
 import { customTableStyle } from "./TableStyle"
 import { LuPencil } from "react-icons/lu"
 import { useNavigate } from "react-router-dom"
+import { useDevice } from "../../context/DeviceContext"
+import { CardAnimal } from "../cards/CardAnimal"
+import { ButtonInterface } from "../../types/ButtonInterface"
+import { CardEsperaCastracao } from "../../types/CardEsperaCastracao"
+import { CardButton } from "../../types/CardButton"
 
 
 
@@ -35,6 +40,7 @@ export const CastrationAnimals = ({ handleSelectRows,
     const [showUploadPagamento, setShowUploadPagamento] = useState(false)
     const [faixaValores, setFaixaValores] = useState<FaixaValor[]>([{ descricao: 'Não Informado', valor: '0' }])
     const [tipoPagamento, setTipoPagamento] = useState<'CONFIRMAR' | 'COMPROVANTE'>('CONFIRMAR')
+    const { isMobile } = useDevice();
     const navigate = useNavigate();
     useEffect(() => {
 
@@ -119,8 +125,8 @@ export const CastrationAnimals = ({ handleSelectRows,
 
     const renderPaymentReceipt = (row: EsperaCastracao) => {
         return <div className="flex items-center space-x-2">
-                {row.paga?<><FcOk size={25} /> <span>Pago</span></>:<><FcCancel size={25} /> <span>Não Pago</span></>}
-            </div>
+            {row.paga ? <><FcOk size={25} /> <span>Pago</span></> : <><FcCancel size={25} /> <span>Não Pago</span></>}
+        </div>
     }
     const renderPriceRange = (row: EsperaCastracao) => {
         return (
@@ -169,6 +175,21 @@ export const CastrationAnimals = ({ handleSelectRows,
             refresh && refresh()
         })
     }
+    const buttonsOptionsCard = (): CardButton[] => {
+        let buttons: CardButton[] = []
+        buttons.push({
+            buttonType: 'button', icon: <FcFolder />, text: 'Pagamento', type: 'neutral', onClick: (row: CardEsperaCastracao) => {
+                setShowUploadPagamento(true)
+                setIdWaitList(row.id)
+            }
+        })
+        buttons.push({ buttonType: 'button', icon: <FaDownload />, text: 'Download Comprovante', isRender: (row: CardEsperaCastracao) => !isEmpty(row.urlComprovante), type: 'neutral', onClick: (row: CardEsperaCastracao) => window.open(row.urlComprovante, "_target") })
+
+        buttons.push({ buttonType: 'button', icon: <FaEdit />, text: 'Editar', type: 'neutral', onClick: (row: CardEsperaCastracao) => navigate('/gerenciar/filaEspera/' + row.id) })
+        buttons.push({ buttonType: 'button', icon: <FaTrashAlt />, text: 'Remover', type: 'neutral', onClick: handleRemoveAnimal ? (row: CardEsperaCastracao) => handleRemoveAnimal(row) : undefined })
+
+        return buttons
+    }
     const renderModalUploadPagamento = () => {
         return (
             <Modal show={showUploadPagamento} onClose={() => setShowUploadPagamento(false)}>
@@ -199,23 +220,29 @@ export const CastrationAnimals = ({ handleSelectRows,
         <div className="overflow-visible">
             {renderModalUploadPagamento()}
             <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
-            <DataTable
-                title={title}
-                columns={columns}
-                data={data}
-                pagination={false}
-                onSelectedRowsChange={handleSelect}
-                defaultSortFieldId='dataSolicitacao'
-                customStyles={customTableStyle}
-                paginationComponentOptions={
-                    {
-                        rowsPerPageText: 'Registros por página',
-                        rangeSeparatorText: 'de',
-                        selectAllRowsItem: true,
-                        selectAllRowsItemText: 'Todos',
+            {isMobile ? <div className="mt-6">
+                {data.map(x => <CardAnimal castracao={x} options={buttonsOptionsCard()} />)}
+            </div>
+                :
+                <DataTable
+                    title={title}
+                    columns={columns}
+                    data={data}
+                    pagination={false}
+                    onSelectedRowsChange={handleSelect}
+                    defaultSortFieldId='dataSolicitacao'
+                    customStyles={customTableStyle}
+                    paginationComponentOptions={
+                        {
+                            rowsPerPageText: 'Registros por página',
+                            rangeSeparatorText: 'de',
+                            selectAllRowsItem: true,
+                            selectAllRowsItemText: 'Todos',
+                        }
                     }
-                }
-            />
+                />
+            }
+
         </div>
     )
 }

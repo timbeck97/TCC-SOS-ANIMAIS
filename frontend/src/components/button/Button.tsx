@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
+import { ButtonInterface } from "../../types/ButtonInterface";
 
-export const Button = (props: { text: string, onClick?: () => void, class?: string, icon?: ReactNode, type?: 'neutral' | 'default'|'success', buttonType?:'button'|'submit' }) => {
+export const Button = (props: ButtonInterface) => {
     const getClass = () => {
         switch (props.type) {
             case 'neutral':

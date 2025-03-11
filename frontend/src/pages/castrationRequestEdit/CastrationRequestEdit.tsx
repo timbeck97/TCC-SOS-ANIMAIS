@@ -244,7 +244,7 @@ export const CastrationRequestEdit = () => {
                 <div className="pb-5 mt-5">
 
                     <h2 className="text-lg/7 font-semibold text-gray-900 mt-2">Dados do Animal</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-1 mt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-x-1 sm:gap-x-6  gap-y-1 mt-3">
 
                         <div className="sm:col-span-1">
                             <InputCombobox id="formaPagamentoIdx"

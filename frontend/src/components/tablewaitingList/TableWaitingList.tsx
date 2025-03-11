@@ -13,6 +13,9 @@ import { openAlertSuccess } from "../../services/Alert"
 import { FaTrashAlt } from "react-icons/fa"
 import { FaixaValor } from "../../types/FaixaValor"
 import { InputCombobox } from "../input/InputCombobox"
+import { useDevice } from "../../context/DeviceContext"
+import { CardAnimal } from "../cards/CardAnimal"
+import { ButtonInterface } from "../../types/ButtonInterface"
 
 
 
@@ -35,11 +38,11 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null)
     const [showUploadPagamento, setShowUploadPagamento] = useState(false)
     const [faixaValores, setFaixaValores] = useState<FaixaValor[]>([])
-
+    const { isMobile } = useDevice();
     useEffect(() => {
-        let fetchCastracoes = async ()=>{
-            let response=await request<EsperaCastracao[]>('get','/castration/waitingList')
-            setData(response||[])
+        let fetchCastracoes = async () => {
+            let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
+            setData(response || [])
         }
         console.log('montou table wait list')
         if (dataProps) {
@@ -48,12 +51,12 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         if (!dataProps && remote) {
             fetchCastracoes()
         }
-        if (permiteAlterarFaixaPreco && faixaValores.length===0) {
+        if (permiteAlterarFaixaPreco && faixaValores.length === 0) {
             getFaixasPreco()
         }
     }, [dataProps, remote, permiteAlterarFaixaPreco])
-    const atualizarSituacaoFaixaPreco = (idSolicitacao:number, idFaixa:number) =>{
-        put('/faixapreco/solicitacaoCastracao/'+idSolicitacao,{},{},{idFaixa:idFaixa}).then(x=>{
+    const atualizarSituacaoFaixaPreco = (idSolicitacao: number, idFaixa: number) => {
+        put('/faixapreco/solicitacaoCastracao/' + idSolicitacao, {}, {}, { idFaixa: idFaixa }).then(x => {
             refresh && refresh()
         })
     }
@@ -70,19 +73,21 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         return 0
     }, [])
     const getFaixasPreco = async () => {
-        let response=await request<FaixaValor[]>('get','/faixapreco')
-        let data=response || []
-        data.unshift({id:0,descricao:'Não Informado', valor:'0'})
+        let response = await request<FaixaValor[]>('get', '/faixapreco')
+        let data = response || []
+        data.unshift({ id: 0, descricao: 'Não Informado', valor: '0' })
         setFaixaValores(data)
     }
     const columns: TableColumn<EsperaCastracao>[] = useMemo(() => {
         let colunas: TableColumn<EsperaCastracao>[] = []
         colunas.push({ name: 'Nome do Requerente', id: 'nomeRequerente', selector: (row: EsperaCastracao) => row.nomeRequerente, sortField: 'nomeRequerente' })
         colunas.push({ name: 'Tipo do Animal', id: 'tipoAnimal', selector: (row: EsperaCastracao) => formatTipoAnimal(row.tipoAnimal), sortable: true })
-        colunas.push({ name: 'Nome/Porte', id: 'nomeAnimal', cell: (row: EsperaCastracao) => <div className="flex flex-col items-center">
-            <span className="font-bold">{row.nomeAnimal}</span>
-            <span>{formatPorteAnimal(row.porteAnimal)}</span>
-        </div> })
+        colunas.push({
+            name: 'Nome/Porte', id: 'nomeAnimal', cell: (row: EsperaCastracao) => <div className="flex flex-col items-center">
+                <span className="font-bold">{row.nomeAnimal}</span>
+                <span>{formatPorteAnimal(row.porteAnimal)}</span>
+            </div>
+        })
         colunas.push({ name: 'Data da Solicitação', id: 'dataSolicitacao', selector: (row: EsperaCastracao) => formatDate(row.dataSolicitacao), sortable: true, sortFunction: orderData })
         colunas.push({ name: 'Pagamento', id: 'formaPagamento', selector: (row: EsperaCastracao) => formatFormaPagamento(row.formaPagamento) })
         if (permiteAlterarFaixaPreco) {
@@ -96,7 +101,7 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
             name: 'Ações', cell: (row: EsperaCastracao) => (
                 <div>
                     <button type="button" onClick={() => setWaitListSelect(row)} >
-                        <FcInfo title="Abri detalhes da solicitação"  className="text-xl md:text-2xl" />
+                        <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
                     </button>
                     {handleRemoveAnimal && <button type="button" onClick={() => handleRemoveAnimal(row)}>
 
@@ -125,18 +130,18 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         }
     }
     const renderPriceRange = (row: EsperaCastracao) => {
-        
+
         return (
-            <InputCombobox 
+            <InputCombobox
                 id="faixaValorIdx"
                 comboboxValues={faixaValores}
                 name="faixaValor"
-                value={row.idFaixa||0}
+                value={row.idFaixa || 0}
                 valueKey="id"
                 arrayKey="descricao"
-                onChange={(e:any)=>atualizarSituacaoFaixaPreco(row.id, e.target.value)}
+                onChange={(e: any) => atualizarSituacaoFaixaPreco(row.id, e.target.value)}
 
-                />
+            />
         )
     }
 
@@ -197,29 +202,34 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
             </Modal>
         )
     }
+   
     return (
-        <div>
+        <div className="space-y-1 sm:space-y-3">
             {renderModalUploadPagamento()}
             <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
-            <DataTable
-                title={title}
-                columns={columns}
-                data={data}
-                pagination={pagination}
-                selectableRows={selectAnimals}
-                onSelectedRowsChange={handleSelect}
-                defaultSortFieldId='dataSolicitacao'
-                customStyles={customTableStyle}
-                selectableRowSelected={rowSelectCritera}
-                paginationComponentOptions={
-                    {
-                        rowsPerPageText: 'Registros por página',
-                        rangeSeparatorText: 'de',
-                        selectAllRowsItem: true,
-                        selectAllRowsItemText: 'Todos',
+            {isMobile ? data.map(x => <CardAnimal castracao={x} />)
+                :
+                <DataTable
+                    title={title}
+                    columns={columns}
+                    data={data}
+                    pagination={pagination}
+                    selectableRows={selectAnimals}
+                    onSelectedRowsChange={handleSelect}
+                    defaultSortFieldId='dataSolicitacao'
+                    customStyles={customTableStyle}
+                    selectableRowSelected={rowSelectCritera}
+                    paginationComponentOptions={
+                        {
+                            rowsPerPageText: 'Registros por página',
+                            rangeSeparatorText: 'de',
+                            selectAllRowsItem: true,
+                            selectAllRowsItemText: 'Todos',
+                        }
                     }
-                }
-            />
+                />
+            }
+
         </div>
     )
 }
