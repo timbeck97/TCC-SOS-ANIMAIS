@@ -21,6 +21,8 @@ import { CardAnimal } from "../cards/CardAnimal"
 import { ButtonInterface } from "../../types/ButtonInterface"
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao"
 import { CardButton } from "../../types/CardButton"
+import { Title } from "../title/Title"
+import { Subtitle } from "../title/Subtitle"
 
 
 
@@ -194,13 +196,13 @@ export const CastrationAnimals = ({ handleSelectRows,
         return (
             <Modal show={showUploadPagamento} onClose={() => setShowUploadPagamento(false)}>
                 <Modal.Header >
-                    Alterar situação do pagamento
+                    <Subtitle text="Alterar situação do pagamento" />
                 </Modal.Header>
                 <Modal.Body>
                     <div>
                         <div>
-                            <button className={"p-2 border-t border-l border-b border-gray-300 rounded-l-md " + (tipoPagamento === 'CONFIRMAR' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('CONFIRMAR')}>Apenas Confirmar Pagamento</button>
-                            <button className={"p-2 border-t border-r border-b border-gray-300 rounded-r-md " + (tipoPagamento === 'COMPROVANTE' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('COMPROVANTE')}>Enviar Comprovante</button>
+                            <button className={"p-2 border-t border-l border-b border-gray-300 rounded-l-md md:text-md text-sm " + (tipoPagamento === 'CONFIRMAR' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('CONFIRMAR')}>Apenas Confirmar Pagamento</button>
+                            <button className={"p-2 border-t border-r border-b border-gray-300 rounded-r-md md:text-md text-sm " + (tipoPagamento === 'COMPROVANTE' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('COMPROVANTE')}>Enviar Comprovante</button>
                         </div>
 
                         {tipoPagamento === 'COMPROVANTE' && <div className="mt-4"><InputFile id="file-upload_pagamento" name="file-upload" label="Anexar Comprovante" value={file} onChange={handleFile} /></div>}

@@ -3,11 +3,11 @@ insert into castration(id,data, observacao, situacao) values (51, '2024-01-02 14
 insert into castration(id,data, observacao, situacao) values (52, '2024-01-03 08:45:00', 'Castração de cachorro', 'EM_ANDAMENTO');
 
 insert into price_range(id, descricao, valor) values
-(1, 'Até 5KG', 70.0),
-(2, '5KG até 10KG', 90.0),
-(3, '10KG até 15KG', 100.0),
-(4, '15KG até 20KG', 110.0),
-(5, '20KG até 25KG', 125.0);
+(600, 'Até 5KG', 70.0),
+(601, '5KG até 10KG', 90.0),
+(602, '10KG até 15KG', 100.0),
+(603, '15KG até 20KG', 110.0),
+(604, '20KG até 25KG', 125.0);
 
 INSERT INTO castration_request (
     id, nome, sobrenome, cpf, telefone, rua, bairro, numero,

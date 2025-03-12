@@ -11,12 +11,15 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      let newValue=window.innerWidth <= 768
+      if(newValue!=isMobile){
+        setIsMobile(newValue);
+      }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile]);
 
   return (
     <DeviceContext.Provider value={{ isMobile }}>

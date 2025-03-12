@@ -4,53 +4,84 @@ import { get, request } from "../../services/Axios"
 
 export const Home = () => {
 
-    const [data, setData] = useState<string|null>('')
+    const [data, setData] = useState<string | null>('')
 
-    const fazerRequestPrivada = async (path:string|undefined) => {
-        let  pathUrl= '/private'
-        if(path){
+    const fazerRequestPrivada = async (path: string | undefined) => {
+        let pathUrl = '/private'
+        if (path) {
             pathUrl = `/private/${path}`
         }
         console.log(pathUrl);
-        
-        let response=await get<string>(pathUrl,{},{})
-        setData(response?.data) 
+
+        let response = await get<string>(pathUrl, {}, {})
+        setData(response?.data)
     }
-    
+
     const fazerRequestpublica = async () => {
         // let response=await get<string>('/public',{},{})
         // setData(response?.data)  
-        let response=await request<string>("get",'/public')  
-        setData(response)       
-      
+        let response = await request<string>("get", '/public')
+        setData(response)
+
     }
 
     return (
-        <div style={{overflowY:"auto", flex:'1'}}>
-            <h1 className="text-4xl text-center">Bem-vindo ao sistema de castrações</h1>
-            <p className="text-xl text-center mt-5">Aqui você
-                pode solicitar a castração de seu animal de estimação e acompanhar a fila de espera.</p>
-            <div className="flex w-1/5 m-auto flex-col">
-                <button className="bg-green-400 rounded rounded-lg p-2 text-white mt-3" onClick={fazerRequestpublica}>
-                    Teste requisicao publica
-                </button>
-                <button className="bg-red-400 rounded rounded-lg p-2 text-white mt-3" onClick={()=>fazerRequestPrivada(undefined)}>
-                    Teste requisicao privada
-                </button>
-                <button className="bg-red-400 rounded rounded-lg p-2 text-white mt-3" onClick={()=>fazerRequestPrivada('admin')}>
-                    Teste requisicao privada Admin
-                </button>
-                <button className="bg-red-400 rounded rounded-lg p-2 text-white mt-3" onClick={()=>fazerRequestPrivada('user')}>
-                    Teste requisicao privada User
-                </button>
+        <div style={{ overflowY: "auto", flex: '1' }}>
+            <div className="font-sans bg-gray-50">
                
-                
+
+                <section className="bg-cover bg-center h-96" style={{ backgroundImage: "url('https://via.placeholder.com/1500x800')" }}>
+                    <div className="flex justify-center items-center h-full bg-black bg-opacity-50">
+                        <h2 className="text-white text-4xl font-bold text-center">Castração Gratuita para Animais Resgatados da Rua</h2>
+                    </div>
+                </section>
+                <section className="py-16 px-4 bg-white">
+                    <div className="container mx-auto text-center">
+                        <h2 className="text-3xl font-bold text-blue-600 mb-4">Sobre a nossa ONG</h2>
+                        <p className="text-lg text-gray-700 mb-8">
+                            A ONG SOS Animais é dedicada ao resgate, cuidado e bem-estar dos animais abandonados. Trabalhamos para garantir que
+                            todos os animais tenham uma vida digna, oferecendo serviços de castração gratuita para os animais resgatados da rua.
+                        </p>
+                    </div>
+                </section>
+
+
+                <section className="py-16 bg-gray-100">
+                    <div className="container mx-auto text-center">
+                        <h2 className="text-3xl font-bold text-blue-600 mb-8">Nossos Serviços</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="bg-white p-6 shadow-lg rounded-lg">
+                                <h3 className="text-xl font-semibold text-blue-600 mb-4">Castração Gratuita</h3>
+                                <p className="text-gray-700">Realizamos castração gratuita para animais que foram resgatados da rua. Agende a sua solicitação agora mesmo!</p>
+                            </div>
+                            <div className="bg-white p-6 shadow-lg rounded-lg">
+                                <h3 className="text-xl font-semibold text-blue-600 mb-4">Adoção Responsável</h3>
+                                <p className="text-gray-700">Oferecemos animais para adoção responsável, todos cuidados e prontos para encontrar uma nova família.</p>
+                            </div>
+                            <div className="bg-white p-6 shadow-lg rounded-lg">
+                                <h3 className="text-xl font-semibold text-blue-600 mb-4">Educação e Conscientização</h3>
+                                <p className="text-gray-700">Promovemos programas educacionais para conscientizar sobre a importância do bem-estar animal e controle populacional.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="py-16 px-4 text-center bg-blue-500 text-white">
+                    <h2 className="text-3xl font-bold mb-4">Solicite uma Castração</h2>
+                    <p className="mb-6">Se o seu animal foi resgatado da rua, ele pode ser castrado gratuitamente. Clique abaixo para fazer a solicitação.</p>
+                    <a href="/solicitar-castracao" className="bg-white text-blue-500 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition duration-300">
+                        Solicitar Castração
+                    </a>
+                </section>
+
+                <footer className="bg-gray-800 text-white py-6">
+                    <div className="container mx-auto text-center">
+                        <p>&copy; 2025 ONG SOS Animais. Todos os direitos reservados.</p>
+                       
+                    </div>
+                </footer>
             </div>
 
-            <div className="mt-5">
-                <p className="text-center font-bold">{data}</p>
-            </div>
-            
         </div>
     )
 }

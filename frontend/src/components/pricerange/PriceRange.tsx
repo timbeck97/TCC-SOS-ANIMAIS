@@ -7,7 +7,7 @@ import { Button } from "../../components/button/Button";
 import { VscTrash } from "react-icons/vsc";
 import { GoPencil } from "react-icons/go";
 import { Subtitle } from "../../components/title/Subtitle";
-import { deleteRequest, get, post } from "../../services/Axios";
+import { deleteRequest, get, post, request } from "../../services/Axios";
 
 export const PriceRange = () => {
     useEffect(() => {
@@ -35,14 +35,14 @@ export const PriceRange = () => {
         setFaixaValor(faixa);
         setShowAdicionarFaixaPreco(true);
     }
-    const adicionarFaixaValor = () => {
-        post<FaixaValor>('/faixapreco', faixaValor, {}, (data) => {
-            let valores = listaValores
-            valores.push(data)
-            setListaValores(valores);
-            setShowAdicionarFaixaPreco(false)
-            setFaixaValor({ descricao: '', valor: '' })
-        })
+    const adicionarFaixaValor = async () => {
+        const req=faixaValor.id?'put':'post'
+        const url=faixaValor.id?'/faixapreco/'+faixaValor.id:'/faixapreco'
+        let result = await request<FaixaValor>(req, url, faixaValor)
+        if(!result)return;
+        setShowAdicionarFaixaPreco(false)
+        setFaixaValor({} as FaixaValor)
+        carregarFaixas();
     }
     const formatValue = (valorString: string) => {
         const valor = parseFloat(valorString);
@@ -66,7 +66,7 @@ export const PriceRange = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaValores.map((row, index) => (
+                            {listaValores && listaValores.map((row, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
                                     <td className="border border-gray-300 px-4 py-2">{row.descricao}</td>
                                     <td className="border border-gray-300 px-4 py-2">{formatValue(row.valor)}</td>
@@ -89,7 +89,7 @@ export const PriceRange = () => {
             </div>
             <Modal show={showAdicionarFaixaPreco} onClose={() => setShowAdicionarFaixaPreco(false)}>
                 <Modal.Header >
-                    Cadastrar nova faixa de valor
+                    Faixa de valor
                 </Modal.Header>
                 <Modal.Body>
                     <div>

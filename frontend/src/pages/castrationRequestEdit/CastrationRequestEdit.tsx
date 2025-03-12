@@ -272,7 +272,7 @@ export const CastrationRequestEdit = () => {
                 </div>
 
 
-                <pre className="mt-5">
+                {/* <pre className="mt-5">
                     <p className="font-bold">
                         Valores formulário
                     </p>
@@ -294,7 +294,7 @@ export const CastrationRequestEdit = () => {
                     <p>FILE: {file?.fileName}</p>
                     <p>Forma de Pagamento: {formValues.formaPagamento}</p>
                     <p>ID faixa valor: {formValues.idFaixa}</p>
-                </pre>
+                </pre> */}
 
                 {!isValid && isSubmitted && (
                     <div className="mb-4 p-3 bg-red-50 text-red-700 mt-3 border border-red-200 rounded-lg">

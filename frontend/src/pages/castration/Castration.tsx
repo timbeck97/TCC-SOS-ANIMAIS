@@ -487,7 +487,7 @@ export const Castration = () => {
                             />
                     </div>
                 </div>
-                <div className="space-x-0 sm:space-x-2">
+                <div className="space-x-0 sm:space-x-2 mt-4 sm:mt-1">
                     {castracao && castracao.situacao==='EM_ANDAMENTO' &&  <Button text="Concluir Castração" onClick={validarConclusao} class="w-full sm:w-60 mt-1" icon={<FaCheck />} type="success" />}
                     <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-60 mt-1" icon={<FaRegFilePdf />} type="default" />
                     <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
