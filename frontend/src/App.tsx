@@ -6,17 +6,9 @@ import { ModalProvider } from './context/ModalContext';
 import GenericModal from './components/modal/GenericModal';
 import { fetchToken } from './services/AuthRequest';
 import { DeviceProvider } from './context/DeviceContext';
+import { TokenAuth } from './types/TokenAuth';
 
 const Wrapper = (props: any) => {
-   useEffect(() => {
-          const urlParams = new URLSearchParams(window.location.search);
-          const code = urlParams.get("code");
-          
-          if (code) {
-              fetchToken(code);
-          }
-  
-      }, []);
   return (
     <div className='flex flex-col min-h-0 h-full grow'>
       {props.children}
@@ -29,11 +21,11 @@ function App() {
     <div className="App">
       <DeviceProvider>
         <ModalProvider>
-          {/* <AuthProvider> */}
+          <AuthProvider>
             <Wrapper>
               <Routes />
             </Wrapper>
-          {/* </AuthProvider> */}
+          </AuthProvider>
           <GenericModal />
         </ModalProvider>
       </DeviceProvider>

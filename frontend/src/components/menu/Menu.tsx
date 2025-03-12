@@ -12,6 +12,7 @@ export const Menu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { isMobile } = useDevice();
     const navigate = useNavigate();
+    const {isAutenticated} = useAuthContext()
 
    
 
@@ -33,7 +34,7 @@ export const Menu = () => {
                     }
                 >
 
-                    {isAutenticado() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
+                    {isAutenticated() ? <Dropdown.Item onClick={logout}>Logout</Dropdown.Item> : <Dropdown.Item onClick={login}>Login</Dropdown.Item>}
                 </Dropdown>
                 <div
                     className={`cursor-pointer ml-4`}
@@ -57,7 +58,7 @@ export const Menu = () => {
                     <LuDog/>Solicitar Castração
                     </NavLink>
                 </li>
-                {isAutenticado() && <>
+                {isAutenticated() && <>
                     <li>
                         <NavLink to="/gerenciar/filaEspera" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
                             <FaRegClock/>Lista de Espera
@@ -101,7 +102,7 @@ export const Menu = () => {
     }
     const renderItensDropDownUser = () => {
         let itens: ReactElement[] = []
-        if (isAutenticado()) {
+        if (isAutenticated()) {
             itens.push(<Dropdown.Item key={2} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
             itens.push(<Dropdown.Item key={1} onClick={logout}>Sair</Dropdown.Item>)
         } else {
@@ -137,7 +138,7 @@ export const Menu = () => {
                             Solicitar Castração
                         </NavLink>
                     </li>
-                    {isAutenticado() && <>
+                    {isAutenticated() && <>
                         <li className='w-full' onClick={toggleMenu}>
                             <NavLink to="/gerenciar/filaEspera" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                 Lista de Espera

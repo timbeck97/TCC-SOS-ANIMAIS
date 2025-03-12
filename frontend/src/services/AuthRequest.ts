@@ -1,3 +1,4 @@
+import { TokenAuth } from "../types/TokenAuth";
 import { openAlertSuccess } from "./Alert";
 import { openModalInstance } from "./ModalTrigger";
 
@@ -15,7 +16,7 @@ const login = () => {
     const authUrl = `${KEYCLOAK_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid`;
     window.location.href = authUrl;
 }
-const updateRefreshToken = async () => {
+const updateRefreshToken = async ():Promise<TokenAuth> => {
     console.log('refreshh promisse: ', refreshPromise);
 
     if (refreshPromise) return refreshPromise;
@@ -68,17 +69,20 @@ const updateRefreshToken = async () => {
                         login();
                     });
                 }
+                return null;
+
 
             }
         } catch (error) {
-            console.error("Erro ao atualizar o token de acesso:", error);
+            console.error("Erro ao atualizar o token:", error);
+            throw error; 
         } finally {
             refreshPromise = null;
         }
     })();
     return refreshPromise;
 }
-const fetchToken = async (code: string) => {
+const fetchToken = async (code: string):Promise<TokenAuth|null> => {
     try {
         const response = await fetch(KEYCLOAK_TOKEN_URL, {
             method: "POST",
@@ -102,7 +106,7 @@ const fetchToken = async (code: string) => {
             const tokenInfo = parseJwt(data.access_token);
             console.log('DATA TOKEN: ', JSON.stringify(tokenInfo));
             const refreshTokenInfo = parseJwt(data.refresh_token);
-            let token = {
+            let token:TokenAuth = {
                 token: data.access_token,
                 tokenExpiration: tokenInfo.exp,
                 refreshToken: data.refresh_token,
@@ -113,15 +117,14 @@ const fetchToken = async (code: string) => {
             localStorage.setItem("token", JSON.stringify(token))
 
             window.history.replaceState({}, document.title, "/");
-            window.location.reload();
+            return token;
         } else {
-            console.error("Erro ao obter o token");
+            return null;
         }
     } catch (error) {
         console.error("Erro ao trocar o código pelo token:", error);
-    } finally {
-
-    }
+        throw error;    
+    } 
 };
 const parseJwt = (token: string) => {
     try {

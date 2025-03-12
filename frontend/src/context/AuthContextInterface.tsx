@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { AuthContextInterface } from '../types/AuthContext';
 import { openAlertSuccess } from '../services/Alert';
 import { openModalInstance } from '../services/ModalTrigger';
+import { fetchToken } from '../services/AuthRequest';
+import { TokenAuth } from '../types/TokenAuth';
 
 
 
@@ -15,14 +17,9 @@ const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
 
 
-    const [token, setToken] = useState<{
-        token: string
-        refreshToken: string
-        tokenId: string
-    }|null>(null);
+    const [token, setToken] = useState<TokenAuth|null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    let refreshPromise: Promise<any> | null = null;
 
 
     useEffect(() => {
@@ -30,141 +27,137 @@ export const AuthProvider = ({ children }: any) => {
         const code = urlParams.get("code");
         
         if (code) {
-            fetchToken(code);
+            fetchTokenAuth(code);
         } else {
             let stringTk=localStorage.getItem('token')
             if(stringTk){
-                let tk=JSON.parse(stringTk);
+                console.log('string do token: ',stringTk)
+                let tk=JSON.parse(JSON.stringify(stringTk));
                 if(tk){
-                    let token:any = {
-                        token: tk.token,
-                        refreshToken: tk.refreshToken,
-                        tokenId: tk.tokenId
-                    }
-                    localStorage.setItem("token", JSON.stringify(token))
-                    setToken(token);
+                    setToken(JSON.parse(tk));
                 }
             }
-            
-            
             setLoading(false);
-
         }
 
     }, []);
 
-    
-  
-    const login = () => {
-        const authUrl = `${KEYCLOAK_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid`;
-        window.location.href = authUrl;
+    const fetchTokenAuth = async (code:string)=>{
+        const token:TokenAuth|null = await fetchToken(code);
+        setToken(token);
+        setLoading(false)
     }
-    const updateRefreshToken = async () => {
-        console.log('refreshh promisse: ',refreshPromise);
+  
+    // const login = () => {
+    //     const authUrl = `${KEYCLOAK_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid`;
+    //     window.location.href = authUrl;
+    // }
+    // const updateRefreshToken = async () => {
+    //     console.log('refreshh promisse: ',refreshPromise);
         
-        if (refreshPromise) return refreshPromise;
+    //     if (refreshPromise) return refreshPromise;
         
-        refreshPromise = (async () => {
-            try {
+    //     refreshPromise = (async () => {
+    //         try {
             
-                const response = await fetch(KEYCLOAK_TOKEN_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: new URLSearchParams({
-                        grant_type: "refresh_token",
-                        client_id: CLIENT_ID,
-                        client_secret: CLIENT_SECRET,
-                        refresh_token: token?.refreshToken || "",
-                    }),
+    //             const response = await fetch(KEYCLOAK_TOKEN_URL, {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //                 body: new URLSearchParams({
+    //                     grant_type: "refresh_token",
+    //                     client_id: CLIENT_ID,
+    //                     client_secret: CLIENT_SECRET,
+    //                     refresh_token: token?.refreshToken || "",
+    //                 }),
                    
-                });
+    //             });
              
                 
-                if (response.ok) {
-                    const data = await response.json();
+    //             if (response.ok) {
+    //                 const data = await response.json();
                     
-                    console.log('data refresj: ',data)
+    //                 console.log('data refresj: ',data)
                     
-                    const tokenInfo = parseJwt(data.access_token);
-                    const refreshTokenInfo = parseJwt(data.refresh_token);
-                    let token = {
-                        token: data.access_token,
-                        tokenExpiration: tokenInfo.exp,
-                        refreshToken: data.refresh_token,
-                        refreshTokenExpiration: refreshTokenInfo.exp,
-                        tokenId: data.id_token
-                    }
-                    localStorage.setItem("token", JSON.stringify(token))
-                    console.log('new token exp: ',tokenInfo.exp)
-                    openAlertSuccess('Token atualizado com sucesso');
-                    // setToken(token);
-                     return token
-                } else {
-                    console.error("Erro ao atualizar o token de acesso");
-                    let body = await response.json();
-                    console.error('body', body);
-                    if(body.error === 'invalid_grant'){
-                        openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
-                            localStorage.removeItem("token");
-                            login();
-                        });
-                    }
+    //                 const tokenInfo = parseJwt(data.access_token);
+    //                 const refreshTokenInfo = parseJwt(data.refresh_token);
+    //                 let token = {
+    //                     token: data.access_token,
+    //                     tokenExpiration: tokenInfo.exp,
+    //                     refreshToken: data.refresh_token,
+    //                     refreshTokenExpiration: refreshTokenInfo.exp,
+    //                     tokenId: data.id_token
+    //                 }
+    //                 localStorage.setItem("token", JSON.stringify(token))
+    //                 console.log('new token exp: ',tokenInfo.exp)
+    //                 openAlertSuccess('Token atualizado com sucesso');
+    //                 // setToken(token);
+    //                  return token
+    //             } else {
+    //                 console.error("Erro ao atualizar o token de acesso");
+    //                 let body = await response.json();
+    //                 console.error('body', body);
+    //                 if(body.error === 'invalid_grant'){
+    //                     openModalInstance("Sessão expirada, é necessário realizar o login novamente", () => { 
+    //                         localStorage.removeItem("token");
+    //                         login();
+    //                     });
+    //                 }
                     
-                }
-            } catch (error) {
-                console.error("Erro ao atualizar o token de acesso:", error);
-            }finally{
-                refreshPromise=null;
-            }
-        })();
-        return refreshPromise;
-    }
-    const fetchToken = async (code: string) => {
-        try {
-            const response = await fetch(KEYCLOAK_TOKEN_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: new URLSearchParams({
-                    grant_type: "authorization_code",
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET,
-                    code,
-                    redirect_uri: REDIRECT_URI,
-                }),
-                credentials: "omit", 
-            });
+    //             }
+    //         } catch (error) {
+    //             console.error("Erro ao atualizar o token de acesso:", error);
+    //         }finally{
+    //             refreshPromise=null;
+    //         }
+    //     })();
+    //     return refreshPromise;
+    // }
+    // const fetchToken = async (code: string) => {
+    //     try {
+    //         const response = await fetch(KEYCLOAK_TOKEN_URL, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/x-www-form-urlencoded",
+    //             },
+    //             body: new URLSearchParams({
+    //                 grant_type: "authorization_code",
+    //                 client_id: CLIENT_ID,
+    //                 client_secret: CLIENT_SECRET,
+    //                 code,
+    //                 redirect_uri: REDIRECT_URI,
+    //             }),
+    //             credentials: "omit", 
+    //         });
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('DATA TOKEN: ',data);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             console.log('DATA TOKEN: ',data);
                 
-                const tokenInfo = parseJwt(data.access_token);
-                const refreshTokenInfo = parseJwt(data.refresh_token);
-                let token = {
-                    token: data.access_token,
-                    tokenExpiration: tokenInfo.exp,
-                    refreshToken: data.refresh_token,
-                    refreshTokenExpiration: refreshTokenInfo.exp,
-                    tokenId: data.id_token
-                }
-                localStorage.setItem("token", JSON.stringify(token))
-                setToken(token);
+    //             const tokenInfo = parseJwt(data.access_token);
+    //             const refreshTokenInfo = parseJwt(data.refresh_token);
+    //             let token = {
+    //                 token: data.access_token,
+    //                 tokenExpiration: tokenInfo.exp,
+    //                 refreshToken: data.refresh_token,
+    //                 refreshTokenExpiration: refreshTokenInfo.exp,
+    //                 tokenId: data.id_token
+    //             }
+    //             localStorage.setItem("token", JSON.stringify(token))
+    //             setToken(token);
 
 
-                window.history.replaceState({}, document.title, "/");
-            } else {
-                console.error("Erro ao obter o token");
-            }
-        } catch (error) {
-            console.error("Erro ao trocar o código pelo token:", error);
-        } finally{
-            setLoading(false);
-        }
-    };
+    //             window.history.replaceState({}, document.title, "/");
+    //         } else {
+    //             console.error("Erro ao obter o token");
+    //         }
+    //     } catch (error) {
+    //         console.error("Erro ao trocar o código pelo token:", error);
+    //     } finally{
+    //         setLoading(false);
+    //     }
+    // };
     const parseJwt = (token: string) => {
         try {
             const base64Url = token.split(".")[1];
@@ -181,7 +174,6 @@ export const AuthProvider = ({ children }: any) => {
         window.location.href = logoutUrl;
     };
     const isAutenticated = useCallback(() => {
-        
         return !!token
     }, [token]);
     // const isAutenticated = useCallback(() => {
@@ -191,7 +183,7 @@ export const AuthProvider = ({ children }: any) => {
 
 
     return (
-        <AuthContext.Provider value={{ login, isAutenticated, logout, updateRefreshToken, loading }}>
+        <AuthContext.Provider value={{isAutenticated, loading}}>
             {children}
         </AuthContext.Provider>
     );
