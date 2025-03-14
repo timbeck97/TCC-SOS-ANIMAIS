@@ -55,12 +55,17 @@ public class CastrationController {
         return ResponseEntity.ok(castrationService.getTotal());
     }
     @DeleteMapping("/waitingList/{id}")
-    public ResponseEntity<?> deleteWaitingList(@PathVariable Long id){
-        return castrationService.deleteRequest(id);
+    public ResponseEntity<?> removeCastration(@PathVariable Long id){
+        return castrationService.removeCastrationRequest(id);
     }
     @PutMapping("/waitingList/{id}")
     public ResponseEntity<CastrationRequestDto> update(@PathVariable Long id, @RequestBody CastrationRequestDto dto){
         return ResponseEntity.ok(castrationService.saveCastrationRequest(dto, id, null));
+    }
+    @DeleteMapping("/waitingList/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        castrationService.deleteCastrationRequest(id);
+        return ResponseEntity.ok().build();
     }
 
 }

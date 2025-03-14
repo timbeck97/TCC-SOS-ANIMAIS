@@ -14,6 +14,7 @@ import org.sos.animais.gestao.repository.CastrationFileRepository;
 import org.sos.animais.gestao.repository.CastrationRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
 import org.sos.animais.gestao.repository.PriceRangeRepository;
+import org.sos.animais.gestao.service.file.FileService;
 import org.sos.animais.gestao.service.file.FileUploadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +30,19 @@ public class CastrationService {
 
     private final CastrationRequestRepository castrationRequestRepository;
     private final CastrationRepository castrationRepository;
-    private final FileUploadService fileUpload;
+    private final FileService fileService;
     private final CastrationFileRepository castrationFileRepository;
     private final PriceRangeRepository priceRangeRepository;
 
-
-    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileUploadService fileUpload, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository) {
+    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileService fileService, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository) {
         this.castrationRequestRepository = castrationRequestRepository;
         this.castrationRepository = castrationRepository;
-        this.fileUpload = fileUpload;
+        this.fileService = fileService;
         this.castrationFileRepository = castrationFileRepository;
         this.priceRangeRepository = priceRangeRepository;
     }
+
+
     public List<CastrationDto> findAll(){
         return castrationRepository.findAll().stream().map(this::convertCastrationToDto).toList();
     }
@@ -56,7 +58,7 @@ public class CastrationService {
     public CastrationRequestTotalDto getTotal(){
         return castrationRequestRepository.countAll();
     }
-    public ResponseEntity<?> deleteRequest(Long id){
+    public ResponseEntity<?> removeCastrationRequest(Long id){
         return castrationRequestRepository.findById(id).map(castrationRequest -> {
             castrationRequest.setCastracao(null);
             castrationRequest.setSituacao(ERequestSituation.AGUARDANDO);
@@ -94,7 +96,7 @@ public class CastrationService {
     public void savePayment(Long id, MultipartFile file){
         CastrationRequest entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
         if(file!=null){
-            fileUpload.uploadFile(file, Constantes.PAYMENT_RECEIPT_FOLDER, entity, EFileType.COMPROVANTE_PAGAMENTO);
+            fileService.uploadFileCastrationRequest(file, Constantes.PAYMENT_RECEIPT_FOLDER, entity, EFileType.COMPROVANTE_PAGAMENTO);
             entity.setPaga(true);
         }else{
             entity.setPaga(true);
@@ -140,12 +142,16 @@ public class CastrationService {
         }
         entity = castrationRequestRepository.save(entity);
         if(id==null && file!=null){
-            CastrationFile castrationFile = fileUpload.uploadFile(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
-            if(castrationFile!=null){
-                entity.setPaga(true);
-                entity = castrationRequestRepository.save(entity);
-            }
+            fileService.uploadFileCastrationRequest(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
         }
         return convertCastrationRequestToDto(entity);
+    }
+    public void deleteCastrationRequest(Long id){
+        CastrationRequest entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        List<CastrationFile> imgFile = castrationFileRepository.findByCastrationRequestId(entity.getId());
+        for (CastrationFile file : imgFile) {
+            fileService.deleteFileCastrationRequest(file);
+        }
+        castrationRequestRepository.delete(entity);
     }
 }

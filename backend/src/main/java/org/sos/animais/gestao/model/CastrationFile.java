@@ -27,6 +27,9 @@ public class CastrationFile implements Serializable {
     @ManyToOne
     private CastrationRequest castrationRequest;
 
+    @Column(columnDefinition = "varchar(30)")
+    private String folder;
+
     public CastrationFile() {
     }
 
@@ -84,5 +87,13 @@ public class CastrationFile implements Serializable {
 
     public void setTipoArquivo(EFileType tipoArquivo) {
         this.tipoArquivo = tipoArquivo;
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
     }
 }

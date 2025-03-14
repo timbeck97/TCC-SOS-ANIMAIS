@@ -24,9 +24,9 @@ public class LocalFileUploadImp implements FileUploadService {
         this.castrationFileRepository = castrationFileRepository;
     }
 
-    public CastrationFile uploadFile(MultipartFile file, String pasta, CastrationRequest castrationRequest, EFileType tipo) {
-        String folderPath = localPath.endsWith("/")?localPath:localPath+"/";
-        folderPath=folderPath+pasta;
+    public String uploadFile(MultipartFile file, String pasta, String fileName) {
+        String folderPath = localPath.endsWith("/") ? localPath : localPath + "/";
+        folderPath = folderPath + pasta;
         File directory = new File(folderPath);
         if (!directory.exists()) {
             boolean mkdirs = directory.mkdirs();
@@ -34,21 +34,30 @@ public class LocalFileUploadImp implements FileUploadService {
                 throw new RuntimeException("Could not create directory");
             }
         }
-        folderPath=folderPath.endsWith("/")?folderPath:folderPath+"/";
-        String randomFileName = java.util.UUID.randomUUID().toString()+"_"+castrationRequest.getId()+"_"+file.getOriginalFilename();
-        File newFile = new File(folderPath + randomFileName);
+        folderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
+        File newFile = new File(folderPath + fileName);
         try {
             file.transferTo(newFile);
-            CastrationFile castrationFile = new CastrationFile();
-            castrationFile.setName(file.getOriginalFilename());
-            castrationFile.setUrl(ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()+"/public/arquivos/"+pasta+"/" + randomFileName);
-            castrationFile.setOrigin(EFileOrigin.LOCAL);
-            castrationFile.setCastrationRequest(castrationRequest);
-            castrationFile.setTipoArquivo(tipo);
-            return castrationFileRepository.save(castrationFile);
+            return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/public/arquivos/" + pasta + "/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Could not save file");
+        }
+    }
+
+    @Override
+    public void deleteFile(String fileName, String folder) {
+        String folderPath = localPath.endsWith("/") ? localPath : localPath + "/";
+        folderPath = folderPath + folder;
+        folderPath = folderPath.endsWith("/") ? folderPath : folderPath + "/";
+        File file = new File(folderPath + fileName);
+        if (file.exists()) {
+            boolean delete = file.delete();
+            if (!delete) {
+                throw new RuntimeException("Could not delete file");
+            }
+        }else{
+            throw new RuntimeException("File not found");
         }
     }
 }

@@ -7,5 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUploadService {
 
-    CastrationFile uploadFile(MultipartFile file, String folder, CastrationRequest castrationRequest, EFileType tipo);
+    String uploadFile(MultipartFile file, String folder, String fileName);
+    void deleteFile(String fileName, String folder);
 }
