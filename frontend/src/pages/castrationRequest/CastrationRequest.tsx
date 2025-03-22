@@ -10,12 +10,12 @@ import { InputFile } from "../../components/input/InputFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 import { InputNumber } from "../../components/input/InputNumber";
-import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import { FORMA_PAGAMENTO, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
-import { openAlertWarning } from "../../services/Alert";
+
 
 
 
@@ -193,7 +193,6 @@ export const CastrationRequest = () => {
                             <Input id="nomeAnimalidx"
                                 label="Nome do Animal"
                                 type="text"
-                                //onChange={(name, value)=>console.log(name,value)}
                                 errors={errors.nomeAnimal}
                                 {...register('nomeAnimal')} />
                         </div>
@@ -221,8 +220,16 @@ export const CastrationRequest = () => {
                                 valueKey="value"
                                 arrayKey="label"
                                 errors={errors.porteAnimal}
-                                //register={register} />
                                 {...register('porteAnimal')} />
+                        </div>
+                        <div className="sm:col-span-1">
+                            <InputCombobox id="generoAnimalIdx"
+                                label="Gênero do Animal"
+                                comboboxValues={GENERO}
+                                valueKey="value"
+                                arrayKey="label"
+                                errors={errors.generoAnimal}
+                                {...register('generoAnimal')} />
                         </div>
                         <div className="sm:col-span-5">
                             <Input id="descricaoAnimalIdx"
@@ -249,6 +256,15 @@ export const CastrationRequest = () => {
                             comboboxValues={FORMA_PAGAMENTO}
                             errors={errors.formaPagamento}
                             {...register('formaPagamento')} />
+                    </div>
+                    <div className="sm:col-span-1 mt-3">
+                        <Input id="observacoesIdx"
+                                label="Observações"
+                                type="textarea"
+                                lines={4}
+                                errors={errors.observacoes}
+                                {...register('observacoes')}
+                            />
                     </div>
                 </div>
                 <div className="border-b border-t border-gray-900/10 py-5 mt-5">

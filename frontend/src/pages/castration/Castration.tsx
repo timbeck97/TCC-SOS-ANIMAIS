@@ -470,21 +470,14 @@ export const Castration = () => {
                     </div>
                     <hr />
                     <div>
-                        <Title text='Lista de animais' icon={<FcList size={30} />} />
-                        {/* <TableWaitingList
-                            dataProps={castracao?.animais}
-                            customTableStyle={customTableStyle}
-                            remote={false}
-                            permiteUploadPagamento
-                            pagination={false}
-                            permiteAlterarFaixaPreco={true}
-                            refresh={() => getCastration(castracao.id)}
-                            handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)} /> */}
-                            <CastrationAnimals 
-                            dataProps={castracao?.animais}
-                            refresh={() => getCastration(castracao.id)}
-                            handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)}
-                            />
+                        <Title text='Lista de animais' icon={<FcList size={30}  />} />
+                            <div className="mt-3">
+                                <CastrationAnimals 
+                                dataProps={castracao?.animais}
+                                refresh={() => getCastration(castracao.id)}
+                                handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)}
+                                />
+                            </div>
                     </div>
                 </div>
                 <div className="space-x-0 sm:space-x-2 mt-4 sm:mt-1">

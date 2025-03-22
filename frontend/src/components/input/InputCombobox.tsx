@@ -34,12 +34,12 @@ export const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxIn
                  onChange={(e) => {
                     handleChange(e); // Dispara o onChange customizado
                   }}
-                 className="block w-full bg-bgWhite pl-2 py-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600  text-sm sm:text-sm/6 outline-none">
+                 className={"block w-full bg-bgWhite pl-2 py-1 rounded-md py-2 text-gray-900 shadow-sm border border-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 outline-none "+(className?className:' text-sm sm:text-sm/6')}>
                     {comboboxValues?.map((obj, index) => {
                         return <option key={index} value={obj[valueKey]?obj[valueKey]:''}>{obj[arrayKey]}</option>
                     })}
                 </select>
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-500 text-xs mt-1 ">
                     {errorMessage}
                 </p>
             </div>

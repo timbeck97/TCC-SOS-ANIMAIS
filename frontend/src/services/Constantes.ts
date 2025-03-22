@@ -9,7 +9,11 @@ export const PORTE_ANIMAIS = [
     { label: 'Pequeno', value: 'PEQUENO' },
     { label: 'Médio', value: 'MEDIO' },
     { label: 'Grande', value: 'GRANDE' }]
-
+export const GENERO = [
+    { label: 'Selecione', value: '' },
+    { label: 'Macho', value: 'MACHO' },
+    { label: 'Fêmea', value: 'FEMEA' },
+]
 export const TAMANHOS_CAIXAS = [
     { label: 'Pequena', value: 'PEQUENA' },
     { label: 'Média', value: 'MEDIA' },

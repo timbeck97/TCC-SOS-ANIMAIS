@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { get, request } from "../../services/Axios"
-
+import { NavLink } from "react-router-dom"
 
 export const Home = () => {
 
@@ -28,7 +28,7 @@ export const Home = () => {
     return (
         <div style={{ overflowY: "auto", flex: '1' }}>
             <div className="font-sans bg-gray-50">
-               
+
 
                 <section className="bg-cover bg-center h-96" style={{ backgroundImage: "url('https://via.placeholder.com/1500x800')" }}>
                     <div className="flex justify-center items-center h-full bg-black bg-opacity-50">
@@ -69,15 +69,18 @@ export const Home = () => {
                 <section className="py-16 px-4 text-center bg-blue-500 text-white">
                     <h2 className="text-3xl font-bold mb-4">Solicite uma Castração</h2>
                     <p className="mb-6">Se o seu animal foi resgatado da rua, ele pode ser castrado gratuitamente. Clique abaixo para fazer a solicitação.</p>
-                    <a href="/solicitar-castracao" className="bg-white text-blue-500 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition duration-300">
-                        Solicitar Castração
-                    </a>
+                    <NavLink to="/solicitarCastracao" end>
+                        <span className="bg-white text-blue-500 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition duration-300">
+                            Solicitar Castração
+                        </span>
+                    </NavLink>
+
                 </section>
 
                 <footer className="bg-gray-800 text-white py-6">
                     <div className="container mx-auto text-center">
                         <p>&copy; 2025 ONG SOS Animais. Todos os direitos reservados.</p>
-                       
+
                     </div>
                 </footer>
             </div>

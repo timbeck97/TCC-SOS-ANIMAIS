@@ -53,11 +53,11 @@ export const Menu = () => {
         let active='border-b-2 border-gray-400'
         return (
             <ul className="flex justify-center items-center gap-x-10">
-                <li>
+                {/* <li>
                     <NavLink to="/solicitarCastracao" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>
                     <LuDog/>Solicitar Castração
                     </NavLink>
-                </li>
+                </li> */}
                 {isAutenticated() && <>
                     <li>
                         <NavLink to="/gerenciar/filaEspera" className={({isActive})=>`${defaultCss} ${isActive?active:''}`} end>

@@ -84,6 +84,10 @@ public class CastrationRequestFactory {
         this.castrationRequest.setSituacao(situacao);
         return this;
     }
+    public CastrationRequestFactory withObservacoes(String observacoes){
+        this.castrationRequest.setObservacoes(observacoes);
+        return this;
+    }
     public CastrationRequestFactory withDto(CastrationRequestDto dto){
         this.castrationRequest.setNome(dto.getNome());
         this.castrationRequest.setSobrenome(dto.getSobrenome());
@@ -100,6 +104,8 @@ public class CastrationRequestFactory {
         this.castrationRequest.setDescricaoAnimal(dto.getDescricaoAnimal());
         this.castrationRequest.setAnimalVacinado(dto.isAnimalVacinado());
         this.castrationRequest.setFormaPagamento(dto.getFormaPagamento());
+        this.castrationRequest.setObservacoes(dto.getObservacoes());
+        this.castrationRequest.setGeneroAnimal(dto.getGeneroAnimal());
         return this;
     }
     public CastrationRequest build(){

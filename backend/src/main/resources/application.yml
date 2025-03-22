@@ -1,34 +1,3 @@
-server:
-  port: 8081
 spring:
-  application:
-    name: "Sistema de Gestao SOS Animais"
-
-
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/sosanimais}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop # drop n create table again, good for testing, comment this in production
-    show-sql: false
-    defer-datasource-initialization: true
-
-  sql:
-    init:
-      mode: always
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-#          issuer-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}
-#          jwk-set-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}/protocol/openid-connect/certs
-          issuer-uri: ${KEYCLOACK_URL:http://192.168.2.173:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}
-          jwk-set-uri: ${KEYCLOACK_URL:http://192.168.2.173:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}/protocol/openid-connect/certs
-
-
-keyCloackClient: ${KEYCLOACK_CLIENT:sosanimais-client}
-fileUploadPath: ${FILE_UPLOAD_PATH:/opt/sosfiles/}
+  profiles:
+    active:  ${PROFILE:dev}

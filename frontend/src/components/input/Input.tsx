@@ -42,6 +42,7 @@ const Input = forwardRef<any, InputInterface>(({
             name={name}
             onChange={onChange}
             value={value}
+            rows={lines}
             {...rest}
                 className={`block w-full px-3 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
             />

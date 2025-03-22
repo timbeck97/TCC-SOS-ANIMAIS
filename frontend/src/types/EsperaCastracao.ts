@@ -22,6 +22,8 @@ export interface EsperaCastracao {
     formaPagamento:string,
     idFaixa?:number,
     paga:boolean,
+    generoAnimal:'MACHO'|'FEMEA',
+    observacoes?:string,
 
     
 }

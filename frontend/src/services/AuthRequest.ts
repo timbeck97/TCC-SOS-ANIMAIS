@@ -139,7 +139,7 @@ const parseJwt = (token: string) => {
 const logout = () => {
     let stringTk = localStorage.getItem('token')
     let token = JSON.parse(stringTk || '');
-    const logoutUrl = `${KEYCLOAK_LOGOUT_URL}?id_token_hint=${token?.tokenId}&post_logout_redirect_uri=${encodeURIComponent('http://localhost:3000')}`;
+    const logoutUrl = `${KEYCLOAK_LOGOUT_URL}?id_token_hint=${token?.tokenId}&post_logout_redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
     localStorage.removeItem("token");
     window.location.href = logoutUrl;
 };

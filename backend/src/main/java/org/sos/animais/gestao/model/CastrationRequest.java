@@ -1,10 +1,7 @@
 package org.sos.animais.gestao.model;
 
 import jakarta.persistence.*;
-import org.sos.animais.gestao.enums.EAnimalSize;
-import org.sos.animais.gestao.enums.EAnimalType;
-import org.sos.animais.gestao.enums.EPaymentMethod;
-import org.sos.animais.gestao.enums.ERequestSituation;
+import org.sos.animais.gestao.enums.*;
 
 import java.util.Date;
 
@@ -57,7 +54,11 @@ public class CastrationRequest {
     private boolean paga;
     @ManyToOne
     private Castration castracao;
-
+    @Column(columnDefinition = "text")
+    private String observacoes;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 6, nullable = false)
+    private EAnimalGender generoAnimal;
     @ManyToOne
     private PriceRange faixaPreco;
 
@@ -230,5 +231,21 @@ public class CastrationRequest {
 
     public void setPaga(boolean paga) {
         this.paga = paga;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public EAnimalGender getGeneroAnimal() {
+        return generoAnimal;
+    }
+
+    public void setGeneroAnimal(EAnimalGender generoAnimal) {
+        this.generoAnimal = generoAnimal;
     }
 }

@@ -11,13 +11,15 @@ export const WaitingListRequestSchema = z.object({
     tipoAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
     nomeAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
     racaAnimal: z.string().optional(),
-    pesoAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
+    generoAnimal: z.enum(['MACHO','FEMEA'],{errorMap: () => ({ message: 'Necessário informar o gênero do animal' })}),
+    pesoAnimal: z.string().optional(),
     animalVacinado: z.boolean().optional(),
     descricaoAnimal: z.string().optional(),
     porteAnimal: z.string().min(1, {message: 'Campo obrigatório'}),
     formaPagamento: z.string().min(1, {message: 'Campo obrigatório'}),
     idFaixa:z.string().nullable().optional(),
-    urlImagem:z.string().nullable().optional()
+    urlImagem:z.string().nullable().optional(),
+    observacoes:z.string().nullable().optional()
 })
 function validarCPF(cpf:string) {
     cpf = cpf.replace(/[^\d]/g, "");

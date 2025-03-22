@@ -8,7 +8,7 @@ import { CastrationRequestInterface } from "../../types/CastrationRequestInterfa
 import { useNavigate, useParams } from "react-router-dom";
 import { request } from "../../services/Axios";
 import { InputCombobox } from "../../components/input/InputCombobox";
-import { FORMA_PAGAMENTO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import { FORMA_PAGAMENTO, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { InputBoolean } from "../../components/input/InputBoolean";
 import { InputNumber } from "../../components/input/InputNumber";
 import Input from "../../components/input/Input";
@@ -51,15 +51,17 @@ export const CastrationRequestEdit = () => {
                 porteAnimal: response?.porteAnimal,
                 urlImagem: response?.urlImagem,
                 formaPagamento: response?.formaPagamento,
-                idFaixa:String(response?.idFaixa)
+                idFaixa: String(response?.idFaixa),
+                generoAnimal: response?.generoAnimal,
+                observacoes: response?.observacoes,
             })
         }
-        ,[id, reset])
+        , [id, reset])
     useEffect(() => {
         getData();
         getFaixasPreco();
     }, [getData])
-    
+
     const getFaixasPreco = async () => {
         let response = await request<FaixaValor[]>('get', '/faixapreco')
         let data = response || []
@@ -68,7 +70,7 @@ export const CastrationRequestEdit = () => {
     }
     const onSubmit: SubmitHandler<CastrationRequestInterface> = async data => {
         console.log(data)
-        let resposta = await request('put', '/castration/waitingList/'+id,data)
+        let resposta = await request('put', '/castration/waitingList/' + id, data)
         console.log(resposta)
         openAlertSuccess('Dados atualizados')
 
@@ -178,7 +180,7 @@ export const CastrationRequestEdit = () => {
                                 type="text"
                                 errors={errors.nomeAnimal}
                                 {...register('nomeAnimal')} />
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                                 <div className="sm:col-span-1">
                                     <InputCombobox id="tipoAnimalidx"
                                         label="Tipo de Animal"
@@ -198,6 +200,15 @@ export const CastrationRequestEdit = () => {
                                         errors={errors.porteAnimal}
                                         //register={register} />
                                         {...register('porteAnimal')} />
+                                </div>
+                                <div className="sm:col-span-1">
+                                    <InputCombobox id="generoAnimalIdx"
+                                        label="Gênero do Animal"
+                                        comboboxValues={GENERO}
+                                        valueKey="value"
+                                        arrayKey="label"
+                                        errors={errors.generoAnimal}
+                                        {...register('generoAnimal')} />
                                 </div>
                             </div>
 
@@ -229,14 +240,22 @@ export const CastrationRequestEdit = () => {
 
 
 
-
-                            <Input id="descricaoAnimalIdx"
-                                label="Descrição do Animal (comportamento)"
-                                type="textarea"
-                                lines={4}
-                                errors={errors.descricaoAnimal}
-                                {...register('descricaoAnimal')}
-                            />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <Input id="descricaoAnimalIdx"
+                                    label="Descrição do Animal (comportamento)"
+                                    type="textarea"
+                                    lines={4}
+                                    errors={errors.descricaoAnimal}
+                                    {...register('descricaoAnimal')}
+                                />
+                                <Input id="observacoesIdx"
+                                    label="Observações"
+                                    type="textarea"
+                                    lines={4}
+                                    errors={errors.observacoes}
+                                    {...register('observacoes')}
+                                />
+                            </div>
                         </div>
 
                     </div>
@@ -261,7 +280,7 @@ export const CastrationRequestEdit = () => {
                                 id="faixaValorIdx"
                                 comboboxValues={faixaValores}
                                 label="Faixa de preço"
-                                value={formValues.idFaixa||''}
+                                value={formValues.idFaixa || ''}
                                 {...register('idFaixa')}
                                 valueKey="id"
                                 arrayKey="descricao"

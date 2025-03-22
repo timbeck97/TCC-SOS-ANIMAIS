@@ -23,15 +23,14 @@ import { CardEsperaCastracao } from "../../types/CardEsperaCastracao"
 import { CardButton } from "../../types/CardButton"
 import { Title } from "../title/Title"
 import { Subtitle } from "../title/Subtitle"
+import { Table } from "../table/Table"
+import { Column } from "../table/Column"
 
 
 
 
-export const CastrationAnimals = ({ handleSelectRows,
-    pagination = true,
-    dataProps,
+export const CastrationAnimals = ({dataProps,
     handleRemoveAnimal,
-    title,
     refresh,
 }: TableWaitingListInterface) => {
 
@@ -75,13 +74,14 @@ export const CastrationAnimals = ({ handleSelectRows,
     }
     const renderAcoes = (row: any) => {
         return (
-            <div className="fixed w-full">
+            <div className="">
                 <Dropdown
                     placement="top"
                     inline
-                    id="asdasdasdas"
-                    enableTypeAhead
-                    className="mt-3 fixed left-0 z-50"
+                    id={row.id}
+                    itemID={row.id}
+
+                    className="mt-3 w-100"
                     label={
                         <span
                             className="bg-indigo-500 float-right text-white flex items-center px-2 rounded-md py-1 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -93,7 +93,7 @@ export const CastrationAnimals = ({ handleSelectRows,
                 >
 
                     <Dropdown.Item icon={FcInfo} onClick={() => setWaitListSelect(row)}>Abrir</Dropdown.Item>
-                    <Dropdown.Item icon={FcFolder} onClick={() => {
+                    <Dropdown.Item icon={FcFolder} className="w-40" onClick={() => {
                         setShowUploadPagamento(true)
                         setIdWaitList(row.id)
                     }}>Pagamento</Dropdown.Item>
@@ -104,26 +104,7 @@ export const CastrationAnimals = ({ handleSelectRows,
             </div>
         )
     }
-    const columns: TableColumn<EsperaCastracao>[] = useMemo(() => {
-        let colunas: TableColumn<EsperaCastracao>[] = []
-        colunas.push({ name: 'Nome do Requerente', id: 'nomeRequerente', selector: (row: EsperaCastracao) => row.nomeRequerente, sortField: 'nomeRequerente' })
-        colunas.push({ name: 'Tipo do Animal', id: 'tipoAnimal', selector: (row: EsperaCastracao) => formatTipoAnimal(row.tipoAnimal), sortable: true })
-        colunas.push({
-            name: 'Nome/Porte', id: 'nomeAnimal', cell: (row: EsperaCastracao) => <div className="flex flex-col items-center">
-                <span className="font-bold">{row.nomeAnimal}</span>
-                <span>{formatPorteAnimal(row.porteAnimal)}</span>
-            </div>
-        })
-        colunas.push({ name: 'Data da Solicitação', id: 'dataSolicitacao', selector: (row: EsperaCastracao) => formatDate(row.dataSolicitacao), sortable: true, sortFunction: orderData })
-        colunas.push({ name: 'Pagamento', id: 'formaPagamento', selector: (row: EsperaCastracao) => formatFormaPagamento(row.formaPagamento) })
-        colunas.push({ name: 'Faixa de preço', id: 'faixaPreco', cell: (row: EsperaCastracao) => renderPriceRange(row) })
-        colunas.push({ name: 'Comprovante de Pagamento', id: 'comprovantePagamento', cell: (row: EsperaCastracao) => renderPaymentReceipt(row) })
-        colunas.push({ name: 'Ações', cell: renderAcoes })
-        console.log('chamou metodo colunas novamente')
-        return colunas
-        //}, [setWaitListSelect, orderData, handleRemoveAnimal]); // Dependências do useMemo
-        // eslint-disable-next-line
-    }, [faixaValores, dataProps]);
+
 
     const renderPaymentReceipt = (row: EsperaCastracao) => {
         return <div className="flex items-center space-x-2">
@@ -136,6 +117,7 @@ export const CastrationAnimals = ({ handleSelectRows,
                 id="faixaValorIdx"
                 comboboxValues={faixaValores}
                 name="faixaValor"
+                className="text-xs"
                 value={row.idFaixa || 0}
                 valueKey="id"
                 arrayKey="descricao"
@@ -144,17 +126,17 @@ export const CastrationAnimals = ({ handleSelectRows,
             />
         )
     }
-
-    const handleSelect = ({ selectedRows }: {
-        allSelected: boolean;
-        selectedCount: number;
-        selectedRows: EsperaCastracao[];
-    }) => {
-        if (handleSelectRows) {
-            handleSelectRows(selectedRows)
-        }
-
+    const renderNomePorte  = (row: EsperaCastracao) => {
+        return(
+            <div className="w-fit">
+                <div className="flex flex-col items-center">
+                    <span className="font-bold">{row.nomeAnimal}</span>
+                    <span>{formatPorteAnimal(row.porteAnimal)}</span>
+                </div>
+            </div>
+        )
     }
+
 
     const handleFile = (name: string, files: FileList | null) => {
         if (files) {
@@ -226,23 +208,34 @@ export const CastrationAnimals = ({ handleSelectRows,
                 {data.map(x => <CardAnimal castracao={x} options={buttonsOptionsCard()} />)}
             </div>
                 :
-                <DataTable
-                    title={title}
-                    columns={columns}
-                    data={data}
-                    pagination={false}
-                    onSelectedRowsChange={handleSelect}
-                    defaultSortFieldId='dataSolicitacao'
-                    customStyles={customTableStyle}
-                    paginationComponentOptions={
-                        {
-                            rowsPerPageText: 'Registros por página',
-                            rangeSeparatorText: 'de',
-                            selectAllRowsItem: true,
-                            selectAllRowsItemText: 'Todos',
-                        }
-                    }
-                />
+                // <DataTable
+                //     title={title}
+                //     columns={columns}
+                //     data={data}
+                //     pagination={false}
+                //     onSelectedRowsChange={handleSelect}
+                //     defaultSortFieldId='dataSolicitacao'
+                //     customStyles={customTableStyle}
+                //     paginationComponentOptions={
+                //         {
+                //             rowsPerPageText: 'Registros por página',
+                //             rangeSeparatorText: 'de',
+                //             selectAllRowsItem: true,
+                //             selectAllRowsItemText: 'Todos',
+                //         }
+                //     }
+                // />
+                <Table id='tableAnimaisIdx' data={data}>
+                    <Column field="nomeRequerente" label="Nome do Requerente" />
+                    <Column field="tipoAnimal" label="Tipo de Animal" format="tipoAnimal" />
+                    <Column label="Nome do Animal" component={(idx, row:EsperaCastracao)=>renderNomePorte(row)} />
+                    <Column field="dataSolicitacao" label="Data da Solicitação" format="data" />
+                    <Column field="formaPagamento" label="Forma de Pagamento" format="formaPagamento" />
+                    <Column label="Faixa de preço"  component={(idx, row:EsperaCastracao)=>renderPriceRange(row)} />
+                    <Column label="Comprovante de pagamento" component={(idx, row:EsperaCastracao)=>renderPaymentReceipt(row)} />
+                    <Column label="Ações" component={(idx, row:EsperaCastracao)=>renderAcoes(row)} />
+
+                </Table>
             }
 
         </div>

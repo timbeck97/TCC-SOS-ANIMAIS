@@ -17,6 +17,8 @@ public class LocalFileUploadImp implements FileUploadService {
 
     @Value("${fileUploadPath}")
     private String localPath;
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     private final CastrationFileRepository castrationFileRepository;
 
@@ -38,7 +40,12 @@ public class LocalFileUploadImp implements FileUploadService {
         File newFile = new File(folderPath + fileName);
         try {
             file.transferTo(newFile);
-            return ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/public/arquivos/" + pasta + "/" + fileName;
+            String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            System.out.println(profile);
+            if(!profile.equals("dev")){
+                uriString = uriString.replace("/api", "");
+            }
+            return uriString + "/public/arquivos/" + pasta + "/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Could not save file");
