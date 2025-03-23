@@ -1,4 +1,3 @@
-import DataTable, { TableColumn, TableStyles } from "react-data-table-component"
 import { useNavigate, useParams } from "react-router-dom"
 import Input from "../../components/input/Input"
 import { TableWaitingList } from "../../components/tablewaitingList/TableWaitingList"
@@ -13,7 +12,7 @@ import { Dropdown, Modal } from "flowbite-react"
 import { FaCheck, FaRegFilePdf, FaSearch } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
-import api, { deleteRequest, get, post, put, request } from "../../services/Axios"
+import api, { deleteRequest, post, put, request } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
 import { ConfirmModal } from "../../components/modal/ConfirmModal"
@@ -27,12 +26,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Subtitle } from "../../components/title/Subtitle"
 import { CastrationAnimals } from "../../components/castrationAnimals/CastrationAnimals"
 import { customTableStyle } from "../../components/castrationAnimals/TableStyle"
+import { Table } from "../../components/table/Table"
+import { Column } from "../../components/table/Column"
 
 
 
 export const Castration = () => {
     const { id } = useParams<{ id: string | undefined }>()
-    const { register, handleSubmit, formState: { errors }, control, watch } = useForm<CastrationFormType>({
+    const { register, handleSubmit, formState: { errors } } = useForm<CastrationFormType>({
         defaultValues: {
             data: fintNextMonday()
         },
@@ -102,7 +103,7 @@ export const Castration = () => {
     }
     const permitidoConcluir = (showAlert:boolean)=>{
         if(castracao && castracao.animais && castracao.animais.length>0){
-            if(!castracao.animais.every(a=>a.idFaixa && a.idFaixa!=0)){
+            if(!castracao.animais.every(a=>a.idFaixa && a.idFaixa!==0)){
                 if(showAlert){
                     openAlertWarning('Para finalizar a castração é necessário informar as faixas de valores')
                 }
@@ -191,41 +192,7 @@ export const Castration = () => {
             </div>
         )
     }
-    const columns: TableColumn<{
-        data: string;
-        quantidadeAnimais: number;
-        observacao: string;
-        situacao?: string;
-    }>[] = [
-            {
-                id: 'data',
-                name: 'Data',
-                selector: (row) => row.data,
-                format: (row) => formatDateWithHour(row.data),
-                sortable: true,
-            },
-            {
-                id: 'quantidadeAnimais',
-                name: 'Quantidade de Animais',
-                selector: (row) => row.quantidadeAnimais,
-                sortable: true,
-            },
-            {
-                id: 'situacao',
-                name: 'Situação',
-                selector: (row) => formatSituacao(row.situacao),
-                sortable: true,
-            },
-            {
-                id: 'observacao',
-                name: 'Observação',
-                selector: (row) => row.observacao,
-                sortable: true,
-            },
-            { name: 'Ações', cell: renderAcoes },
-
-        ]
-
+   
 
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
         setAnimais(selectedRows)
@@ -508,40 +475,35 @@ export const Castration = () => {
     const renderCastracoes = () => {
         return (
             <div>
-                <div className="rounded px-2 pt-4 flex items-center  border-b border-gray-900/10 pb-5">
+                <div className="px-2 pt-4  border-b border-gray-900/10 pb-5">
                     <Title text="Castrações SOS Animais" icon={<FcStatistics size={35} />} />
                 </div>
 
-                <Button text="Nova Castração" class="float-right mt-3" onClick={() => {
-                    getWaitingList();
-                    navigate('/gerenciar/castracoes/nova')
-                    setCastracao({
-                        data: fintNextMonday(),
-                        observacao: '',
-                        quantidadeAnimais: 0,
-                        quantidadeCaixasPequenas: 0,
-                        quantidadeCaixasMedias: 0,
-                        quantidadeCaixasGrandes: 0
-                    })
-                }} icon={<FiPlus />} type="default" />
-                <DataTable
-                    columns={columns}
-                    data={castracoes}
-                    pagination={true}
-                    customStyles={customTableStyle}
-                    onRowClicked={(row) => handleAbrirCastracao(row)}
-                    defaultSortFieldId='data'
-                    pointerOnHover
-                    highlightOnHover
-                    paginationComponentOptions={
-                        {
-                            rowsPerPageText: 'Registros por página',
-                            rangeSeparatorText: 'de',
-                            selectAllRowsItem: true,
-                            selectAllRowsItemText: 'Todos',
-                        }
-                    }
-                />
+                    <div className="flex justify-end mt-3 mb-3">
+                    <Button text="Nova Castração" onClick={() => {
+                        getWaitingList();
+                        navigate('/gerenciar/castracoes/nova')
+                        setCastracao({
+                            data: fintNextMonday(),
+                            observacao: '',
+                            quantidadeAnimais: 0,
+                            quantidadeCaixasPequenas: 0,
+                            quantidadeCaixasMedias: 0,
+                            quantidadeCaixasGrandes: 0
+                        })
+                    }} icon={<FiPlus />} type="default" />
+                    </div>
+                    <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
+                        columnsRowClick={[0,1,2,3]}
+                    >
+                        <Column field="data" label="Data" format="dataHora" />
+                        <Column field="quantidadeAnimais" label="Quantidade de Animais" />
+                        <Column field="situacao" label="Situação" format="situacaoCastracao" />
+                        <Column field="observacao" label="Observação" />
+                        <Column label="Ações" component={renderAcoes}/>
+                    </Table>
+               
+                    
             </div>
         )
     }

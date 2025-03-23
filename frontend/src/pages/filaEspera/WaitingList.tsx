@@ -1,30 +1,48 @@
 import dog from '../../assets/cachorro.jpg'
 import cat2 from '../../assets/cat-svgrepo-com.svg'
 import graph from '../../assets/graph.svg'
-import { FcOvertime } from "react-icons/fc";
-import { TableWaitingList } from '../../components/tablewaitingList/TableWaitingList'
+import { FcInfo, FcOvertime } from "react-icons/fc";
 import { Pawbackground } from '../../components/pawbackground/Pawbackground';
 import { request } from '../../services/Axios';
 import { useEffect, useState } from 'react';
 import { CastrationRequestTotal } from '../../types/CastrationRequestTotal';
 import { Title } from '../../components/title/Title';
+import { Table } from '../../components/table/Table';
+import { Column } from '../../components/table/Column';
+import { EsperaCastracao } from '../../types/EsperaCastracao';
+import { formatPorteAnimal } from '../../services/Util';
+import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 
 
 
 export const WaitingList = () => {
-    
+
+    const [data, setData] = useState<EsperaCastracao[]>([])
 
     useEffect(() => {
+        fetchCastracoes()
         getTotais();
     }, [])
 
     const [totais, setTotais] = useState<CastrationRequestTotal>({ total: 0, totalCats: 0, totalDogs: 0 });
-
+    const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
     const getTotais = async () => {
-        let response = await request<CastrationRequestTotal>('get','/castration/waitingList/totais')
-        if(response){
-            setTotais(response); 
-        }
+        let response = await request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
+        setTotais(response || {} as CastrationRequestTotal);
+    }
+    const fetchCastracoes = async () => {
+        let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
+        setData(response || [])
+    }
+    const renderNomePorte = (row: EsperaCastracao) => {
+        return (
+            <div className="w-fit">
+                <div className="flex flex-col items-center">
+                    <span className="font-bold">{row.nomeAnimal}</span>
+                    <span>{formatPorteAnimal(row.porteAnimal)}</span>
+                </div>
+            </div>
+        )
     }
     return (
         <Pawbackground>
@@ -32,7 +50,7 @@ export const WaitingList = () => {
             <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white'>
 
                 <div className="rounded px-2 pt-4 flex items-center  border-b border-gray-900/10 pb-5">
-        
+
                     <Title text="Fila de Espera" icon={<FcOvertime size={35} />} />
                 </div>
                 <div>
@@ -68,7 +86,18 @@ export const WaitingList = () => {
                     </div>
                     <div>
 
-                        <TableWaitingList selectAnimals={false} />
+                        <Table id='tableAnimaisIdx' data={data} enablePagination={true}>
+                            <Column field="nomeRequerente" label="Nome do Requerente" />
+                            <Column field="tipoAnimal" label="Tipo de Animal" format="tipoAnimal" />
+                            <Column label="Nome do Animal" component={(idx, row: EsperaCastracao) => renderNomePorte(row)} />
+                            <Column field="dataSolicitacao" label="Data da Solicitação" format="data" />
+                            <Column field="formaPagamento" label="Forma de Pagamento" format="formaPagamento" />
+                            <Column label="Ações" component={(idx, row: EsperaCastracao) => <button type="button" onClick={() => setWaitListSelect(row)} >
+                                <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
+                            </button>} />
+
+                        </Table>
+                        <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
                     </div>
 
 

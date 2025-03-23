@@ -46,7 +46,7 @@ public class PriceRangeController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/solicitacaoCastracao/{id}")
-    public ResponseEntity<PriceRange> updateCastracao(@PathVariable Long id, @RequestParam Long idFaixa){
+    public ResponseEntity<PriceRange> updateCastracao(@PathVariable Long id, @RequestParam(required = false, defaultValue = "0") Long idFaixa){
         PriceRange faixa = priceRangeRepository.findById(idFaixa).orElse(null);
         CastrationRequest request= castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("Solicitação de castração não encontrada"));
         request.setFaixaPreco(faixa);

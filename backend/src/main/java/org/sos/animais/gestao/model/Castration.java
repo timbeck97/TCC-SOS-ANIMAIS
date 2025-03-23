@@ -21,6 +21,7 @@ public class Castration {
     @Enumerated(EnumType.STRING)
     private ERequestSituation situacao;
     @OneToMany(mappedBy = "castracao")
+    @OrderBy("dataSolicitacao")
     private List<CastrationRequest> requisicoes;
 
     public Castration() {
