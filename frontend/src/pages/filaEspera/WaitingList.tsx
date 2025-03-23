@@ -12,6 +12,8 @@ import { Column } from '../../components/table/Column';
 import { EsperaCastracao } from '../../types/EsperaCastracao';
 import { formatPorteAnimal } from '../../services/Util';
 import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
+import { useDevice } from '../../context/DeviceContext';
+import { CardAnimal } from '../../components/cards/CardAnimal';
 
 
 
@@ -26,6 +28,7 @@ export const WaitingList = () => {
 
     const [totais, setTotais] = useState<CastrationRequestTotal>({ total: 0, totalCats: 0, totalDogs: 0 });
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
+    const { isMobile } = useDevice();
     const getTotais = async () => {
         let response = await request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
         setTotais(response || {} as CastrationRequestTotal);
@@ -85,7 +88,8 @@ export const WaitingList = () => {
 
                     </div>
                     <div>
-
+                        {isMobile? <div className='space-y-2'>{data.map(x => <CardAnimal castracao={x}/>)}</div>
+                        :
                         <Table id='tableAnimaisIdx' data={data} enablePagination={true}>
                             <Column field="nomeRequerente" label="Nome do Requerente" />
                             <Column field="tipoAnimal" label="Tipo de Animal" format="tipoAnimal" />
@@ -97,6 +101,7 @@ export const WaitingList = () => {
                             </button>} />
 
                         </Table>
+                        }
                         <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
                     </div>
 

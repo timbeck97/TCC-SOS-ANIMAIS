@@ -50,7 +50,7 @@ public class CastrationService {
         return castrationRepository.findById(id).map(this::convertCastrationToDto).orElseThrow(()->new RuntimeException("Castration not found"));
     }
     public List<CastrationRequestDto> findAllRequest(){
-        return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIsOrderByDataSolicitacaoDesc(ERequestSituation.AGUARDANDO).stream().map(this::convertCastrationRequestToDto).toList();
+        return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIsOrderByDataSolicitacaoAsc(ERequestSituation.AGUARDANDO).stream().map(this::convertCastrationRequestToDto).toList();
     }
     public CastrationRequestDto findOneRequest(Long id){
         return castrationRequestRepository.findById(id).map(this::convertCastrationRequestToDto).orElseThrow(()->new RuntimeException("CastrationRequest not found"));

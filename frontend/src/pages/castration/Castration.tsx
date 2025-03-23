@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom"
 import Input from "../../components/input/Input"
-import { TableWaitingList } from "../../components/tablewaitingList/TableWaitingList"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { fintNextMonday, formatDateWithHour, formatSituacao } from "../../services/Util"
+import { fintNextMonday, formatDateWithHour, formatPorteAnimal, formatSituacao } from "../../services/Util"
 import { HiOutlineCube } from "react-icons/hi";
 import { useEffect, useState } from "react"
-import { FcList, FcOvertime, FcStatistics } from "react-icons/fc"
+import { FcInfo, FcList, FcOvertime, FcStatistics } from "react-icons/fc"
 import { CastrationModel } from "../../types/CastrationModel"
 import { PiDog } from "react-icons/pi";
 import { Dropdown, Modal } from "flowbite-react"
@@ -28,6 +27,7 @@ import { CastrationAnimals } from "../../components/castrationAnimals/Castration
 import { customTableStyle } from "../../components/castrationAnimals/TableStyle"
 import { Table } from "../../components/table/Table"
 import { Column } from "../../components/table/Column"
+import { WaitListModal } from "../../components/WaitListModal/WaitListModal"
 
 
 
@@ -44,11 +44,11 @@ export const Castration = () => {
     const [listsEspera, setListsEspera] = useState<EsperaCastracao[]>([])
     const [castracoes, setCastracoes] = useState<CastrationModel[]>([])
     const [animais, setAnimais] = useState<EsperaCastracao[]>([])
-
+    const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
 
     const [showSelecionarCaixas, setShowSelecionarCaixas] = useState<boolean>(false)
     const [confirmFinalizarCastracao, setConfirmFinalizarCastracao] = useState<boolean>(false)
-
+    
     const [castracao, setCastracao] = useState<CastrationModel>({
         data: fintNextMonday(),
         observacao: '',
@@ -196,13 +196,6 @@ export const Castration = () => {
 
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
         setAnimais(selectedRows)
-        let filaEspera = listsEspera
-        filaEspera.forEach((animal) => {
-            if (selectedRows.includes(animal)) {
-                animal.selected = true
-            }
-        })
-        setListsEspera(filaEspera)
     }
     const selectAnimais = () => {
         let qttCaixasPequenas = castracao?.quantidadeCaixasPequenas || 0
@@ -226,7 +219,7 @@ export const Castration = () => {
             return 0
         })
         let animaisCastracao: EsperaCastracao[] = []
-        filaEspera.forEach((animal) => {
+        let newFila = filaEspera.map((animal) => {
 
             switch (animal.porteAnimal) {
                 case 'PEQUENO':
@@ -249,12 +242,13 @@ export const Castration = () => {
                     break;
             }
             if (animal.selected === true) {
-                animaisCastracao.push(animal)
+                animaisCastracao.push({...animal})
             }
+            return animal;
         })
         console.log('on select animais');
 
-        setListsEspera([...filaEspera])
+        setListsEspera([...newFila])
         setAnimais([...animaisCastracao])
     }
     const postCastration = (data: CastrationFormType) => {
@@ -338,6 +332,17 @@ export const Castration = () => {
     const onSubmit: SubmitHandler<CastrationFormType> = data => {
         postCastration(data)
     }
+     const renderDadosAnimal = (row: EsperaCastracao) => {
+            return (
+                <div className="w-full">
+                    <div className="flex flex-col items-center">
+                        <span className="poppins-bold">{row.nomeAnimal}</span>
+                        <span className="poppins-bold">{row.tipoAnimal}</span>
+                        <span>{formatPorteAnimal(row.porteAnimal)}</span>
+                    </div>
+                </div>
+            )
+        }
     const renderCadastrarNovaCastracao = () => {
         return (
             <div className="p-3">
@@ -374,9 +379,9 @@ export const Castration = () => {
 
 
                             </div>
-                            <div className="mt-3 space-x-2">
+                            <div className="mt-3 space-x-2 sm:block grid space-y-2 sm:space-y-0">
                                 <Button buttonType="submit" text='Cadastrar' icon={<FiPlus />} type="default" />
-                                <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} class="bg-gray-600 text-white px-4 rounded-xl py-1 rounded focus:outline-none focus:ring-2 mb-3 mt-3 " />
+                                <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} type="neutral" />
 
                             </div>
                         </div>
@@ -386,7 +391,19 @@ export const Castration = () => {
                                 <h2 className="text-lg/7 font-semibold text-gray-900 ml-2">Lista de Espera</h2>
                             </div>
                             <div className="mt-3">
-                                <TableWaitingList customTableStyle={customTableStyle} dataProps={listsEspera} selectAnimals={true} handleSelectRows={handleSelect} />
+                                {/* <TableWaitingList customTableStyle={customTableStyle} dataProps={listsEspera} selectAnimals={true} handleSelectRows={handleSelect} /> */}
+                                <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows:EsperaCastracao[])=>handleSelect(rows)}>
+                                    <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" />
+                                    <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
+                                    <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
+                                    <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
+                                    <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
+                                    <Column<EsperaCastracao> label="Ações" component={(idx, row) => <button type="button" onClick={() => setWaitListSelect(row)} >
+                                        <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
+                                    </button>} />
+        
+                                </Table>
+                                <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
                             </div>
                         </div>
 

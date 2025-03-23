@@ -1,8 +1,7 @@
-import DataTable, { TableColumn } from "react-data-table-component"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
-import { formatDate, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal, isEmpty } from "../../services/Util"
+import { formatPorteAnimal, formatTipoAnimal, isEmpty } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
 import { post, put, request } from "../../services/Axios"
@@ -13,15 +12,12 @@ import { openAlertSuccess } from "../../services/Alert"
 import { FaDownload, FaEdit, FaTrashAlt } from "react-icons/fa"
 import { FaixaValor } from "../../types/FaixaValor"
 import { InputCombobox } from "../input/InputCombobox"
-import { customTableStyle } from "./TableStyle"
 import { LuPencil } from "react-icons/lu"
 import { useNavigate } from "react-router-dom"
 import { useDevice } from "../../context/DeviceContext"
 import { CardAnimal } from "../cards/CardAnimal"
-import { ButtonInterface } from "../../types/ButtonInterface"
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao"
 import { CardButton } from "../../types/CardButton"
-import { Title } from "../title/Title"
 import { Subtitle } from "../title/Subtitle"
 import { Table } from "../table/Table"
 import { Column } from "../table/Column"
@@ -107,7 +103,7 @@ export const CastrationAnimals = ({dataProps,
 
 
     const renderPaymentReceipt = (row: EsperaCastracao) => {
-        return <div className="flex items-center space-x-2">
+        return <div className="flex items-center space-x-2 justify-center">
             {row.paga ? <><FcOk size={25} /> <span>Pago</span></> : <><FcCancel size={25} /> <span>Não Pago</span></>}
         </div>
     }
@@ -126,11 +122,12 @@ export const CastrationAnimals = ({dataProps,
             />
         )
     }
-    const renderNomePorte  = (row: EsperaCastracao) => {
-        return(
-            <div className="w-fit">
-                <div className="flex flex-col items-center">
-                    <span className="font-bold">{row.nomeAnimal}</span>
+    const renderDadosAnimal = (row: EsperaCastracao) => {
+        return (
+            <div className="w-full">
+                <div className="flex flex-col items-center ">
+                    <span className="poppins-bold">{row.nomeAnimal}</span>
+                    <span className="poppins-bold text-indigo-500">{formatTipoAnimal(row.tipoAnimal)}</span>
                     <span>{formatPorteAnimal(row.porteAnimal)}</span>
                 </div>
             </div>
@@ -208,31 +205,13 @@ export const CastrationAnimals = ({dataProps,
                 {data.map(x => <CardAnimal castracao={x} options={buttonsOptionsCard()} />)}
             </div>
                 :
-                // <DataTable
-                //     title={title}
-                //     columns={columns}
-                //     data={data}
-                //     pagination={false}
-                //     onSelectedRowsChange={handleSelect}
-                //     defaultSortFieldId='dataSolicitacao'
-                //     customStyles={customTableStyle}
-                //     paginationComponentOptions={
-                //         {
-                //             rowsPerPageText: 'Registros por página',
-                //             rangeSeparatorText: 'de',
-                //             selectAllRowsItem: true,
-                //             selectAllRowsItemText: 'Todos',
-                //         }
-                //     }
-                // />
                 <Table id='tableAnimaisIdx' data={data}>
-                    <Column field="nomeRequerente" label="Nome do Requerente" />
-                    <Column field="tipoAnimal" label="Tipo de Animal" format="tipoAnimal" />
-                    <Column label="Nome do Animal" component={(idx, row:EsperaCastracao)=>renderNomePorte(row)} />
-                    <Column field="dataSolicitacao" label="Data da Solicitação" format="data" />
-                    <Column field="formaPagamento" label="Forma de Pagamento" format="formaPagamento" />
-                    <Column label="Faixa de preço"  component={(idx, row:EsperaCastracao)=>renderPriceRange(row)} />
-                    <Column label="Comprovante de pagamento" component={(idx, row:EsperaCastracao)=>renderPaymentReceipt(row)} />
+                    <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
+                    <Column label="Animal" align="center" component={(idx, row:EsperaCastracao)=>renderDadosAnimal(row)} />
+                    <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
+                    <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
+                    <Column label="Faixa de preço" align="center"  component={(idx, row:EsperaCastracao)=>renderPriceRange(row)} />
+                    <Column label="Comprovante de pagamento" align="center"  component={(idx, row:EsperaCastracao)=>renderPaymentReceipt(row)} />
                     <Column label="Ações" component={(idx, row:EsperaCastracao)=>renderAcoes(row)} />
 
                 </Table>

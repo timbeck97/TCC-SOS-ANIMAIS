@@ -4,5 +4,7 @@ export interface TableColumn <T>{
     label: string
     field?: keyof T
     component?:(rowIndex:number,row:T)=>React.ReactElement
-    format?:keyof TypesFormatter
+    format?:keyof TypesFormatter,
+    selected?:boolean,
+    align?:'center'|'left'|'right',
 }

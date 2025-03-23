@@ -2,21 +2,23 @@ import React, { useEffect, useState } from "react";
 import { TableProps } from "../../types/TableProps";
 import { TableColumn } from "../../types/TableColumn";
 import { TypesFormatter } from "../../types/TypesFormatter";
-import { formatDate, formatDateWithHour, formatFormaPagamento, formatSituacao, formatTipoAnimal } from "../../services/Util";
+import { formatDate, formatDateWithHour, formatFormaPagamento, formatPorteAnimal, formatSituacao, formatTipoAnimal } from "../../services/Util";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { Pagination } from "../../types/Pagination";
+import { TableData } from "../../types/TableData";
 
 const formatter: TypesFormatter = {
     tipoAnimal: formatTipoAnimal,
+    porteAnimal: formatPorteAnimal,
     data: formatDate,
-    dataHora:formatDateWithHour,
+    dataHora: formatDateWithHour,
     formaPagamento: formatFormaPagamento,
     situacaoCastracao: formatSituacao
 }
 
-export const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick }: TableProps<T>) => {
-    const [originalData, setOriginalData] = useState<T[]>([])
-    const [listData, setListData] = useState<T[]>([])
+export const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick, selectable, onSelectRow }: TableProps<T>) => {
+    const [originalData, setOriginalData] = useState<TableData<T>[]>([])
+    const [listData, setListData] = useState<TableData<T>[]>([])
     const [pagination, setPagination] = useState<Pagination>({ pageNumber: 1, pageSize: 10, totalPages: 1 })
     useEffect(() => {
         if (enablePagination) {
@@ -25,7 +27,7 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         } else {
             setListData(data)
         }
-        
+
     }, [data, enablePagination])
 
     const renderColumn = <T,>(column: React.ReactElement<TableColumn<T>>, row: any, rowIndex: number) => {
@@ -61,35 +63,67 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         console.log(sliced)
         setListData(originalData.slice(start, end))
     }
-    const handleRowClick = (row:T, c:number)=>{
-        if(onRowClick){
-            if(columnsRowClick){
-                if(columnsRowClick.includes(c)){
+    const handleRowClick = (row: TableData<T>, c: number) => {
+        if (onRowClick) {
+            if (columnsRowClick) {
+                if (columnsRowClick.includes(c)) {
                     onRowClick(row)
                 }
-            }else{
+            } else {
                 onRowClick(row)
             }
         }
+    }
+    const isChecked = (rowIndex: number | undefined): boolean => {
+        return rowIndex !== undefined ? listData[rowIndex].selected || false : listData.every(d => d.selected === true);
+    }
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number | string) => {
+        let value = e.target.checked;
+        setListData((prev) => {
+            let newData = prev.map((data, idx) => {
+                if (rowIndex === 'all') {
+                    return { ...data, selected: value }
+                } else {
+                    if (rowIndex === idx) {
+                        return { ...data, selected: value }
+                    } else {
+                        return data
+                    }
+                }
+            })
+            if (onSelectRow) {
+                onSelectRow(newData.filter(d => d.selected).map(x => ({ ...x } as T)))
+            }
+            return newData
+        })
+
     }
     return (
         <div className="overflow-x-auto">
             <table id={id} className="min-w-full table-auto border-collapse border border-gray-200">
                 <thead>
                     <tr className="bg-gray-100">
+                        {selectable && <th className="px-6 py-3 border-b text-left text-xs  text-gray-700 poppins-semibold">
+                            <input type="checkbox" checked={isChecked(undefined)} onChange={e => handleCheckbox(e, 'all')} />
+                        </th>}
                         {children.map((column: React.ReactElement, index) => (
-                            <th key={index} className="px-6 py-3 border-b text-left text-xs  text-gray-700 poppins-semibold">
+                            <th key={index} className={`px-6 py-3 border-b text-left text-xs  text-gray-700 poppins-semibold ${column.props.align?'text-'+column.props.align:''}`}>
                                 {column.props.label}
                             </th>
                         ))}
 
+
                     </tr>
                 </thead>
                 <tbody>
+
                     {listData.map((row, rowIndex) => (
-                        <tr key={rowIndex} className={`hover:bg-gray-50 ${onRowClick?'cursor-pointer':''}`} >
-                            {children.map((column: React.ReactElement, colIndex) =>
-                                <td key={colIndex} className="px-6 py-1.5 border-b text-sm text-gray-900 text-xs " onClick={()=>handleRowClick(row, colIndex)}>
+                        <tr key={rowIndex} className={`hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`} >
+                            {selectable && <td className="px-6 py-1.5 border-b text-sm text-gray-900 text-xs">
+                                <input type="checkbox" checked={isChecked(rowIndex)} onChange={e => handleCheckbox(e, rowIndex)} />
+                            </td>}
+                            {children.map((column: React.ReactElement<TableColumn<T>>, colIndex) =>
+                                <td key={colIndex} className={`px-2 py-1.5 border-b text-sm text-gray-900 text-xs ${column.props.align?'text-'+column.props.align:''}`} onClick={() => handleRowClick(row, colIndex)}>
                                     {renderColumn(column, row, rowIndex)}
                                 </td>)}
                         </tr>

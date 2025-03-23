@@ -7,7 +7,7 @@ export const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
          
         }} className="flex flex-col grow">
 
-            <div className="container sm:max-w-full  md:max-w-6xl mx-auto  shadow-md pt-3">
+            <div className="container max-w-full  md:max-w-6xl mx-auto  shadow-md pt-3">
                 {children}
             </div>
         </div>
