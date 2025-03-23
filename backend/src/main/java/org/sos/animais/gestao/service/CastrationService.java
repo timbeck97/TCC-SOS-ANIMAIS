@@ -81,6 +81,14 @@ public class CastrationService {
         entity = castrationRepository.save(entity);
         return convertCastrationToDto(entity);
     }
+    public void addAnimal(Long idCastration, Long idAnimal){
+        Castration entity = castrationRepository.findById(idCastration).orElseThrow(()->new RuntimeException("Castration not found"));
+        CastrationRequest castrationRequest = castrationRequestRepository.findById(idAnimal).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        castrationRequest.setCastracao(entity);
+        castrationRequest.setSituacao(ERequestSituation.EM_ANDAMENTO);
+        entity.getRequisicoes().add(castrationRequest);
+        castrationRepository.save(entity);
+    }
     public void finishCastration(Long id){
         Castration entity = castrationRepository.findById(id).orElseThrow(()->new RuntimeException("Castration not found"));
        if(! entity.getRequisicoes().stream()
@@ -135,6 +143,8 @@ public class CastrationService {
         if(castrationRequestDto.getIdFaixa()!=null && castrationRequestDto.getIdFaixa()>0l){
             PriceRange priceRange = priceRangeRepository.findById(castrationRequestDto.getIdFaixa()).orElseThrow(()->new RuntimeException("PriceRange not found"));
             entity.setFaixaPreco(priceRange);
+        }else{
+            entity.setFaixaPreco(null);
         }
         if(id==null){
             entity.setSituacao(ERequestSituation.AGUARDANDO);

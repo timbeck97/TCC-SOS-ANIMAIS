@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -36,6 +37,11 @@ public class CastrationController {
     @GetMapping("/{id}")
     public ResponseEntity<CastrationDto> findCastration(@PathVariable Long id){
         return ResponseEntity.ok(castrationService.findOne(id));
+    }
+    @PostMapping("/waitingList/{id}/addAnimal/{idAnimal}")
+    public ResponseEntity<?> addAnimal(@PathVariable Long id, @PathVariable Long idAnimal){
+        castrationService.addAnimal(id, idAnimal);
+        return ResponseEntity.status(201).build();
     }
     @PostMapping("/waitingList/{id}/payment")
     public ResponseEntity<?> sendPaymentReceipt(@PathVariable Long id, @RequestPart(value = "file", required = false) MultipartFile file){

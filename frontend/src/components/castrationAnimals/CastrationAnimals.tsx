@@ -25,7 +25,7 @@ import { Column } from "../table/Column"
 
 
 
-export const CastrationAnimals = ({dataProps,
+export const CastrationAnimals = ({ dataProps,
     handleRemoveAnimal,
     refresh,
 }: TableWaitingListInterface) => {
@@ -49,23 +49,28 @@ export const CastrationAnimals = ({dataProps,
             refresh && refresh()
         })
     }
-    const orderData = useCallback((a: EsperaCastracao, b: EsperaCastracao) => {
-        const dateA = a.dataSolicitacao
-        const dateB = b.dataSolicitacao
-
-        if (dateA > dateB) {
-            return 1
+    const enviarPagamento = () => {
+        let headers = {
+            'Content-Type': 'multipart/form-data'
         }
-        if (dateA < dateB) {
-            return -1
+        const formData = new FormData();
+        if (file?.file && tipoPagamento === 'COMPROVANTE') {
+            formData.append("file", file?.file);
         }
-        return 0
-    }, [])
+        formData.append("dto", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        post(`/castration/waitingList/${idWaitList}/payment`, formData, headers, (resp) => {
+            openAlertSuccess('Pagamento confirmado com sucesso')
+            setShowUploadPagamento(false)
+            setIdWaitList(null)
+            refresh && refresh()
+        })
+    }
+   
+  
     const getFaixasPreco = async () => {
         let response = await request<FaixaValor[]>('get', '/faixapreco')
         let data = response || []
         data.unshift({ id: 0, descricao: 'Não Informado', valor: '0' })
-        console.log(data)
         setFaixaValores(data)
     }
     const renderAcoes = (row: any) => {
@@ -140,22 +145,7 @@ export const CastrationAnimals = ({dataProps,
             setFile({ fileName: files[0].name, file: files[0] })
         }
     }
-    const enviarPagamento = () => {
-        let headers = {
-            'Content-Type': 'multipart/form-data'
-        }
-        const formData = new FormData();
-        if (file?.file && tipoPagamento === 'COMPROVANTE') {
-            formData.append("file", file?.file);
-        }
-        formData.append("dto", new Blob([JSON.stringify(data)], { type: "application/json" }));
-        post(`/castration/waitingList/${idWaitList}/payment`, formData, headers, (resp) => {
-            openAlertSuccess('Pagamento confirmado com sucesso')
-            setShowUploadPagamento(false)
-            setIdWaitList(null)
-            refresh && refresh()
-        })
-    }
+   
     const buttonsOptionsCard = (): CardButton[] => {
         let buttons: CardButton[] = []
         buttons.push({
@@ -197,6 +187,7 @@ export const CastrationAnimals = ({dataProps,
             </Modal>
         )
     }
+    
     return (
         <div className="overflow-visible">
             {renderModalUploadPagamento()}
@@ -207,12 +198,12 @@ export const CastrationAnimals = ({dataProps,
                 :
                 <Table id='tableAnimaisIdx' data={data}>
                     <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
-                    <Column label="Animal" align="center" component={(idx, row:EsperaCastracao)=>renderDadosAnimal(row)} />
+                    <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
                     <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
                     <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                    <Column label="Faixa de preço" align="center"  component={(idx, row:EsperaCastracao)=>renderPriceRange(row)} />
-                    <Column label="Comprovante de pagamento" align="center"  component={(idx, row:EsperaCastracao)=>renderPaymentReceipt(row)} />
-                    <Column label="Ações" component={(idx, row:EsperaCastracao)=>renderAcoes(row)} />
+                    <Column label="Faixa de preço" align="center" component={(idx, row: EsperaCastracao) => renderPriceRange(row)} />
+                    <Column label="Comprovante de pagamento" align="center" component={(idx, row: EsperaCastracao) => renderPaymentReceipt(row)} />
+                    <Column label="Ações" component={(idx, row: EsperaCastracao) => renderAcoes(row)} />
 
                 </Table>
             }
