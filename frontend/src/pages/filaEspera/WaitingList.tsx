@@ -22,21 +22,36 @@ export const WaitingList = () => {
     const [data, setData] = useState<EsperaCastracao[]>([])
 
     useEffect(() => {
-        fetchCastracoes()
-        getTotais();
+        // fetchCastracoes()
+        // getTotais();
+        Promise.all([getTotais(), fetchCastracoes()])
+        .then(result=>{
+            setTotais(result[0] || {} as CastrationRequestTotal);
+            setData(result[1] || [])
+            setLoading(false)
+        })
     }, [])
 
     const [totais, setTotais] = useState<CastrationRequestTotal>({ total: 0, totalCats: 0, totalDogs: 0 });
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
     const { isMobile } = useDevice();
+    const [loading, setLoading] = useState(true)
+    // const getTotais = async () => {
+    //     let response = await request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
+    //     setTotais(response || {} as CastrationRequestTotal);
+    // }
+    // const fetchCastracoes = async () => {
+    //     let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
+    //     setData(response || [])
+    // }
     const getTotais = async () => {
-        let response = await request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
-        setTotais(response || {} as CastrationRequestTotal);
+        return request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
+       
     }
     const fetchCastracoes = async () => {
-        let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
-        setData(response || [])
+        return  request<EsperaCastracao[]>('get', '/castration/waitingList')
     }
+    
     const renderNomePorte = (row: EsperaCastracao) => {
         return (
             <div className="w-fit">
@@ -50,7 +65,7 @@ export const WaitingList = () => {
     return (
         <Pawbackground>
 
-            <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white'>
+            <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white relative'>
 
                 <div className="rounded px-2 pt-4 flex items-center  border-b border-gray-900/10 pb-5">
 
@@ -107,6 +122,12 @@ export const WaitingList = () => {
 
 
                 </div>
+                <div
+                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
+          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            >
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+            </div>
             </div>
         </Pawbackground>
 

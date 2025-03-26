@@ -34,3 +34,7 @@ spring:
 
 keyCloackClient: ${KEYCLOACK_CLIENT:sosanimais-client}
 fileUploadPath: ${FILE_UPLOAD_PATH:/opt/sosfiles/}
+
+logging:
+  file:
+    name: /opt/sos-animais.log

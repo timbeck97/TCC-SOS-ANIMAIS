@@ -24,7 +24,6 @@ import { CastrationFormSchema, CastrationFormType } from "../../schemas/Castrati
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Subtitle } from "../../components/title/Subtitle"
 import { CastrationAnimals } from "../../components/castrationAnimals/CastrationAnimals"
-import { customTableStyle } from "../../components/castrationAnimals/TableStyle"
 import { Table } from "../../components/table/Table"
 import { Column } from "../../components/table/Column"
 import { WaitListModal } from "../../components/WaitListModal/WaitListModal"

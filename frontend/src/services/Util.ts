@@ -38,7 +38,7 @@ export const fintNextMonday = () => {
 
     const now = new Date();
     const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
-  
+
     const nextMonday = new Date(now);
     nextMonday.setDate(now.getDate() + daysUntilMonday);
     nextMonday.setHours(7, 0, 0, 0);
@@ -55,7 +55,7 @@ export const parseDate = (date: string) => {
     const dateArray = date.split('/')
     return new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]))
 }
-export const formatDate = (date: Date|string) => {
+export const formatDate = (date: Date | string) => {
     console.log(date)
     if (!date) {
         return ''
@@ -66,7 +66,7 @@ export const formatDate = (date: Date|string) => {
     //format date to dd/mm/yyyy
     return date.toLocaleDateString('pt-BR')
 }
-export const formatDateWithHour = (date: Date|string) => {
+export const formatDateWithHour = (date: Date | string) => {
     if (!date) {
         return ''
     }
@@ -75,7 +75,7 @@ export const formatDateWithHour = (date: Date|string) => {
     }
     //format date to dd/mm/yyyy hh:mm
     return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR')
-    
+
 }
 export const formatPorteAnimal = (porte: string | undefined) => {
     if (!porte) {
@@ -100,11 +100,11 @@ export const formatTipoAnimal = (tipo: string | undefined) => {
     return tipo;
 }
 export const formatSituacao = (situacao?: string) => {
-    if(!situacao){
+    if (!situacao) {
         return ''
     }
-    for(let i = 0; i < SITUACOES.length; i++){
-        if(SITUACOES[i].value === situacao){
+    for (let i = 0; i < SITUACOES.length; i++) {
+        if (SITUACOES[i].value === situacao) {
             return SITUACOES[i].label
         }
     }
@@ -121,12 +121,37 @@ export const formatFormaPagamento = (formaPagamento: string | undefined) => {
     }
     return formaPagamento;
 }
-export const isEmpty = (value:any) =>{
+export const isEmpty = (value: any) => {
     return (
         value === undefined ||
         value === null ||
         (typeof value === "string" && value.trim() === "") ||
         (Array.isArray(value) && value.length === 0) ||
         (typeof value === "object" && Object.keys(value).length === 0)
-      );
+    );
+}
+export const getYearsCombobox = () => {
+    const anos = [];
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear - 2; i < currentYear; i++) {
+        anos.push({ id: i.toString(), label:i.toString() });
+    }
+    for (let i = currentYear; i < currentYear + 5; i++) {
+        anos.push({ id: i.toString(), label: i.toString() });
+    }
+    return anos;
+}
+export const getInitialMonth = (next: boolean) => {
+    let month = new Date().getMonth();
+    if (next) {
+        month += 1;
+    }
+    if (month <= 9) {
+        return '0' + month;
+    }
+    return String(month);
+}
+export const formatValorMoeda=(valor:number)=>{
+    if(Number.isNaN(valor))return '0,0'
+    return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(valor);
 }
