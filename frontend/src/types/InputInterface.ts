@@ -14,4 +14,5 @@ export interface InputInterface {
     validationMessage?: string;
     errors?: FieldError | string | undefined;
     register?: any;
+    readonly?:boolean;
 }

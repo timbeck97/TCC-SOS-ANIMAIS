@@ -1,6 +1,6 @@
 insert into castration(id,data, observacao, situacao) values (50, '2025-01-06 10:00:00', 'Castração de cachorro', 'FINALIZADA');
-insert into castration(id,data, observacao, situacao) values (51, '2025-01-13 14:30:00', 'Castração de gato', 'FINALIZADA');
-insert into castration(id,data, observacao, situacao) values (52, '2025-01-20 08:45:00', 'Castração de cachorro', 'FINALIZADA');
+insert into castration(id,data, observacao, situacao) values (51, '2025-02-13 14:30:00', 'Castração de gato', 'FINALIZADA');
+insert into castration(id,data, observacao, situacao) values (52, '2025-03-20 08:45:00', 'Castração de cachorro', 'FINALIZADA');
 insert into castration(id,data, observacao, situacao) values (53, '2025-06-20 08:45:00', NULL, 'FINALIZADA');
 
 
@@ -43,16 +43,16 @@ VALUES
 (1124, 'Juliana', 'Martins', '66778899002', '(81) 92234-5678', 'Avenida das Acácias', 'Centro', '210', 'CACHORRO', 'Mel', 'Cocker Spaniel', 13.0, 'MEDIO', 'Cachorro carinhoso', false, 'AGUARDANDO', '2024-12-24 16:45:00', NULL, 'DINHEIRO', 'FEMEA', null),
 (1125, 'Eduardo', 'Santos', '88990022334', '(71) 93123-4567', 'Rua Central', 'Bairro da Paz', '180', 'CACHORRO', 'Thor', 'Rottweiler', 32.0, 'GRANDE', 'Cachorro forte e leal', true, 'AGUARDANDO', '2024-12-25 11:15:00', NULL, 'DINHEIRO', 'MACHO', null),
 (1126, 'Larissa', 'Costa', '77665544321', '(51) 93765-4321', 'Rua das Flores', 'Vila Jardim', '120', 'GATO', 'Simba', 'Sphynx', 4.2, 'PEQUENO', 'Gato ativo e brincalhão', true, 'AGUARDANDO', '2024-12-26 09:30:00', 52, 'PIX', 'MACHO', 601),
-(1127, 'André', 'Teixeira', '66554433222', '(31) 94567-1234', 'Rua da Paz', 'Bairro Alto', '220', 'CACHORRO', 'Max', 'Pitbull', 29.0, 'GRANDE', 'Cachorro protetor e amigável', false, 'AGUARDANDO', '2024-12-27 13:30:00', NULL, 'PIX', 'MACHO', null),
-(1128, 'Fabiana', 'Alves', '55443322199', '(61) 93678-1234', 'Avenida Brasil', 'Centro', '175', 'CACHORRO', 'Bella', 'Shih Tzu', 6.5, 'PEQUENO', 'Cachorro meigo e dócil', true, 'AGUARDANDO', '2024-12-28 14:00:00', NULL, 'DINHEIRO', 'FEMEA', null),
+(1127, 'André', 'Teixeira', '66554433222', '(31) 94567-1234', 'Rua da Paz', 'Bairro Alto', '220', 'CACHORRO', 'Max', 'Pitbull', 29.0, 'GRANDE', 'Cachorro protetor e amigável', false, 'AGUARDANDO', '2024-12-27 13:30:00', NULL, 'PIX', 'MACHO', 601),
+(1128, 'Fabiana', 'Alves', '55443322199', '(61) 93678-1234', 'Avenida Brasil', 'Centro', '175', 'CACHORRO', 'Bella', 'Shih Tzu', 6.5, 'PEQUENO', 'Cachorro meigo e dócil', true, 'AGUARDANDO', '2024-12-28 14:00:00', NULL, 'DINHEIRO', 'FEMEA', 601),
 (1129, 'Ricardo', 'Martins', '99887766532', '(41) 92345-6789', 'Rua das Palmeiras', 'Vila Nova', '160', 'GATO', 'Luna', 'Abyssinian', 4.8, 'PEQUENO', 'Gato independente e ágil', false, 'AGUARDANDO', '2024-12-29 17:00:00', 52, 'PIX', 'FEMEA', 601),
-(1130, 'Vanessa', 'Rodrigues', '44332211099', '(91) 93456-7890', 'Rua do Porto', 'Bairro São José', '185', 'CACHORRO', 'Rocky', 'Cocker Spaniel', 14.2, 'MEDIO', 'Cachorro brincalhão', true, 'AGUARDANDO', '2024-12-30 12:30:00', NULL, 'DINHEIRO', 'MACHO', null),
+(1130, 'Vanessa', 'Rodrigues', '44332211099', '(91) 93456-7890', 'Rua do Porto', 'Bairro São José', '185', 'CACHORRO', 'Rocky', 'Cocker Spaniel', 14.2, 'MEDIO', 'Cachorro brincalhão', true, 'AGUARDANDO', '2024-12-30 12:30:00', NULL, 'DINHEIRO', 'MACHO', 603),
 (15111, 'João', 'Silva', '12345678901', '(11) 91234-5678', 'Rua das Flores', 'Centro', '123', 'CACHORRO', 'Rex', 'Vira-lata', 15.2, 'GRANDE', 'Cachorro amigável', true, 'AGUARDANDO', '2025-01-01 10:00:00', NULL , 'PIX','MACHO', 600),
 (15112, 'Maria', 'Souza', '98765432100', '(21) 98765-4321', 'Av. Brasil', 'Bairro Alto', '456', 'GATO', 'Mia', 'Siamês', 4.1, 'PEQUENO', 'Gato calmo', false, 'AGUARDANDO', '2024-12-02 14:30:00', NULL, 'CASTRACAO_SOLIDARIA','FEMEA', null),
 (15113, 'Carlos', 'Oliveira', '32165498701', '(31) 99876-5432', 'Travessa Verde', 'Jardim Palmeiras', '789', 'CACHORRO', 'Bolt', 'Pastor Alemão', 22.0, 'GRANDE', 'Cachorro ativo', true, 'AGUARDANDO', '2024-12-03 08:45:00', NULL, 'CASTRACAO_SOLIDARIA', 'MACHO', null),
-(15114, 'Ana', 'Ferreira', '65478912300', '(41) 92345-6789', 'Rua das Palmeiras', 'Vila Nova', '321', 'CACHORRO', 'Toby', 'Golden Retriever', 28.5, 'GRANDE', 'Muito dócil e brincalhão', true, 'AGUARDANDO', '2025-02-10 09:15:00', 53, 'DINHEIRO', 'MACHO', null),
+(15114, 'Ana', 'Ferreira', '65478912300', '(41) 92345-6789', 'Rua das Palmeiras', 'Vila Nova', '321', 'CACHORRO', 'Toby', 'Golden Retriever', 28.5, 'GRANDE', 'Muito dócil e brincalhão', true, 'AGUARDANDO', '2025-02-10 09:15:00', 53, 'DINHEIRO', 'MACHO', 603),
 (15115, 'Bruno', 'Lima', '74185296301', '(51) 93456-7890', 'Rua São João', 'Centro', '159', 'GATO', 'Luna', 'Persa', 3.7, 'PEQUENO', 'Gato muito tranquilo', false, 'AGUARDANDO', '2025-03-05 11:20:00', 53, 'CASTRACAO_SOLIDARIA', 'FEMEA', null),
-(15116, 'Camila', 'Alves', '85296374102', '(61) 94567-8901', 'Avenida Central', 'Bairro Industrial', '753', 'CACHORRO', 'Spike', 'Bulldog', 18.0, 'MEDIO', 'Um pouco teimoso, mas carinhoso', true, 'AGUARDANDO', '2025-03-07 15:40:00', 53, 'PIX', 'MACHO', null),
+(15116, 'Camila', 'Alves', '85296374102', '(61) 94567-8901', 'Avenida Central', 'Bairro Industrial', '753', 'CACHORRO', 'Spike', 'Bulldog', 18.0, 'MEDIO', 'Um pouco teimoso, mas carinhoso', true, 'AGUARDANDO', '2025-03-07 15:40:00', 53, 'PIX', 'MACHO', 601),
 (15117, 'Diego', 'Ramos', '96374185203', '(71) 95678-9012', 'Rua das Acácias', 'Residencial Primavera', '951', 'GATO', 'Nina', 'Maine Coon', 6.5, 'MEDIO', 'Muito ativa e curiosa', true, 'AGUARDANDO', '2025-05-12 08:00:00', 53, 'DINHEIRO', 'FEMEA', null),
 (15118, 'Eduarda', 'Martins', '15926374804', '(81) 96789-0123', 'Travessa Azul', 'Vila Esperança', '852', 'CACHORRO', 'Thor', 'Husky Siberiano', 25.3, 'GRANDE', 'Cheio de energia, precisa de espaço', false, 'AGUARDANDO', '2025-06-20 13:30:00', 53, 'CASTRACAO_SOLIDARIA', 'MACHO', null),
 (15119, 'Fernando', 'Moura', '25836974105', '(91) 97890-1234', 'Rua do Sol', 'Bairro Novo', '456', 'GATO', 'Simba', 'Angorá', 5.0, 'MEDIO', 'Gosta de escalar móveis', true, 'AGUARDANDO', '2025-07-15 16:10:00', 53, 'PIX', 'MACHO', 600),

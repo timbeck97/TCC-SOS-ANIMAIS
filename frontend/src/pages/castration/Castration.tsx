@@ -103,7 +103,7 @@ export const Castration = () => {
     }
     const permitidoConcluir = (showAlert: boolean) => {
         if (castracao && castracao.animais && castracao.animais.length > 0) {
-            if (!castracao.animais.every(a => a.idFaixa && a.idFaixa !== 0)) {
+            if (!castracao.animais.filter(c=>c.formaPagamento!=='CASTRACAO_SOLIDARIA').every(a => a.idFaixa && a.idFaixa !== 0)) {
                 if (showAlert) {
                     openAlertWarning('Para finalizar a castração é necessário informar as faixas de valores')
                 }
@@ -402,7 +402,6 @@ export const Castration = () => {
                                 <h2 className="text-lg/7 font-semibold text-gray-900 ml-2">Lista de Espera</h2>
                             </div>
                             <div className="mt-3">
-                                {/* <TableWaitingList customTableStyle={customTableStyle} dataProps={listsEspera} selectAnimals={true} handleSelectRows={handleSelect} /> */}
                                 <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
                                     <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" />
                                     <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
@@ -477,7 +476,7 @@ export const Castration = () => {
                 </div>
                 <div className="space-x-0 sm:space-x-2 mt-4 sm:mt-1">
                     {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" onClick={validarConclusao} class="w-full sm:w-60 mt-1" icon={<FaCheck />} type="success" />}
-                    {castracao && castracao.id && <Button text="Adicionar Animal" onClick={() => handleAddNovoAnimal()} class="w-full sm:w-60 mt-1" icon={<FiCheck />} type="default" />}
+                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' &&  <Button text="Adicionar Animal" onClick={() => handleAddNovoAnimal()} class="w-full sm:w-60 mt-1" icon={<FiCheck />} type="default" />}
                     <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-60 mt-1" icon={<FaRegFilePdf />} type="neutral" />
                     <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
                 </div>

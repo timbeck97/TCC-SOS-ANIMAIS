@@ -15,6 +15,7 @@ const Input = forwardRef<any, InputInterface>(({
     errors,
     lines,
     format,
+    readonly,
     ...rest
 
 }: InputInterface, ref) => {
@@ -56,9 +57,10 @@ const Input = forwardRef<any, InputInterface>(({
                 name={name}
                 type={type}
                 onChange={onChange}
+                disabled={readonly}
                 value={value}
                 {...rest}
-                className={`block w-full px-3 py-2 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
+                className={`block w-full px-3 py-2 text-gray-900 shadow-sm border-0 disabled:bg-gray-50 disabled:text-gray-500 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
             />
         )
     }

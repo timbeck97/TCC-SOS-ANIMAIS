@@ -21,6 +21,7 @@ import { CardButton } from "../../types/CardButton"
 import { Subtitle } from "../title/Subtitle"
 import { Table } from "../table/Table"
 import { Column } from "../table/Column"
+import { FiCheck } from "react-icons/fi"
 
 
 
@@ -108,6 +109,13 @@ export const CastrationAnimals = ({ dataProps,
 
 
     const renderPaymentReceipt = (row: EsperaCastracao) => {
+        if(row.formaPagamento==='CASTRACAO_SOLIDARIA'){
+            return(
+                <div className="flex justify-center items-center gap-x-2">
+                    <span className="text-md">Isento</span>
+                </div>
+            )
+        }
         return <div className="flex items-center space-x-2 justify-center">
             {row.paga ? <><FcOk size={25} /> <span>Pago</span></> : <><FcCancel size={25} /> <span>Não Pago</span></>}
         </div>
