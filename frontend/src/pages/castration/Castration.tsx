@@ -127,12 +127,14 @@ export const Castration = () => {
 
     }
     const handleAbrirCastracao = (row: any) => {
+        console.log('clicou')
         getCastration(row.id, () => {
             navigate('/gerenciar/castracoes/' + row.id)
         })
 
     }
     const generateReport = (row: any) => {
+        console.log(row)
         api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response) => {
 
             const contentDisposition = response.headers['content-disposition'];
@@ -547,13 +549,16 @@ export const Castration = () => {
                     }} icon={<FiPlus />} type="default" />
                 </div>
                 <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
-                    columnsRowClick={[0, 1, 2, 3]}
+                    columnsRowClick={[0, 1, 2, 3,4,5,6]}
                 >
-                    <Column field="data" label="Data" format="dataHora" />
-                    <Column field="quantidadeAnimais" label="Quantidade de Animais" />
-                    <Column field="situacao" label="Situação" format="situacaoCastracao" />
-                    <Column field="observacao" label="Observação" />
-                    <Column label="Ações" component={renderAcoes} />
+                    <Column field="data" label="Data" format="dataHora" align="center" />
+                    <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
+                    <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
+                    <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
+                    <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
+                    <Column field="situacao" label="Situação" format="situacaoCastracao" align="center" />
+                    <Column field="observacao" label="Observação" align="center" />
+                    <Column label="Ações" component={(idx, row)=>renderAcoes(row)} />
                 </Table>
 
 

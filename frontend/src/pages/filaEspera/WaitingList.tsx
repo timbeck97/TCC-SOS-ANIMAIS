@@ -10,7 +10,7 @@ import { Title } from '../../components/title/Title';
 import { Table } from '../../components/table/Table';
 import { Column } from '../../components/table/Column';
 import { EsperaCastracao } from '../../types/EsperaCastracao';
-import { formatPorteAnimal } from '../../services/Util';
+import { formatPorteAnimal, formatTipoAnimal } from '../../services/Util';
 import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 import { useDevice } from '../../context/DeviceContext';
 import { CardAnimal } from '../../components/cards/CardAnimal';
@@ -22,8 +22,7 @@ export const WaitingList = () => {
     const [data, setData] = useState<EsperaCastracao[]>([])
 
     useEffect(() => {
-        // fetchCastracoes()
-        // getTotais();
+    
         Promise.all([getTotais(), fetchCastracoes()])
         .then(result=>{
             setTotais(result[0] || {} as CastrationRequestTotal);
@@ -36,14 +35,7 @@ export const WaitingList = () => {
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
     const { isMobile } = useDevice();
     const [loading, setLoading] = useState(true)
-    // const getTotais = async () => {
-    //     let response = await request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
-    //     setTotais(response || {} as CastrationRequestTotal);
-    // }
-    // const fetchCastracoes = async () => {
-    //     let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
-    //     setData(response || [])
-    // }
+
     const getTotais = async () => {
         return request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
        
@@ -52,16 +44,17 @@ export const WaitingList = () => {
         return  request<EsperaCastracao[]>('get', '/castration/waitingList')
     }
     
-    const renderNomePorte = (row: EsperaCastracao) => {
-        return (
-            <div className="w-fit">
-                <div className="flex flex-col items-center">
-                    <span className="font-bold">{row.nomeAnimal}</span>
-                    <span>{formatPorteAnimal(row.porteAnimal)}</span>
+    const renderDadosAnimal = (row: EsperaCastracao) => {
+            return (
+                <div className="w-full">
+                    <div className="flex flex-col items-center ">
+                        <span className="poppins-bold">{row.nomeAnimal}</span>
+                        <span className="poppins-bold text-indigo-500">{formatTipoAnimal(row.tipoAnimal)}</span>
+                        <span>{formatPorteAnimal(row.porteAnimal)}</span>
+                    </div>
                 </div>
-            </div>
-        )
-    }
+            )
+        }
     return (
         <Pawbackground>
 
@@ -106,11 +99,10 @@ export const WaitingList = () => {
                         {isMobile? <div className='space-y-2'>{data.map(x => <CardAnimal castracao={x}/>)}</div>
                         :
                         <Table id='tableAnimaisIdx' data={data} enablePagination={true}>
-                            <Column field="nomeRequerente" label="Nome do Requerente" />
-                            <Column field="tipoAnimal" label="Tipo de Animal" format="tipoAnimal" />
-                            <Column label="Nome do Animal" component={(idx, row: EsperaCastracao) => renderNomePorte(row)} />
-                            <Column field="dataSolicitacao" label="Data da Solicitação" format="data" />
-                            <Column field="formaPagamento" label="Forma de Pagamento" format="formaPagamento" />
+                            <Column field="nomeRequerente" align='center' label="Nome do Requerente" />
+                            <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
+                            <Column field="dataSolicitacao" align='center'  label="Data da Solicitação" format="data" />
+                            <Column field="formaPagamento" align='center' label="Forma de Pagamento" format="formaPagamento" />
                             <Column label="Ações" component={(idx, row: EsperaCastracao) => <button type="button" onClick={() => setWaitListSelect(row)} >
                                 <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
                             </button>} />

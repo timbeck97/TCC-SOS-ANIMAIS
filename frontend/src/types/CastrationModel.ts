@@ -4,6 +4,8 @@ export interface CastrationModel {
     id?: number,
     data: string,
     quantidadeAnimais: number,
+    valorPagoSos?:number,
+    valoPagoPopulacao?:number,
     observacao: string
     animais?: EsperaCastracao[]
     situacao?: string,

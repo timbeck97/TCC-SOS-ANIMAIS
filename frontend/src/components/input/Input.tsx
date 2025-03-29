@@ -45,7 +45,7 @@ const Input = forwardRef<any, InputInterface>(({
             value={value}
             rows={lines}
             {...rest}
-                className={`block w-full px-3 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
+                className={`block w-full px-3 text-gray-900 shadow-sm rounded rounded-md border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-100 sm:text-sm/6`}
             />
         )
     }
@@ -60,7 +60,7 @@ const Input = forwardRef<any, InputInterface>(({
                 disabled={readonly}
                 value={value}
                 {...rest}
-                className={`block w-full px-3 py-2 text-gray-900 shadow-sm border-0 disabled:bg-gray-50 disabled:text-gray-500 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
+                className={`block w-full px-3 py-2 text-gray-900 shadow-sm border-0 rounded rounded-md disabled:bg-gray-50 disabled:text-gray-500 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6`}
             />
         )
     }

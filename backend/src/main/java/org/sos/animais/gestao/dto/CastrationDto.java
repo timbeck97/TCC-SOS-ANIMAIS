@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import org.sos.animais.gestao.enums.ERequestSituation;
+import org.sos.animais.gestao.model.Castration;
 
 import java.util.Date;
 import java.util.List;
@@ -16,9 +17,12 @@ public class CastrationDto {
     private int quantidadeAnimais;
     private ERequestSituation situacao;
     private List<CastrationRequestDto> animais;
+    private double valoPagoPopulacao;
+    private double valorPagoSos;
 
     public CastrationDto() {
     }
+
 
     public Long getId() {
         return id;
@@ -66,5 +70,21 @@ public class CastrationDto {
 
     public void setSituacao(ERequestSituation situacao) {
         this.situacao = situacao;
+    }
+
+    public double getValoPagoPopulacao() {
+        return valoPagoPopulacao;
+    }
+
+    public void setValoPagoPopulacao(double valoPagoPopulacao) {
+        this.valoPagoPopulacao = valoPagoPopulacao;
+    }
+
+    public double getValorPagoSos() {
+        return valorPagoSos;
+    }
+
+    public void setValorPagoSos(double valorPagoSos) {
+        this.valorPagoSos = valorPagoSos;
     }
 }

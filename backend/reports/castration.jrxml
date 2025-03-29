@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2025-03-29T11:55:05 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="castration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8ab06382-ebbf-4a58-a971-4de4031cd05e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sosanimais"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="P_CASTRATION_ID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT 
+cr.nome,cr. sobrenome, cr.cpf,cr. telefone, cr.rua,cr. bairro, cr.numero,
+cr.nome_animal,cr. raca_animal,cr. peso_animal,cr. porte_animal, 
+cr.descricao_animal,cr. animal_vacinado, cr.situacao, cr.genero_animal,
+cr.tipo_animal,to_char( c.data,'dd/MM/yyyy') as data
+FROM castration_request cr
+inner join castration c on c.id=cr.castracao_id
+where castracao_id=$P{P_CASTRATION_ID}]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="sobrenome" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="telefone" class="java.lang.String"/>
+	<field name="rua" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="nome_animal" class="java.lang.String"/>
+	<field name="raca_animal" class="java.lang.String"/>
+	<field name="peso_animal" class="java.lang.Double"/>
+	<field name="porte_animal" class="java.lang.String"/>
+	<field name="descricao_animal" class="java.lang.String"/>
+	<field name="animal_vacinado" class="java.lang.Boolean"/>
+	<field name="situacao" class="java.lang.String"/>
+	<field name="genero_animal" class="java.lang.String"/>
+	<field name="tipo_animal" class="java.lang.String"/>
+	<field name="data" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="-1" y="113" width="553" height="666" uuid="789c282c-759e-4f00-8cb9-604322411cad"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="50" width="70" height="21" uuid="9d33aee0-b80d-44bd-b3b1-05712962a2e4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[PACIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="71" width="99" height="21" uuid="9ae04717-85e4-4234-957e-01f22d216fe3"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[PROPRIETÁRIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="71" width="42" height="21" uuid="a3091282-dcd9-4542-9db7-15886140a995"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="92" width="80" height="21" uuid="88b77720-3b7e-41b3-97fa-03c4d1f49054"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[ENDERECO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="50" width="146" height="21" uuid="4c23b0e5-f37e-42f4-87e6-19470d46d5b8"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nome_animal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="71" width="275" height="21" uuid="e3981c66-3a9a-49a6-833c-78673c2548cf"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nome}+" "+$F{sobrenome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="92" width="472" height="21" uuid="e6e2016c-bb4d-4cfb-8fac-b2f11ca52d54"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{rua}+", "+$F{numero}+" - "+$F{bairro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="71" width="136" height="21" uuid="2c25c215-33e7-4a85-86fb-6a33e577e5c0"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="552" height="50" backcolor="#EDE8E8" uuid="97ca6444-74aa-4bca-a28c-3622572295e4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TERMO DE CONSENTIMENTO PARA PRÁTICA ANESTÉSICO-CIRÚRGICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="120" width="553" height="30" uuid="f1cb8601-429c-4aa5-9ef1-e300c0cf90da"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Para fins de ordem legal, AUTORIZO os procedimentos para a cirugia do animal de minha propriedade.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="150" width="553" height="50" uuid="928c1294-05a2-488d-b7a3-b5c7c20f08a3"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Entendo que, no caso de anestesias, cirugias e administração de medicamentos existem riscos inerentes e complicações. Sendo assim, EXIMO os profissionais envolvidos de toda e qualquer responsabilidade quanto a vida do meu animal.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="200" width="553" height="40" uuid="cedd8f26-c9d4-43a7-b4d6-9514cc6d8af6"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Autorizo a realização a critério médico veterinário, de todo e qualquer procedimento e administração de medicamentos que se façam necessários.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="240" width="553" height="29" uuid="63e9e8a8-9f7d-411a-9689-7ebf3dedf34c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Estou ciente que serei o único responsável por qualquer complicação pós-cirúrgica devido á:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="279" width="553" height="41" uuid="9366f7f3-93ba-4014-89d3-c5249d0529b9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+					<paragraph leftIndent="15" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[- Falta de cuidados ou proteção devida (colar cirúrgico, malha cirúrgica) restrição de espaço e das atividades do paciente durante a recuperação cirúrgica ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="320" width="553" height="30" uuid="11a37eb4-421f-4a75-b9ab-8e0df4e6f100">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+					<paragraph leftIndent="15" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[- Falta ou erro na administração de medicamentos prescritos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="350" width="553" height="30" uuid="f33ad170-56a3-4364-b65c-c09bfab22c69"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+					<paragraph leftIndent="15" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[- Falta de informação ao veterinário sobre qualquer anormalidade PRÉ ou PÓS cirúrgica.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="380" width="553" height="40" uuid="8316503c-02d5-47e3-93a2-36a19f7776a0"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Assumo total responsabilidade financeira dos custos advindos com internação, medicamentos, exames e cirúrgias e concordo a pagar todos os custos da alta do animal de minha propriedade.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="420" width="553" height="40" uuid="90c6f792-e015-4180-92e3-af94c896c95e"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Outro assim, declaro que preenchi as especificações acima de pŕoprio cunho, dato e assino o presente documento, com força de contrato de prestação de serviço Médico Veterinário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="216" y="50" width="44" height="21" uuid="5981b5a3-db58-4204-ace9-cad487be4860"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[SEXO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="260" y="50" width="90" height="21" uuid="14fdda1b-7697-4c9b-92a4-7096b9368059"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{genero_animal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="50" width="142" height="21" uuid="fdcb3acc-b96b-45d5-a6cc-1bdbca604b9d"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_animal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="350" y="50" width="60" height="21" uuid="591f90c4-e1fe-4ea8-b4dc-e00efd825005"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[ESPÉCIE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="460" width="553" height="20" uuid="ba81fffa-0d7a-427a-8924-7b8c94cc1167"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[(  ) VACINAS EM DIA
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-2" y="480" width="553" height="20" uuid="5a263317-82b1-43ad-9db4-70278e5bb93e"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[(  ) NÃO APRESENTOU CARTEIRA DE VACINAÇÃO E/OUT NÃO É VACINADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="500" width="553" height="20" uuid="9dbd7e7a-7eea-4594-8a1f-04e8494f7892"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[(  ) FEZ E/OU APRESENTOU EXAMES PRÉ CIRÚRGICOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-2" y="520" width="553" height="20" uuid="6632e5fc-e8fb-4460-9fbe-e58f0871bcab"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[(  ) TUTOR OPTOU EM NÃO FAZER OS EXAMES CIENTES DE TODOS OS RISCOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="570" width="50" height="20" uuid="bfb477cd-08aa-4b61-a37a-c3d11feecbb8"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[DATA:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="104" y="660" width="350" height="1" uuid="d0d86687-a625-4fa6-92b1-e255a026e1d7">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="230" y="661" width="99" height="20" uuid="f6a94080-dce4-47e9-88b4-22785ec33f91"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Assinatura]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="570" width="136" height="21" uuid="ce139316-970d-414c-9737-1b05fa6604c2"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -151,7 +151,19 @@ export const getInitialMonth = (next: boolean) => {
     }
     return String(month);
 }
-export const formatValorMoeda=(valor:number)=>{
+export const formatValorMoeda=(valor:number, cifrao:boolean)=>{
     if(Number.isNaN(valor))return '0,0'
-    return new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(valor);
+    if (cifrao) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(valor);
+    } else {
+    return new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(valor);
+    }
 }

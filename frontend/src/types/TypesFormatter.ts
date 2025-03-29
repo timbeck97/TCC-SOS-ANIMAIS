@@ -5,4 +5,6 @@ export interface TypesFormatter{
     dataHora:(value:string)=>string
     formaPagamento:(value:string)=>string
     situacaoCastracao:(value:string)=>string
+    moeda:(value:string)=>string
+    moedaCifrao:(value:string)=>string
 }

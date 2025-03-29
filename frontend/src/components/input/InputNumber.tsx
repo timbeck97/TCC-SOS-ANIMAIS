@@ -74,7 +74,7 @@ export const InputNumber = forwardRef<HTMLSelectElement, InputNumberInterface>((
         <div >
             <label htmlFor={id} className="block text-sm/6 font-medium text-gray-900">{label}</label>
             <div className="mt-2">
-                <input className="block w-full px-3 py-2 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                <input className="block w-full rounded rounded-md px-3 py-2 text-gray-900 shadow-sm border-0 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                     type="text" id={id} name={name} value={componentValue} onChange={(e)=>onChange(e.target.value)} onFocus={(e)=>e.target.select()} />
                 <p className="text-red-500 text-xs mt-1">
                     {errorMessage}

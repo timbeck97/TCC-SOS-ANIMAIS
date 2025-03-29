@@ -1,11 +1,11 @@
 package org.sos.animais.gestao.service;
 
-import org.sos.animais.gestao.config.AutenticationService;
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.enums.ENotification;
+import org.sos.animais.gestao.enums.EPaymentMethod;
 import org.sos.animais.gestao.enums.ERequestSituation;
 import org.sos.animais.gestao.factory.CastrationRequestFactory;
 import org.sos.animais.gestao.model.Castration;
@@ -17,7 +17,6 @@ import org.sos.animais.gestao.repository.CastrationRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
 import org.sos.animais.gestao.repository.PriceRangeRepository;
 import org.sos.animais.gestao.service.file.FileService;
-import org.sos.animais.gestao.service.file.FileUploadService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -122,6 +121,12 @@ public class CastrationService {
         dto.setObservacao(entity.getObservacao());
         dto.setAnimais(entity.getRequisicoes().stream().map(x->convertCastrationRequestToDto(x)).toList());
         dto.setQuantidadeAnimais(entity.getRequisicoes().size());
+        dto.setValoPagoPopulacao(entity.getRequisicoes().stream()
+                        .filter(x->x.getFormaPagamento()!= EPaymentMethod.CASTRACAO_SOLIDARIA && x.getFaixaPreco()!=null)
+                .mapToDouble(x->x.getFaixaPreco().getValor()).sum());
+        dto.setValorPagoSos(entity.getRequisicoes().stream()
+                .filter(x->x.getFormaPagamento()== EPaymentMethod.CASTRACAO_SOLIDARIA && x.getFaixaPreco()!=null)
+                .mapToDouble(x->x.getFaixaPreco().getValor()).sum());
         dto.setSituacao(entity.getSituacao());
         return dto;
     }

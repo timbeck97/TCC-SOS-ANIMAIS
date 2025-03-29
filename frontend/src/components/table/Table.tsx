@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TableProps } from "../../types/TableProps";
 import { TableColumn } from "../../types/TableColumn";
 import { TypesFormatter } from "../../types/TypesFormatter";
-import { formatDate, formatDateWithHour, formatFormaPagamento, formatPorteAnimal, formatSituacao, formatTipoAnimal } from "../../services/Util";
+import { formatDate, formatDateWithHour, formatFormaPagamento, formatPorteAnimal, formatSituacao, formatTipoAnimal, formatValorMoeda } from "../../services/Util";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { Pagination } from "../../types/Pagination";
 import { TableData } from "../../types/TableData";
@@ -13,7 +13,9 @@ const formatter: TypesFormatter = {
     data: formatDate,
     dataHora: formatDateWithHour,
     formaPagamento: formatFormaPagamento,
-    situacaoCastracao: formatSituacao
+    situacaoCastracao: formatSituacao,
+    moeda:(value)=>formatValorMoeda(parseFloat(value), false),
+    moedaCifrao:(value)=>formatValorMoeda(parseFloat(value), true)
 }
 
 export const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick, selectable, onSelectRow }: TableProps<T>) => {

@@ -1,29 +1,7 @@
-import { useState } from "react"
-import { get, request } from "../../services/Axios"
 import { NavLink } from "react-router-dom"
 
 export const Home = () => {
 
-    const [data, setData] = useState<string | null>('')
-
-    const fazerRequestPrivada = async (path: string | undefined) => {
-        let pathUrl = '/private'
-        if (path) {
-            pathUrl = `/private/${path}`
-        }
-        console.log(pathUrl);
-
-        let response = await get<string>(pathUrl, {}, {})
-        setData(response?.data)
-    }
-
-    const fazerRequestpublica = async () => {
-        // let response=await get<string>('/public',{},{})
-        // setData(response?.data)  
-        let response = await request<string>("get", '/public')
-        setData(response)
-
-    }
 
     return (
         <div style={{ overflowY: "auto", flex: '1' }}>
