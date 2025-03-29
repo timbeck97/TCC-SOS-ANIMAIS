@@ -136,8 +136,8 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
                     <span className="px-3 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleChangePagination(1)}>
                         <MdKeyboardDoubleArrowLeft size={18} />
                     </span>
-                    {Array.apply(null, Array(pagination.totalPages)).map((x, y) => y + 1).map(x => (
-                        <span className={`py-2 px-5  poppins-regular hover:bg-gray-200 cursor-pointer ${pagination.pageNumber === x ? 'bg-gray-300' : ''}`} onClick={() => handleChangePagination(x)}>{x}</span>
+                    {Array.apply(null, Array(pagination.totalPages)).map((x, y) => y + 1).map((x, idx) => (
+                        <span key={idx} className={`py-2 px-5  poppins-regular hover:bg-gray-200 cursor-pointer ${pagination.pageNumber === x ? 'bg-gray-300' : ''}`} onClick={() => handleChangePagination(x)}>{x}</span>
                     ))}
                     <span className="px-3 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleChangePagination(pagination.totalPages)} >
                         <MdKeyboardDoubleArrowRight />

@@ -8,6 +8,7 @@ import { Castration } from "../pages/castration/Castration";
 import { Dashboard } from "../pages/dashboard/Dashboard";
 import { Configurations } from "../pages/configuration/Configurations";
 import { CastrationRequestEdit } from "../pages/castrationRequestEdit/CastrationRequestEdit";
+import { Notification } from "../pages/notification/Notification";
 
 
 export const Routes = () => {
@@ -18,7 +19,6 @@ export const Routes = () => {
           <Route path="" element={<Home />} />
           <Route path="/solicitarCastracao" element={<CastrationRequest />} />
         </Route>
-
         <Route path="/gerenciar" element={<PrivateRoute />}>
           <Route path="" element={<Navigate to="filaEspera" />} />
           <Route path="filaEspera" element={<WaitingList />} />
@@ -27,6 +27,7 @@ export const Routes = () => {
           <Route path="castracoes/:id" element={<Castration />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="configuracoes" element={<Configurations />} />
+          <Route path="notificacoes" element={<Notification />} />
         </Route>
       </Route>
 

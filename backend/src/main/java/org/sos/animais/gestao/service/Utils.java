@@ -61,13 +61,11 @@ public class Utils {
         return stringMes;
     }
     public static String formateCompetencia(String competencia) {
-        System.out.println(competencia);
         if (competencia == null || competencia.length() != 6) {
             return "";
         }
         String mes = competencia.substring(4);
         String nomeMes = getNomeMesAbrev(mes);
-        System.out.println(nomeMes);
         return nomeMes + "/" + competencia.substring(0, 4);
     }
 }

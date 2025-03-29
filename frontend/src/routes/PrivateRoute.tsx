@@ -1,14 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContextInterface";
 import { Menu } from "../components/menu/Menu";
+import { useAuthContext } from "../context/AuthContextInterface";
 
 
 export const PrivateRoute = () => {
     //get context auth
-    //const { isAutenticated, loading } = useAuthContext();
+    const { isAutenticated, loading } = useAuthContext();
     const stringTk=localStorage.getItem('token')
 
-    if (!stringTk) {
+    if (loading) {
         return <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="flex items-center  space-x-2">
                 <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce"></div>
@@ -18,14 +18,13 @@ export const PrivateRoute = () => {
             </div>
         </div>
     }
-    if (stringTk) {
+    if (!loading && isAutenticated()) {
         return <div className="flex flex-col min-h-0 grow">
             <Menu />
             <div className="flex flex-col grow" style={{ overflowY: 'scroll' }}>
                 <Outlet />
             </div>
         </div>
-
 
 
     } else {

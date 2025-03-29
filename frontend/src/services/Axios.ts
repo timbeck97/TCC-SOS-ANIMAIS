@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { openModalInstance } from "./ModalTrigger";
 import { updateRefreshToken } from "./AuthRequest";
 
@@ -44,11 +44,7 @@ api.interceptors.response.use((response) => {
   if (error.code === 'ERR_NETWORK') {
     openModalInstance("Erro ao acessar o servidor: " + error.message, () => { });
   } else if (response?.status === 401 && response?.data.message?.includes('Jwt expired')) {
-    //   openModalInstance("Sessão expirada. Faça login novamente.", () => {
-    //   //logout();
-    //   openAlertSuccess('Renovando token a partir do refresh token.');
 
-    // });
     updateRefreshToken();
   } else if (response?.status === 403) {
     openModalInstance("Você não tem permissão para acessar esses dados", () => { });
@@ -143,6 +139,7 @@ export async function request<T>(
   config?: AxiosRequestConfig
 ): Promise<T | null> {
   try {
+    console.log(data)
     const response = await api.request<T>({
       method,
       url,

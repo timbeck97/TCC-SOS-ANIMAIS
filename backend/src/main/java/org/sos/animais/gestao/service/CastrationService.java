@@ -1,9 +1,11 @@
 package org.sos.animais.gestao.service;
 
+import org.sos.animais.gestao.config.AutenticationService;
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
 import org.sos.animais.gestao.enums.EFileType;
+import org.sos.animais.gestao.enums.ENotification;
 import org.sos.animais.gestao.enums.ERequestSituation;
 import org.sos.animais.gestao.factory.CastrationRequestFactory;
 import org.sos.animais.gestao.model.Castration;
@@ -33,13 +35,15 @@ public class CastrationService {
     private final FileService fileService;
     private final CastrationFileRepository castrationFileRepository;
     private final PriceRangeRepository priceRangeRepository;
+    private final NotificationService notificationService;
 
-    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileService fileService, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository) {
+    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileService fileService, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository, NotificationService notificationService) {
         this.castrationRequestRepository = castrationRequestRepository;
         this.castrationRepository = castrationRepository;
         this.fileService = fileService;
         this.castrationFileRepository = castrationFileRepository;
         this.priceRangeRepository = priceRangeRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -153,6 +157,9 @@ public class CastrationService {
         entity = castrationRequestRepository.save(entity);
         if(id==null && file!=null){
             fileService.uploadFileCastrationRequest(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
+        }
+        if(id==null){
+            notificationService.createNotification(ENotification.CASTRATION_REQUEST_CREATED, entity.getNomeFormatado());
         }
         return convertCastrationRequestToDto(entity);
     }

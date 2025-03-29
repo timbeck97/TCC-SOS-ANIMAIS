@@ -248,4 +248,13 @@ public class CastrationRequest {
     public void setGeneroAnimal(EAnimalGender generoAnimal) {
         this.generoAnimal = generoAnimal;
     }
+    public String getNomeFormatado(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(nome.substring(0,1).toUpperCase());
+        sb.append(nome.substring(1).toLowerCase());
+        sb.append(" ");
+        sb.append(sobrenome.substring(0,1).toUpperCase());
+        sb.append(sobrenome.substring(1).toLowerCase());
+        return sb.toString();
+    }
 }
