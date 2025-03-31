@@ -17,6 +17,7 @@ import { Button } from "../../components/button/Button";
 import { GrLinkPrevious } from "react-icons/gr";
 import { FaSave } from "react-icons/fa";
 import { openAlertSuccess } from "../../services/Alert";
+import { formatNumberInput, formatValorMoeda } from "../../services/Util";
 
 export const CastrationRequestEdit = () => {
 
@@ -45,7 +46,7 @@ export const CastrationRequestEdit = () => {
                 tipoAnimal: response?.tipoAnimal,
                 nomeAnimal: response?.nomeAnimal,
                 racaAnimal: response?.racaAnimal,
-                pesoAnimal: String(response?.pesoAnimal),
+                pesoAnimal: formatValorMoeda(response?.pesoAnimal||0, false),
                 descricaoAnimal: response?.descricaoAnimal,
                 animalVacinado: response?.animalVacinado,
                 porteAnimal: response?.porteAnimal,

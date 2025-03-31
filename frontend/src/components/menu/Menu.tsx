@@ -176,11 +176,11 @@ export const Menu = () => {
     const renderItensDropDownUser = () => {
         let itens: ReactElement[] = []
         if (isAutenticated()) {
-            itens.push(<Dropdown.Item key={2} icon={FaCog} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
-            itens.push(<DropdownDivider />)
-            itens.push(<Dropdown.Item key={1} icon={CiLogout} onClick={logout}>Sair</Dropdown.Item>)
+            itens.push(<Dropdown.Item key={1} icon={FaCog} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
+            itens.push(<DropdownDivider key={2} />)
+            itens.push(<Dropdown.Item key={3} icon={CiLogout} onClick={logout}>Sair</Dropdown.Item>)
         } else {
-            itens.push(<Dropdown.Item key={3} icon={FaUser} onClick={login}>Login</Dropdown.Item>)
+            itens.push(<Dropdown.Item key={4} icon={FaUser} onClick={login}>Login</Dropdown.Item>)
 
         }
         return itens;

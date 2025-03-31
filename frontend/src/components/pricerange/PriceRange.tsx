@@ -8,6 +8,7 @@ import { VscTrash } from "react-icons/vsc";
 import { GoPencil } from "react-icons/go";
 import { Subtitle } from "../../components/title/Subtitle";
 import { deleteRequest, get, post, request } from "../../services/Axios";
+import { formatValorMoeda } from "../../services/Util";
 
 export const PriceRange = () => {
     useEffect(() => {
@@ -16,15 +17,12 @@ export const PriceRange = () => {
     const [showAdicionarFaixaPreco, setShowAdicionarFaixaPreco] = useState<boolean>(false)
     const [faixaValor, setFaixaValor] = useState<FaixaValor>({ descricao: '', valor: '' })
     const [listaValores, setListaValores] = useState<FaixaValor[]>([
-        { descricao: 'Até 5KG', valor: '70.0' },
-        { descricao: '5kg até 10kg', valor: '90.0' },
-        { descricao: '10kg até 15kg', valor: '110.0' },
-        { descricao: '15kg até 20kg', valor: '120.0' },
-        { descricao: '20kg até 25kg', valor: '150.0' },
+   
     ])
     const carregarFaixas = async () => {
         let response = await get<FaixaValor[]>('faixapreco', {}, {})
-        setListaValores(response?.data)
+        setListaValores(response?.data.map(x=>({...x,valor:formatValorMoeda(parseFloat(x.valor), false)})));
+        
     }
     const deletarFaixa = (id: number) => {
         deleteRequest('faixapreco/' + id, () => {
@@ -50,6 +48,10 @@ export const PriceRange = () => {
             style: 'currency',
             currency: 'BRL',
         });
+    }
+    const fechar = ()=>{
+        setShowAdicionarFaixaPreco(false)
+        setFaixaValor({} as FaixaValor)
     }
     return (
         <div>
@@ -113,7 +115,7 @@ export const PriceRange = () => {
                 <Modal.Footer>
                     <div className="w-full space-x-2 flex justify-end">
 
-                        <Button text="Fechar" onClick={() => setShowAdicionarFaixaPreco(false)} type="neutral" />
+                        <Button text="Fechar" onClick={fechar} type="neutral" />
                         <Button text="Confirmar" onClick={adicionarFaixaValor} type="default" />
                     </div>
                 </Modal.Footer>

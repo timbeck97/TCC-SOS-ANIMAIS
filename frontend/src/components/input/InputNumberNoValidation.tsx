@@ -8,7 +8,7 @@ export const InputNumberNoValidation = ({ id, name, label, value, type, onChange
         if(value){
             setComponentValue(value)
         }
-    },[value])
+    },[])
 
     const [componentValue, setComponentValue] = useState<string>('');
     const formatar = (value: string) => {
@@ -35,6 +35,7 @@ export const InputNumberNoValidation = ({ id, name, label, value, type, onChange
     const handleChange = (value: string) => {
         let valueFormated = '';
         value = formatar(value);
+        console.log(value)
         setComponentValue(value)
         switch (type) {
             case 'numeric2decimals':
