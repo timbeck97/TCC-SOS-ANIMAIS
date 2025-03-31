@@ -134,7 +134,6 @@ export const Castration = () => {
 
     }
     const generateReport = (row: any) => {
-        console.log(row)
         api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response) => {
 
             const contentDisposition = response.headers['content-disposition'];
@@ -248,7 +247,6 @@ export const Castration = () => {
             }
             return animal;
         })
-        console.log('on select animais');
 
         setListsEspera([...newFila])
         setAnimais([...animaisCastracao])
@@ -552,7 +550,6 @@ export const Castration = () => {
                     columnsRowClick={[0, 1, 2, 3,4,5,6]}
                 >
                     <Column field="data" label="Data" format="dataHora" align="center" />
-                    <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
                     <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
                     <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
                     <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />

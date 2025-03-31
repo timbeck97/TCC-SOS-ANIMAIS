@@ -52,17 +52,14 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         let total = data.length;
         let pages = Math.ceil(total / pagination.pageSize);
         setPagination({ ...pagination, totalPages: pages })
-        console.log(data)
-        setListData(data.slice(0, (pagination.pageSize + 1)))
+        setListData(data.slice(0, (pagination.pageSize)))
 
     }
     const handleChangePagination = (page: number) => {
         setPagination({ ...pagination, pageNumber: page });
         let start = pagination.pageSize * (page - 1);
         let end = start + pagination.pageSize;
-        console.log(originalData)
         let sliced = originalData.slice(start, end);
-        console.log(sliced)
         setListData(originalData.slice(start, end))
     }
     const handleRowClick = (row: TableData<T>, c: number) => {
@@ -82,23 +79,30 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
     const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number | string) => {
         let value = e.target.checked;
         setListData((prev) => {
-            let newData = prev.map((data, idx) => {
-                if (rowIndex === 'all') {
-                    return { ...data, selected: value }
-                } else {
-                    if (rowIndex === idx) {
-                        return { ...data, selected: value }
-                    } else {
-                        return data
-                    }
-                }
-            })
+            let newData = setListChecked(prev, rowIndex, value)
             if (onSelectRow) {
                 onSelectRow(newData.filter(d => d.selected).map(x => ({ ...x } as T)))
             }
             return newData
         })
+        setOriginalData((prev) => {
+            let newData = setListChecked(prev, rowIndex, value)
+            return newData
+        })
 
+    }
+    const setListChecked = (prev:TableData<T>[],  rowIndex: number | string, value:boolean)=>{
+        return prev.map((data, idx) => {
+            if (rowIndex === 'all') {
+                return { ...data, selected: value }
+            } else {
+                if (rowIndex === idx) {
+                    return { ...data, selected: value }
+                } else {
+                    return data
+                }
+            }
+        })
     }
     return (
         <div className="overflow-x-auto">

@@ -1,4 +1,3 @@
-import Input from "../../components/input/Input"
 import { useEffect, useState } from "react"
 import { Bar, Line, Pie } from "react-chartjs-2"
 import {
@@ -13,7 +12,6 @@ import {
     LineElement,
     ArcElement,
 } from 'chart.js';
-import { useDevice } from "../../context/DeviceContext";
 import { Button } from "../../components/button/Button";
 import { request } from "../../services/Axios";
 import { Dashboards } from "../../types/Dashboards";
@@ -105,7 +103,7 @@ export const Dashboard = () => {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 col-span-2">
                         <div className="p-4 border rounded-lg shadow-lg col-span-1">
-                            <h2 className="text-xl text-[#464549] poppins-semibold mb-2">Formas de Pagamento</h2>
+                            <h2 className="text-xl text-[#464549] poppins-semibold mb-2">Castrações por Meio de Pagamento</h2>
                             {renderBarChart()}
                         </div>
                         <div className="p-4 border rounded-lg shadow-lg col-span-1">
