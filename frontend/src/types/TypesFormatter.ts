@@ -7,4 +7,5 @@ export interface TypesFormatter{
     situacaoCastracao:(value:string)=>string
     moeda:(value:string)=>string
     moedaCifrao:(value:string)=>string
+    boolean:(value:string)=>string
 }

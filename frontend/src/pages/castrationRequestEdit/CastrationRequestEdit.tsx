@@ -17,7 +17,7 @@ import { Button } from "../../components/button/Button";
 import { GrLinkPrevious } from "react-icons/gr";
 import { FaSave } from "react-icons/fa";
 import { openAlertSuccess } from "../../services/Alert";
-import { formatNumberInput, formatValorMoeda } from "../../services/Util";
+import { formatValorMoeda } from "../../services/Util";
 
 export const CastrationRequestEdit = () => {
 

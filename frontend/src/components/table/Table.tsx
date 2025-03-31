@@ -15,7 +15,8 @@ const formatter: TypesFormatter = {
     formaPagamento: formatFormaPagamento,
     situacaoCastracao: formatSituacao,
     moeda:(value)=>formatValorMoeda(parseFloat(value), false),
-    moedaCifrao:(value)=>formatValorMoeda(parseFloat(value), true)
+    moedaCifrao:(value)=>formatValorMoeda(parseFloat(value), true),
+    boolean:(value)=> Boolean(value)===true?'Sim':'Não'
 }
 
 export const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick, selectable, onSelectRow }: TableProps<T>) => {
@@ -105,7 +106,7 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         })
     }
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex flex-col flex-1">
             <table id={id} className="min-w-full table-auto border-collapse border border-gray-200">
                 <thead>
                     <tr className="bg-gray-100">
@@ -134,7 +135,7 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
                                 </td>)}
                         </tr>
                     ))}
-
+                    {listData.length===0 && <tr><td className="text-center text-gray-600" colSpan={children.length}>Nenhum registro</td></tr>}
                 </tbody>
             </table>
             {enablePagination && <div className="flex justify-end">

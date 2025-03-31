@@ -3,5 +3,6 @@ export interface Notification{
     mensagem:string,
     tipo:string,
     data:Date,
-    lida:boolean
+    lida:boolean,
+    usuario:string
 }

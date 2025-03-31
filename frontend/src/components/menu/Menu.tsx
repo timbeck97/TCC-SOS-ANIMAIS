@@ -177,6 +177,7 @@ export const Menu = () => {
         let itens: ReactElement[] = []
         if (isAutenticated()) {
             itens.push(<Dropdown.Item key={1} icon={FaCog} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
+            itens.push(<Dropdown.Item key={1} icon={FaBell} onClick={() => navigate('/gerenciar/notificacoes')}>Notificações</Dropdown.Item>)
             itens.push(<DropdownDivider key={2} />)
             itens.push(<Dropdown.Item key={3} icon={CiLogout} onClick={logout}>Sair</Dropdown.Item>)
         } else {

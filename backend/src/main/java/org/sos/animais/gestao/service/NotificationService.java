@@ -19,8 +19,11 @@ public class NotificationService {
     public NotificationService(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
-    public List<NotificationDto> findAll(){
+    public List<NotificationDto> findAllUnreaded(){
         return notificationRepository.findAllByLidaIsFalseOrderByDataDesc();
+    }
+    public List<NotificationDto> findAll(){
+        return notificationRepository.findAllDto();
     }
     public List<NotificationDto> markAsRead(Long id){
         UserDto user = AutenticationService.getUser();

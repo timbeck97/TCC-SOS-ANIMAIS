@@ -19,6 +19,10 @@ public class NotificationController {
     }
 
     @GetMapping
+    public ResponseEntity<List<NotificationDto>> findAllUnreaded(){
+        return ResponseEntity.ok(notificationService.findAllUnreaded());
+    }
+    @GetMapping("/all")
     public ResponseEntity<List<NotificationDto>> findAll(){
         return ResponseEntity.ok(notificationService.findAll());
     }
