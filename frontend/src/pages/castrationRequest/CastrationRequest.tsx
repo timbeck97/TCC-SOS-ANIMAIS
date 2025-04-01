@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import imagem from '../../assets/family2.jpg'
 import check from '../../assets/check.png'
+import logo from '../../assets/logo.png'
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
 import Input from "../../components/input/Input"
 import { InputCombobox } from "../../components/input/InputCombobox";
@@ -320,7 +321,7 @@ export const CastrationRequest = () => {
         <Pawbackground>
             <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white" ref={topRef}>
                 <div className="pt-5">
-                    <img src={imagem} alt="Imagem logo SOS Animais" className="size-1/4  rounded-full mx-auto" />
+                    <img src={logo} alt="Imagem logo SOS Animais" className="size-1/3   mx-auto" />
                 </div>
                 {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
             </div>

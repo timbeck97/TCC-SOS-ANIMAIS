@@ -23,6 +23,12 @@ public class FileController {
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename,@PathVariable String folder) {
         localPath=localPath.endsWith("/")?localPath:localPath+"/";
         Path rootLocation = Paths.get(localPath+folder);
+        if (folder.contains("..") || folder.contains("/") || folder.contains("\\")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        if (filename.contains("..") || filename.contains("/") || filename.contains("\\")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         try {
             Path file = rootLocation.resolve(filename).normalize();
             Resource resource = new UrlResource(file.toUri());

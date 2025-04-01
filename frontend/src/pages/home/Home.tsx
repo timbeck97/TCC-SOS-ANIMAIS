@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom"
-
+import banner from '../../assets/banner.jpg'
+import logo from '../../assets/logo.png'
 export const Home = () => {
 
 
@@ -8,12 +9,16 @@ export const Home = () => {
             <div className="font-sans bg-gray-50">
 
 
-                <section className="bg-cover bg-center h-96" style={{ backgroundImage: "url('https://via.placeholder.com/1500x800')" }}>
-                    <div className="flex justify-center items-center h-full bg-black bg-opacity-50">
-                        <h2 className="text-white text-4xl font-bold text-center">Castração Gratuita para Animais Resgatados da Rua</h2>
+                <section className="relative w-full h-[500px] drop-shadow-md">
+                    <img className="w-full h-full object-cover object-center" src={banner} />
+                    <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-40">
+                       
+                            {/* <h1 className="text-8xl poppins-bold text-white ">SOS Animais</h1> */}
+                            <img src={logo} alt="Logo" className="sm:w-fit sm:h-fit w-1/2 h-1/2" />
+                      
                     </div>
                 </section>
-                <section className="py-16 px-4 bg-white">
+                <section className="py-16 px-4 bg-white drop-shadow-md">
                     <div className="container mx-auto text-center">
                         <h2 className="text-3xl font-bold text-blue-600 mb-4">Sobre a nossa ONG</h2>
                         <p className="text-lg text-gray-700 mb-8">
@@ -21,10 +26,11 @@ export const Home = () => {
                             todos os animais tenham uma vida digna, oferecendo serviços de castração gratuita para os animais resgatados da rua.
                         </p>
                     </div>
+
                 </section>
 
 
-                <section className="py-16 bg-gray-100">
+                <section className="py-16 bg-gray-100 drop-shadow-md" >
                     <div className="container mx-auto text-center">
                         <h2 className="text-3xl font-bold text-blue-600 mb-8">Nossos Serviços</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

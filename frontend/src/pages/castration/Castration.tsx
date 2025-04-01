@@ -43,6 +43,7 @@ export const Castration = () => {
     const [listsEspera, setListsEspera] = useState<EsperaCastracao[]>([])
     const [castracoes, setCastracoes] = useState<CastrationModel[]>([])
     const [animais, setAnimais] = useState<EsperaCastracao[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
     const [showAdicionarAnimal, setShowAdicionarAnimal] = useState(false)
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
 
@@ -73,6 +74,9 @@ export const Castration = () => {
     const getWaitingList = async () => {
         let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
         setListsEspera(response || [])
+        if(loading){
+            setLoading(false)
+        }
     }
     const getCastration = async (id: string | number | undefined, callback?: () => void) => {
         if (!id) {
@@ -83,10 +87,16 @@ export const Castration = () => {
         if (callback) {
             callback()
         }
+        if(loading){
+            setLoading(false)
+        }
     }
     const getCastrations = async () => {
         let response = await request<CastrationModel[]>('get', '/castration', {}, {})
         setCastracoes(response || [])
+        if(loading){
+            setLoading(false)
+        }
     }
     const concluirCastracao = () => {
         put('/castration/concluir/' + id, {}, {}, {}).then(data => {
@@ -547,7 +557,7 @@ export const Castration = () => {
                     }} icon={<FiPlus />} type="default" />
                 </div>
                 <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
-                    columnsRowClick={[0, 1, 2, 3,4,5,6]}
+                    columnsRowClick={[0, 1, 2, 3,4,5]}
                 >
                     <Column field="data" label="Data" format="dataHora" align="center" />
                     <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
@@ -564,8 +574,14 @@ export const Castration = () => {
     }
     return (
 
-        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
+        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow relative">
             {!id ? renderCastracoes() : renderDetalheCastracao()}
+            <div
+                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
+          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            >
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+            </div>
         </div>
 
     )

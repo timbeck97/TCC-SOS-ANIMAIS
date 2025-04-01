@@ -158,13 +158,13 @@ export const CastrationRequestEdit = () => {
 
                 <div className="border-b border-gray-900/10 pb-5 mt-5">
                     <h2 className="text-lg/7 font-semibold text-gray-900">Dados do Animal</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-4 mt-3 space-x-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-5 mt-3 space-x-6">
                         <div className="sm:col-span-1">
                             {/* <InputFile id="file-upload" name="file-upload" types=".jpeg, .png, .jpg" label="Foto do Animal" value={file} onChange={handleFile} /> */}
                             <div className="relative flex items-start flex-col justify-start h-full">
                                 <div className="space-y-2 w-full">
                                     <span className="font-bold">Foto do animal</span>
-                                    {formValues.urlImagem && <img className="rounded-lg shadow-lg" src={formValues.urlImagem} />}
+                                    {formValues.urlImagem && <img className="rounded-lg shadow-lg max-w-72" src={formValues.urlImagem} />}
                                     {!formValues.urlImagem && <div>
                                         <svg className="text-gray-300 w-2/3 h-2/3 " viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
                                             <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />
@@ -175,7 +175,7 @@ export const CastrationRequestEdit = () => {
                             </div>
 
                         </div>
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4">
                             <Input id="nomeAnimalidx"
                                 label="Nome do Animal"
                                 type="text"
