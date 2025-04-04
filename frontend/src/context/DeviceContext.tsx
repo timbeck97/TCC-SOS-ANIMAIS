@@ -12,7 +12,7 @@ export const DeviceProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const handleResize = () => {
       let newValue=window.innerWidth <= 768
-      if(newValue!=isMobile){
+      if(newValue!==isMobile){
         setIsMobile(newValue);
       }
     };

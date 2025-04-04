@@ -31,6 +31,7 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
             setListData(data)
         }
 
+        // eslint-disable-next-line
     }, [data, enablePagination])
 
     const renderColumn = <T,>(column: React.ReactElement<TableColumn<T>>, row: any, rowIndex: number) => {
@@ -60,7 +61,6 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         setPagination({ ...pagination, pageNumber: page });
         let start = pagination.pageSize * (page - 1);
         let end = start + pagination.pageSize;
-        let sliced = originalData.slice(start, end);
         setListData(originalData.slice(start, end))
     }
     const handleRowClick = (row: TableData<T>, c: number) => {

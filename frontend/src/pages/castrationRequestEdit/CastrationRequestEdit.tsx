@@ -26,7 +26,6 @@ export const CastrationRequestEdit = () => {
         mode: "onChange"
     });
     const { id } = useParams<{ id: string | undefined }>()
-    const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
     const [faixaValores, setFaixaValores] = useState<FaixaValor[]>([])
     const formValues = watch();
     const navigate = useNavigate();
@@ -76,13 +75,7 @@ export const CastrationRequestEdit = () => {
         openAlertSuccess('Dados atualizados')
 
     };
-    const handleFile = (name: string, files: FileList | null) => {
-        if (files && files.length > 0) {
-            setFile({ fileName: files[0].name, file: files[0] });
-        } else {
-            setFile(null);
-        }
-    }
+
 
     return (
         <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
@@ -164,7 +157,7 @@ export const CastrationRequestEdit = () => {
                             <div className="relative flex items-start flex-col justify-start h-full">
                                 <div className="space-y-2 w-full">
                                     <span className="font-bold">Foto do animal</span>
-                                    {formValues.urlImagem && <img className="rounded-lg shadow-lg max-w-72" src={formValues.urlImagem} />}
+                                    {formValues.urlImagem && <img className="rounded-lg shadow-lg max-w-72" src={formValues.urlImagem} alt="animal" />}
                                     {!formValues.urlImagem && <div>
                                         <svg className="text-gray-300 w-2/3 h-2/3 " viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
                                             <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" />

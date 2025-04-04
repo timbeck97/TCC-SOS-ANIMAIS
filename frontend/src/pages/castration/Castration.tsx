@@ -68,6 +68,7 @@ export const Castration = () => {
         } else {
             getCastrations()
         }
+    // eslint-disable-next-line
     }, [id])
 
 
@@ -282,7 +283,7 @@ export const Castration = () => {
         })
     }
      const adicionarAnimalCastracao = async (id:number) => {
-            let response = await request<void>('post', `/castration/waitingList/${castracao.id}/addAnimal/${id}`)
+            await request<void>('post', `/castration/waitingList/${castracao.id}/addAnimal/${id}`)
             openAlertSuccess('Animal adicionado com sucesso')
             setShowAdicionarAnimal(false)
             getCastration(castracao.id)
@@ -298,7 +299,7 @@ export const Castration = () => {
         })
     }
     const handleAddNovoAnimal = ()=>{
-        if(listsEspera.length==0){
+        if(listsEspera.length===0){
             getWaitingList()
         }
         setShowAdicionarAnimal(true)

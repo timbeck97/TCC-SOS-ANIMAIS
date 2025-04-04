@@ -7,7 +7,7 @@ import { Button } from "../../components/button/Button";
 import { VscTrash } from "react-icons/vsc";
 import { GoPencil } from "react-icons/go";
 import { Subtitle } from "../../components/title/Subtitle";
-import { deleteRequest, get, post, request } from "../../services/Axios";
+import { deleteRequest, get, request } from "../../services/Axios";
 import { formatValorMoeda } from "../../services/Util";
 
 export const PriceRange = () => {

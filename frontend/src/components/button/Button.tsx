@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { ButtonInterface } from "../../types/ButtonInterface";
 
 export const Button = (props: ButtonInterface) => {

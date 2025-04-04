@@ -107,7 +107,7 @@ export const publicPost = async <T>(url: string, data: any, headers: any, callba
     callback(response?.data);
   } catch (error: any) {
     console.log(error)
-    if (error.code === "ERR_NETWORK" || error.code=='ERR_BAD_RESPONSE') {
+    if (error.code === "ERR_NETWORK" || error.code==='ERR_BAD_RESPONSE') {
       openModalInstance("Erro na comunicação com o servidor", () => { });
     }
 

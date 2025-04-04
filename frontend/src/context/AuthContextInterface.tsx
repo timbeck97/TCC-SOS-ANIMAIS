@@ -4,13 +4,6 @@ import { fetchToken } from '../services/AuthRequest';
 import { TokenAuth } from '../types/TokenAuth';
 
 
-
-const KEYCLOAK_AUTH_URL = process.env.REACT_APP_KEYCLOAK_AUTH_URL ||'';
-const KEYCLOAK_TOKEN_URL = process.env.REACT_APP_KEYCLOAK_TOKEN_URL||'';
-const KEYCLOAK_LOGOUT_URL = process.env.REACT_APP_KEYCLOAK_LOGOUT_URL||'';
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID||'';
-const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET||'';
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI||'';
 const AuthContext = createContext<AuthContextInterface | undefined>(undefined);
 export const AuthProvider = ({ children }: any) => {
 

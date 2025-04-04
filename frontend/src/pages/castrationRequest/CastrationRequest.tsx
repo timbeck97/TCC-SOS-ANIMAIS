@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import imagem from '../../assets/family2.jpg'
 import check from '../../assets/check.png'
 import logo from '../../assets/logo.png'
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
@@ -58,7 +57,6 @@ export const CastrationRequest = () => {
 
     const registerWithMask = useHookFormMask(register);
 
-    // const { openModal } = useModal();
 
     const onSubmit: SubmitHandler<CastrationRequestInterface> = data => {
         let headers = {

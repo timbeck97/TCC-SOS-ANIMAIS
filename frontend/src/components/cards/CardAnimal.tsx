@@ -1,15 +1,13 @@
 import { FaCheck, FaTimes } from "react-icons/fa";
-import { formatDate, formatFormaPagamento, formatNumeroTelefone } from "../../services/Util";
-import { ButtonInterface } from "../../types/ButtonInterface";
 import { CardButton } from "../../types/CardButton";
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
-import { EsperaCastracao } from "../../types/EsperaCastracao";
 import { Button } from "../button/Button";
+import { formatDate, formatFormaPagamento, formatNumeroTelefone } from "../../services/Util";
 
 export const CardAnimal = (props:{castracao:CardEsperaCastracao, options?:CardButton[]}) => {
     const {castracao} = props
     const renderButton = (b:CardButton)=>{
-        if(!b.isRender || b.isRender(castracao)==true){
+        if(!b.isRender || b.isRender(castracao)===true){
             const {onClick,isRender, ...rest} = b;
             return  <Button {...rest} onClick={onClick?()=>onClick(castracao):undefined} />
         }

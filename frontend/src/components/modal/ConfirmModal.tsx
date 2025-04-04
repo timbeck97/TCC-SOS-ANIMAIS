@@ -1,5 +1,4 @@
 import { Modal } from "flowbite-react"
-import { useEffect } from "react"
 
 export const ConfirmModal = ({ show, confirm, close, title, text }: {
     show: boolean,

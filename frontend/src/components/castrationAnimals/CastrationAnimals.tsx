@@ -1,5 +1,5 @@
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
 import { formatPorteAnimal, formatTipoAnimal, isEmpty } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
@@ -21,7 +21,6 @@ import { CardButton } from "../../types/CardButton"
 import { Subtitle } from "../title/Subtitle"
 import { Table } from "../table/Table"
 import { Column } from "../table/Column"
-import { FiCheck } from "react-icons/fi"
 
 
 

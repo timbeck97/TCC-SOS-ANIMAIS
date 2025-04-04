@@ -10,7 +10,7 @@ export const Home = () => {
 
 
                 <section className="relative w-full h-[500px] drop-shadow-md">
-                    <img className="w-full h-full object-cover object-center" src={banner} />
+                    <img alt="banner" className="w-full h-full object-cover object-center" src={banner} />
                     <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-40">
                        
                             {/* <h1 className="text-8xl poppins-bold text-white ">SOS Animais</h1> */}

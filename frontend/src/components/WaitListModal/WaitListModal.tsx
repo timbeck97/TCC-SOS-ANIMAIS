@@ -1,6 +1,6 @@
 import { Modal } from "flowbite-react"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { formatCpf, formatNumberInput, formatNumeroTelefone, formatPorteAnimal, formatTipoAnimal, formatValorMoeda } from "../../services/Util"
+import { formatCpf,  formatNumeroTelefone, formatPorteAnimal, formatTipoAnimal, formatValorMoeda } from "../../services/Util"
 
 export const WaitListModal = ({ show, handleClose, obj }: {
     show: boolean,

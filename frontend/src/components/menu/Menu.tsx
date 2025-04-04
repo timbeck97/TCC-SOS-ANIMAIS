@@ -1,22 +1,19 @@
-import { Fragment, ReactElement, useEffect, useRef, useState } from 'react';
+import {  ReactElement, useEffect,  useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContextInterface';
-import { FaBell, FaChartLine, FaCheck, FaCog, FaList, FaPaw, FaRegClock, FaUser } from 'react-icons/fa';
+import { FaBell, FaChartLine,  FaCog, FaList, FaPaw, FaRegClock, FaUser } from 'react-icons/fa';
 import user from '../../assets/user.png'
 import { Dropdown, DropdownDivider } from 'flowbite-react';
 import { login, logout } from '../../services/AuthRequest';
 import { useDevice } from '../../context/DeviceContext';
 import { request } from '../../services/Axios';
 import { Notification } from '../../types/Notification';
-import { FiPlusCircle } from 'react-icons/fi';
-import { CiCircleAlert, CiLogout } from "react-icons/ci";
+import { CiLogout } from "react-icons/ci";
 import { IoListSharp } from 'react-icons/io5';
-import { MenuButton, Menu as MenuHeadles, MenuItem, MenuItems } from '@headlessui/react';
 
 export const Menu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isOpenNotification, setIsOpenNotification] = useState(false);
 
     const [notifications, setNotifications] = useState<Notification[]>([])
     const { isMobile } = useDevice();
@@ -27,7 +24,7 @@ export const Menu = () => {
         setNotifications(response || [])
     }
     const markNotificationsAsReaded = async (notification: Notification) => {
-        let response = await request<Notification[]>('put', `/notification/${notification.id}/markAsRead`, notifications)
+        await request<Notification[]>('put', `/notification/${notification.id}/markAsRead`, notifications)
         setNotifications(notifications.map(x => ({ ...x, lida: x.id === notification.id ? true : x.lida })))
 
     }
@@ -68,7 +65,7 @@ export const Menu = () => {
                         }
                     >
                         <Dropdown.Header>Notificações</Dropdown.Header>
-                        {notifications.length == 0 && <Dropdown.Item className='cursor-auto' >Nenhuma notificação</Dropdown.Item>}
+                        {notifications.length === 0 && <Dropdown.Item className='cursor-auto' >Nenhuma notificação</Dropdown.Item>}
                         {notifications.map((n, idx) => (
                             <Dropdown.Item key={idx} onClick={() => markNotificationsAsReaded(n)}>{renderCheckIcon(n)}<span className={`ml-1 poppins-semibold max-w-48 text-left ml-3 hover:bg-white-100 ${!n.lida ? 'poppins-semibold' : 'cursor-auto'}`}>{n.mensagem}</span></Dropdown.Item>
                         ))}
@@ -172,7 +169,7 @@ export const Menu = () => {
                         }
                     >
                         <Dropdown.Header>Notificações</Dropdown.Header>
-                        {notifications.length == 0 && <Dropdown.Item className='cursor-auto' >Nenhuma notificação</Dropdown.Item>}
+                        {notifications.length === 0 && <Dropdown.Item className='cursor-auto' >Nenhuma notificação</Dropdown.Item>}
                         {notifications.map((n, idx) => (
                             <Dropdown.Item key={idx} onClick={() => markNotificationsAsReaded(n)}>{renderCheckIcon(n)}<span className={`ml-1 poppins-semibold max-w-48 text-left ml-3 hover:bg-white-100 ${!n.lida ? 'poppins-semibold' : 'cursor-auto'}`}>{n.mensagem}</span></Dropdown.Item>
                         ))}

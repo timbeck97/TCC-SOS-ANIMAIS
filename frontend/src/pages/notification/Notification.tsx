@@ -1,6 +1,5 @@
 import { Pawbackground } from "../../components/pawbackground/Pawbackground"
 import { IoNotifications } from "react-icons/io5"
-import { Title } from "../../components/title/Title"
 import { Table } from "../../components/table/Table"
 import { useEffect, useState } from "react"
 import { Notification as NotificacioInterface } from "../../types/Notification"
