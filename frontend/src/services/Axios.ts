@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { openModalInstance } from "./ModalTrigger";
 import { updateRefreshToken } from "./AuthRequest";
+import { TokenAuth } from "../types/TokenAuth";
 
 const URL = process.env.REACT_APP_API_URL
 
@@ -15,9 +16,10 @@ api.interceptors.request.use(async (config) => {
 
   const tokenObj = localStorage.getItem('token');
   if (tokenObj) {
-    tokenJson = JSON.parse(tokenObj);
+    tokenJson = JSON.parse(tokenObj) as TokenAuth;
   }
   if (tokenJson && verifyTokenExpiration(tokenJson)) {
+    console.log('expirou na verificacao de tempo')
     let newToken = await updateRefreshToken();
     console.log('refresh token awaited: ', newToken);
 
@@ -26,7 +28,7 @@ api.interceptors.request.use(async (config) => {
     }
   }
   if (tokenJson) {
-    config.headers.Authorization = `Bearer ${tokenJson.token}`
+    config.headers.Authorization = `Bearer ${tokenJson.accessToken}`
   }
   return config;
 }, error => {
@@ -42,6 +44,7 @@ api.interceptors.response.use((response) => {
 
 
   if (error.code === 'ERR_NETWORK') {
+    console.log('e',error)
     openModalInstance("Erro ao acessar o servidor: " + error.message, () => { });
   } else if (response?.status === 401 && response?.data.message?.includes('Jwt expired')) {
 
@@ -49,6 +52,7 @@ api.interceptors.response.use((response) => {
   } else if (response?.status === 403) {
     openModalInstance("Você não tem permissão para acessar esses dados", () => { });
   } else {
+    console.log(response?.data)
     openModalInstance("Erro ao acessar o servidor: \n\n\n" + response?.data?.message, () => { });
   }
 
@@ -56,12 +60,12 @@ api.interceptors.response.use((response) => {
 
 
 })
-const verifyTokenExpiration = (token: any) => {
+const verifyTokenExpiration = (token: TokenAuth) => {
 
-  let tokenExpiration = token.tokenExpiration;
+  let tokenExpiration = token.expiresIn;
   let now = Date.now() / 1000
   console.log('verificadno expiração do token, ', tokenExpiration, now);
-  return tokenExpiration <= now;
+  return tokenExpiration < now;
 }
 let controller: AbortController | null = null;
 
@@ -159,4 +163,3 @@ export async function request<T>(
   }
 }
 
-export default api;

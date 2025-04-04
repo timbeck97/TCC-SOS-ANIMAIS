@@ -1,7 +1,7 @@
 export interface TokenAuth {
-    token: string,
-    tokenExpiration: number,
+    accessToken: string,
+    expiresIn: number,
     refreshToken: string,
-    refreshTokenExpiration: number,
+    refreshExpiresIn: number,
     tokenId: string
 }

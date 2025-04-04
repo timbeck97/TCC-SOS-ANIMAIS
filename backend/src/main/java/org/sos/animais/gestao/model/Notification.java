@@ -17,7 +17,7 @@ public class Notification {
     private String mensagem;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(columnDefinition = "varchar(30) not null")
+    @Column(nullable = false, length = 30)
     private ENotification tipo;
 
     @Column(columnDefinition = "boolean not null default false")

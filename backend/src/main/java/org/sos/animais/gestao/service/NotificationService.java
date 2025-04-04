@@ -1,6 +1,5 @@
 package org.sos.animais.gestao.service;
 
-import org.sos.animais.gestao.config.AutenticationService;
 import org.sos.animais.gestao.dto.NotificationDto;
 import org.sos.animais.gestao.dto.UserDto;
 import org.sos.animais.gestao.enums.ENotification;

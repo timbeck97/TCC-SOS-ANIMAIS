@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${keyCloackClient}")
+    @Value("${keycloak.client.id}")
     private String keyCloackClient;
 
     private final AccessDeniedHandlerJwt accessDeniedHandlerJwt;
@@ -91,7 +91,7 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://timbeck.com.br"));
         for (int i = 2; i <= 254; i++) {
             config.addAllowedOrigin("http://192.168.2." + i + ":3000");
         }

@@ -28,10 +28,9 @@ export const AuthProvider = ({ children }: any) => {
         } else {
             let stringTk=localStorage.getItem('token')
             if(stringTk){
-                console.log('string do token: ',stringTk)
-                let tk=JSON.parse(JSON.stringify(stringTk));
+                let tk=JSON.parse(JSON.stringify(stringTk)) as TokenAuth;
                 if(tk){
-                    setToken(JSON.parse(tk));
+                    setToken(tk);
                 }
             }
             setLoading(false);

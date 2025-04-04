@@ -43,7 +43,7 @@ public class LocalFileUploadImp implements FileUploadService {
             String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
             System.out.println(profile);
             if(!profile.equals("dev")){
-                uriString = uriString.replace("/api", "");
+                uriString = uriString.replace("/api", "/service");
             }
             return uriString + "/public/arquivos/" + pasta + "/" + fileName;
         } catch (Exception e) {
