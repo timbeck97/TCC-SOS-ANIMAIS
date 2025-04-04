@@ -167,3 +167,10 @@ export const formatValorMoeda=(valor:number, cifrao:boolean)=>{
     }).format(valor);
     }
 }
+export const formatNumeroTelefone = (numero:string)=>{
+    numero = numero.replace(/\D/g, '');
+    if (numero.length !== 11) {
+      return 'Número inválido';
+    }
+    return `(${numero.slice(0, 2)})${numero[2]} ${numero.slice(3, 7)}-${numero.slice(7)}`;
+}

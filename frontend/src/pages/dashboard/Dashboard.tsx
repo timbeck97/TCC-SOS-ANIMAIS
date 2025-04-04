@@ -233,8 +233,8 @@ export const Dashboard = () => {
 
     return (
         <div className="bg-[#f3f4f6] flex-1 relative">
-            <div className="md:w-2/4 px-2 m-auto flex justify-center space-x-5 mt-5  shadow-sm p-3 border">
-                <div className="flex flex-col">
+            <div className="w-full sm:w-2/5 px-4 m-auto flex justify-center sm:space-x-5 mt-5 rounded rounded  shadow-sm p-3 border flex-col sm:flex-row">
+                <div className="flex flex-col flex-1">
                     <div>
                         <h3 className="poppins-semibold">Período Inicial</h3>
                     </div>
@@ -263,7 +263,7 @@ export const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1">
                     <div>
                         <h3 className="poppins-semibold">Período Final</h3>
                     </div>

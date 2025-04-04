@@ -14,7 +14,7 @@ module.exports = {
        'mobile': '400px',  //  📱  Mobile (até 640px)
         'tablet': '1024px', //  📲  Tablet (1024px)
         'hd': '1200px',     //  💻  HD (1366px)
-        'fullhd': '1920px', //  🖥️  Full HD (1920px)
+        'fullhd': '1800px', //  🖥️  Full HD (1920px)
       }
     },
 

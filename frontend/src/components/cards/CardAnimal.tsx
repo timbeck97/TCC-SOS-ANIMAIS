@@ -1,5 +1,5 @@
 import { FaCheck, FaTimes } from "react-icons/fa";
-import { formatDate, formatFormaPagamento } from "../../services/Util";
+import { formatDate, formatFormaPagamento, formatNumeroTelefone } from "../../services/Util";
 import { ButtonInterface } from "../../types/ButtonInterface";
 import { CardButton } from "../../types/CardButton";
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
@@ -20,14 +20,14 @@ export const CardAnimal = (props:{castracao:CardEsperaCastracao, options?:CardBu
                 <img
                     src={castracao.urlImagem}
                     alt={castracao.nomeAnimal}
-                    className=" rounded-xl object-cover shadow-lg"
+                    className=" w-4/5 h-auto rounded-xl shadow-lg m-auto"
                 />
             )}
             <div className="flex flex-col w-full space-y-2">
                 <h2 className="text-lg font-semibold">{castracao.nomeAnimal} ({castracao.tipoAnimal})</h2>
                 <p className="text-sm font-bold text-gray-800">Data da Solicitação: {formatDate(castracao.dataSolicitacao) || "A definir"}</p>
                 <p className="text-sm text-gray-600">Requerente: {castracao.nomeRequerente}</p>
-                <p className="text-sm text-gray-600">Contato: {castracao.telefone}</p>
+                <p className="text-sm text-gray-600">Contato: {formatNumeroTelefone(castracao.telefone)}</p>
                 <p className="text-sm text-gray-600">Endereço: {castracao.rua}, {castracao.numero}, {castracao.bairro}</p>
                 <p className="text-sm text-gray-600">Porte: {castracao.porteAnimal} | Raça: {castracao.racaAnimal || "Não informado"}</p>
                 <p className="text-sm text-gray-600">Peso: {castracao.pesoAnimal ? `${castracao.pesoAnimal} kg` : "Não informado"}</p>

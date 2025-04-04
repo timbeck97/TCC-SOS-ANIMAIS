@@ -16,6 +16,7 @@ import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
+import { formatCpf, formatNumeroTelefone, formatValorMoeda } from "../../services/Util";
 
 
 
@@ -84,28 +85,32 @@ export const CastrationRequest = () => {
             <div className="border border-gray-300 p-4 mt-5 rounded-md">
                 <div className="mensagem-topo bg-green-100 text-green-800 p-4 rounded mb-6 flex items-center space-x-4">
                     <img src={check} alt="Check logo" className="w-20" />
-                    <p className="font-bold md:text-md text-sm">
+                    <p className="font-bold  text-sm sm:text-md md:text-lg ">
                         Sua solicitação de castração foi registrada e você está na lista de espera. Avisaremos pelo celular assim que a SOS Animais agendar uma nova data.
                     </p>
                 </div>
                 <h3 className="text-lg/7 font-semibold text-gray-900 border-b border-gray-900/10 pb-5 mt-10">
                     Resumo da solicitação
                 </h3>
-                <ul className="mt-2 space-y-2">
-                    <li><strong>Nome:</strong> {submittedData?.nome}</li>
-                    <li><strong>Sobrenome:</strong> {submittedData?.sobrenome}</li>
-                    <li><strong>CPF:</strong> {submittedData?.cpf}</li>
-                    <li><strong>Telefone:</strong> {submittedData?.telefone}</li>
-                    <li><strong>Rua:</strong> {submittedData?.rua}</li>
-                    <li><strong>Número:</strong> {submittedData?.numero}</li>
-                    <li><strong>Bairro:</strong> {submittedData?.bairro}</li>
-                    <li><strong>Tipo de Animal:</strong> {submittedData?.tipoAnimal}</li>
-                    <li><strong>Nome do Animal:</strong> {submittedData?.nomeAnimal}</li>
-                    <li><strong>Raça do Animal:</strong> {submittedData?.racaAnimal}</li>
-                    <li><strong>Peso do Animal:</strong> {submittedData?.pesoAnimal}</li>
-                    <li><strong>Animal Vacinado:</strong> {submittedData?.animalVacinado ? "Sim" : "Não"}</li>
-                    <li><strong>Descrição:</strong> {submittedData?.descricaoAnimal}</li>
-                </ul>
+                <div className="grid grid-cols-1 sm:grid-cols-2 mt-4">
+                    <ul className="space-y-4  text-sm hd:text-md fullhd:text-lg ">
+                        <li><strong>Nome:</strong> {submittedData?.nome}</li>
+                        <li><strong>Sobrenome:</strong> {submittedData?.sobrenome}</li>
+                        <li><strong>CPF:</strong> {formatCpf(submittedData?.cpf||'')}</li>
+                        <li><strong>Telefone:</strong> {formatNumeroTelefone(submittedData?.telefone||'')}</li>
+                        <li><strong>Rua:</strong> {submittedData?.rua}</li>
+                        <li><strong>Número:</strong> {submittedData?.numero}</li>
+                        <li><strong>Bairro:</strong> {submittedData?.bairro}</li>
+                        <li><strong>Tipo de Animal:</strong> {submittedData?.tipoAnimal}</li>
+                        <li><strong>Nome do Animal:</strong> {submittedData?.nomeAnimal}</li>
+                        <li><strong>Raça do Animal:</strong> {submittedData?.racaAnimal}</li>
+                        <li><strong>Peso do Animal:</strong> {formatValorMoeda(submittedData?.pesoAnimal||0, false)+' KG'}</li>
+                        <li><strong>Animal Vacinado:</strong> {submittedData?.animalVacinado ? "Sim" : "Não"}</li>
+                        <li><strong>Descrição:</strong> {submittedData?.descricaoAnimal}</li>
+                    </ul>
+                    <img src={submittedData?.urlImagem ? submittedData?.urlImagem : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='}
+                            alt="" className="w-4/5 h-auto rounded-lg shadow-lg m-auto mt-5 sm:mt-0" />
+                </div>
          
 
             </div>
@@ -321,7 +326,8 @@ export const CastrationRequest = () => {
         <Pawbackground>
             <div className="border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white" ref={topRef}>
                 <div className="pt-5">
-                    <img src={logo} alt="Imagem logo SOS Animais" className="size-1/3   mx-auto" />
+                    <img src={logo} alt="Imagem logo SOS Animais" className="size-3/4 sm:size-1/3   mx-auto" />
+                    <hr />
                 </div>
                 {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
             </div>
