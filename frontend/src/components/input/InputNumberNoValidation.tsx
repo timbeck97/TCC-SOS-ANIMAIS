@@ -8,6 +8,7 @@ export const InputNumberNoValidation = ({ id, name, label, value, type, onChange
         if(value){
             setComponentValue(value)
         }
+    // eslint-disable-next-line
     },[])
 
     const [componentValue, setComponentValue] = useState<string>('');

@@ -49,7 +49,19 @@ export const Dashboard = () => {
         pieChart: { labels: [], values: [] },
         totalCards: {} as DashboardCards
     })
-    
+
+
+    useEffect(() => {
+        fetchData()
+        // eslint-disable-next-line
+    }, [])
+
+    const getDateFilter = () => {
+        return {
+            startDate: anoInicio + mesInicio,
+            endDate: anoFim + mesFim
+        }
+    }
     const fetchData = async () => {
         let response = await request<Dashboards>('get', '/dashboard', null, { params: { ...getDateFilter() } })
         setListData(response || {
@@ -60,18 +72,6 @@ export const Dashboard = () => {
         })
         setLoading(false)
     }
-
-    useEffect(() => {
-        fetchData()
-    }, [fetchData])
-
-    const getDateFilter = () => {
-        return {
-            startDate: anoInicio + mesInicio,
-            endDate: anoFim + mesFim
-        }
-    }
-   
 
 
     const handleSearch = () => {
