@@ -1,5 +1,7 @@
 package org.sos.animais.gestao.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
@@ -25,8 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 import java.util.List;
 
+
 @Service
 public class CastrationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CastrationService.class);
 
 
     private final CastrationRequestRepository castrationRequestRepository;
@@ -144,6 +149,7 @@ public class CastrationService {
         return dto;
     }
     public CastrationRequestDto saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
+        logger.info("Saving castration request: {}", Utils.convertObjectToJson(castrationRequestDto));
         CastrationRequest entity=new CastrationRequest();
         if(id!=null){
             entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));

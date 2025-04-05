@@ -14,18 +14,23 @@ public class UsuarioController {
         return "Protegido";
     }
 
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/private/user")
     public String user() {
         return "REQUISITOU COMO USER";
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/private/admin")
     public String admin() {
         return "REQUISITOU COMO ADMIN";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/private/adminUser")
+    public String adminOrUser() {
+        return "REQUISITOU COMO ADMIN OU USER";
+    }
 
     @GetMapping("/public")
     public String publico() {

@@ -60,28 +60,66 @@ public class SecurityConfig {
                 .build();
     }
 
+//    @Bean
+//    public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
+//        Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
+//            Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+//
+//            Object client = resourceAccess.get(keyCloackClient);
+//
+//            LinkedTreeMap<String, List<String>> clientRoleMap = (LinkedTreeMap<String, List<String>>) client;
+//
+//            List<String> clientRoles = new ArrayList<>(clientRoleMap.get("roles"));
+//
+//            return clientRoles.stream()
+//                    .map(SimpleGrantedAuthority::new)
+//                    .collect(Collectors.toList());
+//        };
+//
+//        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+//
+//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+//
+//        return jwtAuthenticationConverter;
+//    }
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
         Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
+            Set<String> roles = new HashSet<>();
+
+            Map<String, Object> realmAccess = jwt.getClaim("realm_access");
+            if (realmAccess != null && realmAccess.get("roles") instanceof List<?>) {
+                List<?> realmRoles = (List<?>) realmAccess.get("roles");
+                realmRoles.stream()
+                        .filter(role -> role instanceof String)
+                        .map(role -> "ROLE_" + role)
+                        .forEach(roles::add);
+            }
+
             Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+            if (resourceAccess != null && resourceAccess.get(keyCloackClient) instanceof Map<?, ?> clientAccess) {
+                Object clientRolesObj = clientAccess.get("roles");
+                if (clientRolesObj instanceof List<?>) {
+                    List<?> clientRoles = (List<?>) clientRolesObj;
+                    clientRoles.stream()
+                            .filter(role -> role instanceof String)
+                            .map(role -> "ROLE_" + role)
+                            .forEach(roles::add);
+                }
+            }
 
-            Object client = resourceAccess.get(keyCloackClient);
 
-            LinkedTreeMap<String, List<String>> clientRoleMap = (LinkedTreeMap<String, List<String>>) client;
-
-            List<String> clientRoles = new ArrayList<>(clientRoleMap.get("roles"));
-
-            return clientRoles.stream()
+            return roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
         };
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
     }
+
 
     @Bean
     public CorsFilter corsFilter() {

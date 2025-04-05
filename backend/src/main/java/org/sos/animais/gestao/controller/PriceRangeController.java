@@ -7,12 +7,14 @@ import org.sos.animais.gestao.repository.CastrationRequestRepository;
 import org.sos.animais.gestao.repository.PriceRangeRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/faixapreco")
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class PriceRangeController {
 
     private final PriceRangeRepository priceRangeRepository;

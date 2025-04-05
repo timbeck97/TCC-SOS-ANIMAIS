@@ -1,6 +1,12 @@
 package org.sos.animais.gestao.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sos.animais.gestao.dto.ApiErrorDto;
+import org.sos.animais.gestao.dto.UserDto;
+import org.sos.animais.gestao.service.AutenticationService;
+import org.sos.animais.gestao.service.CastrationService;
+import org.sos.animais.gestao.service.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -19,10 +25,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> ApiErrorDtohandleInvalidArgument(MethodArgumentNotValidException ex)
     {
-        ex.printStackTrace();
+
         List<String> details = ex
                 .getBindingResult()
                 .getFieldErrors()
@@ -35,15 +44,16 @@ public class CustomExceptionHandler {
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<?> ApiErrorAccessDenied(Exception ex)
     {
-        //ex.printStackTrace();
-        List<String> details = Arrays.asList(ex.getMessage());
 
+        List<String> details = Arrays.asList(ex.getMessage());
+        UserDto user = AutenticationService.getUser();
+        logger.error("Usuario {} sem permissão para acessar este recurso", user!=null?user.userName():"");
         ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.FORBIDDEN,HttpStatus.FORBIDDEN.value(), "r" ,details);
         return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultException(Exception ex, WebRequest request) {
-        ex.printStackTrace();
+
         List<String> details = new ArrayList<>();
         details.add(ex.getMessage());
         ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage() ,details);

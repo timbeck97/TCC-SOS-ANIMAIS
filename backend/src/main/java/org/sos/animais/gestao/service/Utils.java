@@ -1,5 +1,8 @@
 package org.sos.animais.gestao.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,5 +70,15 @@ public class Utils {
         String mes = competencia.substring(4);
         String nomeMes = getNomeMesAbrev(mes);
         return nomeMes + "/" + competencia.substring(0, 4);
+    }
+    public static String convertObjectToJson(Object object){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String jsonFormatado = mapper
+                    .writeValueAsString(object);
+            return jsonFormatado;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
