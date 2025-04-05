@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/faixapreco")
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class PriceRangeController {
 
     private final PriceRangeRepository priceRangeRepository;
