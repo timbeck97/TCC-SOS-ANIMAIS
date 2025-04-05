@@ -234,7 +234,7 @@ export const Dashboard = () => {
 
     return (
         <div className="bg-[#f3f4f6] flex-1 relative">
-            <div className="w-full sm:w-2/5 px-4 m-auto flex justify-center sm:space-x-5 mt-5 rounded rounded  shadow-sm p-3 border flex-col sm:flex-row">
+            <div className="w-full hd:w-3/5 fullhd:w-2/5 px-4 m-auto flex justify-center sm:space-x-5 mt-5 rounded rounded  shadow-sm p-3 border flex-col sm:flex-row">
                 <div className="flex flex-col flex-1">
                     <div>
                         <h3 className="poppins-semibold">Período Inicial</h3>
@@ -293,8 +293,8 @@ export const Dashboard = () => {
                         />
                     </div>
                 </div>
-                <div className="flex items-end py-2">
-                    <Button text="Buscar" onClick={handleSearch} type="neutral" />
+                <div className="flex items-end py-2 justify-center">
+                    <Button text="Buscar" class="flex-1" onClick={handleSearch} type="default" />
                 </div>
             </div>
             <div>

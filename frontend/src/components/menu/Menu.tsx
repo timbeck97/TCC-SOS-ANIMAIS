@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContextInterface';
 import { FaBell, FaChartLine,  FaCog, FaList, FaPaw, FaRegClock, FaUser } from 'react-icons/fa';
 import user from '../../assets/user.png'
+import logo from '../../assets/logo.png'
 import { Dropdown, DropdownDivider } from 'flowbite-react';
 import { login, logout } from '../../services/AuthRequest';
 import { useDevice } from '../../context/DeviceContext';
@@ -229,10 +230,11 @@ export const Menu = () => {
 
     return (
         <nav className='bg-[#464549]'>
-            <div className="px-4 py-3  flex justify-between">
-                <NavLink to="/" end className='flex items-center'>
-                    <FaPaw className="text-3xl text-white " />
-                    <span className="text-lg  text-white  ml-2 border-b-2 border-gray-500 poppins-semibold">SOS Animais</span>
+            <div className="px-4 py-1  flex justify-between">
+                <NavLink to="/" end className='flex items-center bg-white rounded rounded-xl'>
+                    {/* <FaPaw className="text-3xl text-white " />
+                    <span className="text-lg  text-white  ml-2 border-b-2 border-gray-500 poppins-semibold">SOS Animais</span> */}
+                    <img src={logo} alt='logo' className='h-14 w-20 px-2'/>
                 </NavLink>
                 {isMobile ? renderMenusMobile() : renderMenusDesktop()}
             </div>
