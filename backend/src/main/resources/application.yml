@@ -1,3 +1,22 @@
 spring:
   profiles:
     active:  ${PROFILE:dev}
+  application:
+    name: "Sistema de Gestao SOS Animais"
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+keycloak:
+  url: ${KEYCLOACK_URL_AUTH:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/auth}
+  token:
+    url: ${KEYCLOACK_TOKEN_URL:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/token}
+  logout:
+    url: ${KEYCLOACK_LOGOUT_URL:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/logout}
+  redirect:
+    uri: ${KEYCLOACK_REDIRECT_URI:http://localhost:3000}
+  client:
+    id: ${KEYCLOACK_CLIENT_ID:sosanimais-client}
+    secret: ${KEYCLOACK_CLIENT_SECRET:1234}
+
+fileUploadPath: ${FILE_UPLOAD_PATH:/opt/sosfiles/}

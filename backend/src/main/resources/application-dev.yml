@@ -1,12 +1,4 @@
-server:
-  port: 8081
-  servlet:
-    context-path: /api
 spring:
-  application:
-    name: "Sistema de Gestao SOS Animais"
-
-
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/sosanimais}
     username: ${DATABASE_USERNAME:postgres}
@@ -14,36 +6,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # drop n create table again, good for testing, comment this in production
+      ddl-auto: create-drop
     show-sql: false
     defer-datasource-initialization: true
 
   sql:
     init:
       mode: always
-
   security:
     oauth2:
       resourceserver:
         jwt:
-           issuer-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}
-           jwk-set-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}/protocol/openid-connect/certs
-keycloak:
-  url: ${KEYCLOACK_URL_AUTH:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/auth}
-  token:
-    url: ${KEYCLOACK_TOKEN_URL:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/token}
-  logout:
-    url: ${KEYCLOACK_LOGOUT_URL:http://localhost:8080/realms/sosanimais-realm/protocol/openid-connect/logout}
-  redirect:
-    uri: ${KEYCLOACK_REDIRECT_URI:http://localhost:3000}
-  client:
-    id: ${KEYCLOACK_CLIENT_ID:sosanimais-client}
-    secret: ${KEYCLOACK_CLIENT_SECRET:1234}
-
-
-
-fileUploadPath: ${FILE_UPLOAD_PATH:/opt/sosfiles/}
-
-logging:
-  file:
-    name: /opt/sos-animais.log
+           issuer-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/sosanimais-realm
+           jwk-set-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/sosanimais-realm/protocol/openid-connect/certs
