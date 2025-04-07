@@ -12,6 +12,7 @@ public class Utils {
 
     private static final SimpleDateFormat sdfCompetencia = new SimpleDateFormat("yyyyMM");
     private static final SimpleDateFormat sdfCompetenciaFmt = new SimpleDateFormat("MMM/yyyy");
+    private static final SimpleDateFormat sdf_dd_mm_yyyy = new SimpleDateFormat("dd/MM/yyyy");
 
     public static Date getFirstDyByCompetencia(String competencia){
         try {
@@ -32,6 +33,16 @@ public class Utils {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         return calendar.getTime();
+    }
+    public static Date getDate(int day, int month, int year){
+        Date data = null;
+        try {
+            String dataStr = String.format("%02d/%02d/%04d", day, month, year);
+            data = sdf_dd_mm_yyyy.parse(dataStr);
+            return data;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
     public static String getNomeMesAbrev(String stringMes) {
         int mes = Integer.parseInt(stringMes);

@@ -45,6 +45,7 @@ public class CastrationRequest {
     @Column(length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private ERequestSituation situacao;
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSolicitacao;
     @Enumerated(EnumType.STRING)

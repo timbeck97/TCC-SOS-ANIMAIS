@@ -1,10 +1,12 @@
 package org.sos.animais.gestao.factory;
 
 import org.sos.animais.gestao.dto.CastrationRequestDto;
-import org.sos.animais.gestao.enums.EAnimalSize;
-import org.sos.animais.gestao.enums.EAnimalType;
-import org.sos.animais.gestao.enums.ERequestSituation;
+import org.sos.animais.gestao.enums.*;
+import org.sos.animais.gestao.model.Castration;
 import org.sos.animais.gestao.model.CastrationRequest;
+import org.sos.animais.gestao.model.PriceRange;
+
+import java.util.Date;
 
 public class CastrationRequestFactory {
 
@@ -86,6 +88,26 @@ public class CastrationRequestFactory {
     }
     public CastrationRequestFactory withObservacoes(String observacoes){
         this.castrationRequest.setObservacoes(observacoes);
+        return this;
+    }
+    public CastrationRequestFactory withGeneroAnimal(EAnimalGender generoAnimal){
+        this.castrationRequest.setGeneroAnimal(generoAnimal);
+        return this;
+    }
+    public CastrationRequestFactory withDataSolicitacao(Date dataSolicitacao){
+        this.castrationRequest.setDataSolicitacao(dataSolicitacao);
+        return this;
+    }
+    public CastrationRequestFactory withCastracao(Castration c){
+        this.castrationRequest.setCastracao(c);
+        return this;
+    }
+    public CastrationRequestFactory withFormaPagamento(EPaymentMethod p){
+        this.castrationRequest.setFormaPagamento(p);
+        return this;
+    }
+    public CastrationRequestFactory withFaixapreco(PriceRange p){
+        this.castrationRequest.setFaixaPreco(p);
         return this;
     }
     public CastrationRequestFactory withDto(CastrationRequestDto dto){

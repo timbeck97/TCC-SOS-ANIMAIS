@@ -32,7 +32,8 @@ public interface CastrationRequestRepository extends JpaRepository<CastrationReq
     @Query(value = "SELECT count(1), forma_pagamento FROM castration_request c " +
             " INNER JOIN castration ct on ct.id=c.castracao_id " +
             " WHERE ct.data BETWEEN :startDate AND :endDate AND ct                                                                                                                                  .situacao='FINALIZADA' " +
-            " GROUP BY 2", nativeQuery = true)
+            " GROUP BY 2 " +
+            " ORDER BY 2 ASC", nativeQuery = true)
     List<Object> countByPaymentMethod(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
     @Query(value = "SELECT COALESCE(SUM(CASE WHEN cr.forma_pagamento='CASTRACAO_SOLIDARIA' then p.valor else 0.0 end),0) as valorSos," +
