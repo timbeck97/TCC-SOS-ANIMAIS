@@ -3,7 +3,9 @@ package org.sos.animais.gestao.model;
 import jakarta.persistence.*;
 import org.sos.animais.gestao.enums.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -62,6 +64,8 @@ public class CastrationRequest {
     private EAnimalGender generoAnimal;
     @ManyToOne
     private PriceRange faixaPreco;
+    @OneToMany(mappedBy = "castrationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CastrationFile> arquivos;
 
     public CastrationRequest() {
     }
@@ -249,6 +253,18 @@ public class CastrationRequest {
     public void setGeneroAnimal(EAnimalGender generoAnimal) {
         this.generoAnimal = generoAnimal;
     }
+
+    public List<CastrationFile> getArquivos() {
+        if(arquivos==null){
+            arquivos= new ArrayList<>();
+        }
+        return arquivos;
+    }
+
+    public void setArquivos(List<CastrationFile> arquivos) {
+        this.arquivos = arquivos;
+    }
+
     public String getNomeFormatado(){
         if(nome==null || sobrenome==null){
             return "";

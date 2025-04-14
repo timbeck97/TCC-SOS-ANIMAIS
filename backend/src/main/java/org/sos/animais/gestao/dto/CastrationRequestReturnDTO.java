@@ -1,5 +1,6 @@
 package org.sos.animais.gestao.dto;
 
+import org.sos.animais.gestao.model.CastrationFile;
 import org.sos.animais.gestao.model.CastrationRequest;
 
 import java.util.Date;
@@ -18,6 +19,13 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
         this.dataSolicitacao = c.getDataSolicitacao();
         this.paga = c.isPaga();
         this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
+        for (CastrationFile arq : c.getArquivos()) {
+            if (arq.getTipoArquivo().equals("IMAGEM")) {
+                this.urlImagem = arq.getUrl();
+            } else if (arq.getTipoArquivo().equals("COMPROVANTE")) {
+                this.urlComprovante = arq.getUrl();
+            }
+        }
 
     }
 

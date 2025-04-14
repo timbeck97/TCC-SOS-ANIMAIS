@@ -59,10 +59,10 @@ public class CastrationService {
         return castrationRepository.findById(id).map(this::convertCastrationToDto).orElseThrow(()->new RuntimeException("Castration not found"));
     }
     public List<CastrationRequestReturnDTO> findAllRequest(){
-        return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIsOrderByDataSolicitacaoAsc(ERequestSituation.AGUARDANDO).stream().map(this::convertCastrationRequestToDto).toList();
+        return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIsOrderByDataSolicitacaoAsc(ERequestSituation.AGUARDANDO).stream().map(CastrationRequestReturnDTO::new).toList();
     }
     public CastrationRequestDto findOneRequest(Long id){
-        return castrationRequestRepository.findById(id).map(this::convertCastrationRequestToDto).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        return castrationRequestRepository.findById(id).map(CastrationRequestReturnDTO::new).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
     }
     public CastrationRequestTotalDto getTotal(){
         return castrationRequestRepository.countAll();
@@ -125,7 +125,7 @@ public class CastrationService {
         dto.setData(entity.getData());
         dto.setId(entity.getId());
         dto.setObservacao(entity.getObservacao());
-        dto.setAnimais(entity.getRequisicoes().stream().map(x->convertCastrationRequestToDto(x)).toList());
+        dto.setAnimais(entity.getRequisicoes().stream().map(CastrationRequestReturnDTO::new).toList());
         dto.setQuantidadeAnimais(entity.getRequisicoes().size());
         dto.setValoPagoPopulacao(entity.getRequisicoes().stream()
                         .filter(x->x.getFormaPagamento()!= EPaymentMethod.CASTRACAO_SOLIDARIA && x.getFaixaPreco()!=null)
@@ -136,19 +136,7 @@ public class CastrationService {
         dto.setSituacao(entity.getSituacao());
         return dto;
     }
-    public CastrationRequestReturnDTO convertCastrationRequestToDto(CastrationRequest entity){
-        CastrationRequestReturnDTO dto = new CastrationRequestReturnDTO(entity);
-        List<CastrationFile> imgFile = castrationFileRepository.findByCastrationRequestId(entity.getId());
-        for (CastrationFile file : imgFile) {
-            if(file.getTipoArquivo().equals(EFileType.FOTO)){
-                dto.setUrlImagem(file.getUrl());
-            } else if (file.getTipoArquivo().equals(EFileType.COMPROVANTE_PAGAMENTO)){
-                dto.setUrlComprovante(file.getUrl());
-            }
-        }
 
-        return dto;
-    }
     public CastrationRequestReturnDTO saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
         logger.info("Saving castration request: {}", Utils.convertObjectToJson(castrationRequestDto));
         CastrationRequest entity=new CastrationRequest();
@@ -173,7 +161,8 @@ public class CastrationService {
         if(id==null){
             notificationService.createNotification(ENotification.CASTRATION_REQUEST_CREATED, entity.getNomeFormatado());
         }
-        return convertCastrationRequestToDto(entity);
+        entity = castrationRequestRepository.findById(entity.getId()).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        return new CastrationRequestReturnDTO(entity);
     }
     public void deleteCastrationRequest(Long id){
         CastrationRequest entity = castrationRequestRepository.findById(id).orElseThrow(()->new RuntimeException("CastrationRequest not found"));

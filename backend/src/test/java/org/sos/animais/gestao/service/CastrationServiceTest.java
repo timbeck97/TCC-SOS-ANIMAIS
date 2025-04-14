@@ -36,9 +36,6 @@ class CastrationServiceTest {
     private FileService fileService;
 
     @Mock
-    private CastrationFileRepository castrationFileRepository;
-
-    @Mock
     private NotificationService notificationService;
     @Captor
     private ArgumentCaptor<CastrationRequest> castrationRequestCapture;
@@ -75,8 +72,7 @@ class CastrationServiceTest {
 
         Mockito.when(priceRangeRepository.findById(1L)).thenReturn(Optional.of(faixa));
         Mockito.when(castrationRequestRepository.save(Mockito.any(CastrationRequest.class))).thenReturn(new CastrationRequest());
-        Mockito.when(castrationFileRepository.findByCastrationRequestId(Mockito.anyLong())).thenReturn(new ArrayList<>());
-
+        Mockito.when(castrationRequestRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new CastrationRequest()));
 
         CastrationRequestDto result = castrationService.saveCastrationRequest(dto, null, file);
 
@@ -160,7 +156,6 @@ class CastrationServiceTest {
         Mockito.when(priceRangeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(faixa));
         Mockito.when(castrationRequestRepository.findById(1L)).thenReturn(Optional.of(existingRequest));
         Mockito.when(castrationRequestRepository.save(Mockito.any(CastrationRequest.class))).thenReturn(existingRequest);
-        Mockito.when(castrationFileRepository.findByCastrationRequestId(Mockito.anyLong())).thenReturn(new ArrayList<>());
         CastrationRequestDto result = castrationService.saveCastrationRequest(dto, 1L, file);
         Mockito.verify(castrationRequestRepository).save(castrationRequestCapture.capture()); // Captura o argumento
         CastrationRequest captured = castrationRequestCapture.getValue();
