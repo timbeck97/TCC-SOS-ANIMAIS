@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
+import org.sos.animais.gestao.dto.CastrationRequestReturnDTO;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.enums.ENotification;
@@ -57,7 +58,7 @@ public class CastrationService {
     public CastrationDto findOne(Long id){
         return castrationRepository.findById(id).map(this::convertCastrationToDto).orElseThrow(()->new RuntimeException("Castration not found"));
     }
-    public List<CastrationRequestDto> findAllRequest(){
+    public List<CastrationRequestReturnDTO> findAllRequest(){
         return castrationRequestRepository.findAllByCastracaoIsNullAndSituacaoIsOrderByDataSolicitacaoAsc(ERequestSituation.AGUARDANDO).stream().map(this::convertCastrationRequestToDto).toList();
     }
     public CastrationRequestDto findOneRequest(Long id){
@@ -135,8 +136,8 @@ public class CastrationService {
         dto.setSituacao(entity.getSituacao());
         return dto;
     }
-    public CastrationRequestDto convertCastrationRequestToDto(CastrationRequest entity){
-        CastrationRequestDto dto = new CastrationRequestDto(entity);
+    public CastrationRequestReturnDTO convertCastrationRequestToDto(CastrationRequest entity){
+        CastrationRequestReturnDTO dto = new CastrationRequestReturnDTO(entity);
         List<CastrationFile> imgFile = castrationFileRepository.findByCastrationRequestId(entity.getId());
         for (CastrationFile file : imgFile) {
             if(file.getTipoArquivo().equals(EFileType.FOTO)){
@@ -148,7 +149,7 @@ public class CastrationService {
 
         return dto;
     }
-    public CastrationRequestDto saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
+    public CastrationRequestReturnDTO saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
         logger.info("Saving castration request: {}", Utils.convertObjectToJson(castrationRequestDto));
         CastrationRequest entity=new CastrationRequest();
         if(id!=null){

@@ -250,6 +250,9 @@ public class CastrationRequest {
         this.generoAnimal = generoAnimal;
     }
     public String getNomeFormatado(){
+        if(nome==null || sobrenome==null){
+            return "";
+        }
         StringBuffer sb = new StringBuffer();
         sb.append(nome.substring(0,1).toUpperCase());
         sb.append(nome.substring(1).toLowerCase());

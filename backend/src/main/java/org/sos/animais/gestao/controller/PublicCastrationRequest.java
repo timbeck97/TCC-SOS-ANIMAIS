@@ -1,5 +1,6 @@
 package org.sos.animais.gestao.controller;
 
+import jakarta.validation.Valid;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
 import org.sos.animais.gestao.service.CastrationService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class PublicCastrationRequest {
     }
 
     @PostMapping()
-    public ResponseEntity<CastrationRequestDto> save(@RequestPart CastrationRequestDto dto,
+    public ResponseEntity<CastrationRequestDto> save(@Valid @RequestPart CastrationRequestDto dto,
                                                      @RequestPart(value = "file", required = false) MultipartFile file){
         CastrationRequestDto entity = castrationService.saveCastrationRequest(dto, null, file);
         return ResponseEntity.ok(entity);

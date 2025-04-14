@@ -53,7 +53,7 @@ public class CustomExceptionHandler {
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultException(Exception ex, WebRequest request) {
-
+        logger.error("Erro inesperado: ", ex);
         List<String> details = new ArrayList<>();
         details.add(ex.getMessage());
         ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage() ,details);

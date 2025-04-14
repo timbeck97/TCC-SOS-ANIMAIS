@@ -18,7 +18,6 @@ public class CastrationRequestDto {
     private String nome;
     @NotBlank
     private String sobrenome;
-    private String nomeRequerente;
     @NotBlank
     private String cpf;
     @NotBlank
@@ -39,17 +38,12 @@ public class CastrationRequestDto {
     private EAnimalSize porteAnimal;
     private String descricaoAnimal;
     private boolean animalVacinado;
-    private ERequestSituation situacao;
-    private Date dataSolicitacao;
-    private String urlImagem;
-    private String urlComprovante;
-    @NotBlank
+    @NotNull
     private EPaymentMethod formaPagamento;
-    private Long idFaixa;
-    private boolean paga;
     private String observacoes;
+    @NotNull
     private EAnimalGender generoAnimal;
-
+    private Long idFaixa;
     public CastrationRequestDto() {
     }
 
@@ -69,16 +63,13 @@ public class CastrationRequestDto {
         this.porteAnimal = c.getPorteAnimal();
         this.descricaoAnimal = c.getDescricaoAnimal();
         this.animalVacinado = c.isAnimalVacinado();
-        this.situacao = c.getSituacao();
-        this.dataSolicitacao = c.getDataSolicitacao();
-        this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
+
         this.formaPagamento = c.getFormaPagamento();
-        if(c.getFaixaPreco()!=null){
-            this.idFaixa=c.getFaixaPreco().getId();
-        }
-        this.paga=c.isPaga();
         this.observacoes=c.getObservacoes();
         this.generoAnimal=c.getGeneroAnimal();
+        if(c.getFaixaPreco()!=null){
+            this.idFaixa = c.getFaixaPreco().getId();
+        }
     }
 
     public long getId() {
@@ -201,68 +192,12 @@ public class CastrationRequestDto {
         this.animalVacinado = animalVacinado;
     }
 
-    public ERequestSituation getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(ERequestSituation situacao) {
-        this.situacao = situacao;
-    }
-
-    public String getUrlImagem() {
-        return urlImagem;
-    }
-
-    public void setUrlImagem(String urlImagem) {
-        this.urlImagem = urlImagem;
-    }
-
-    public Date getDataSolicitacao() {
-        return dataSolicitacao;
-    }
-
-    public void setDataSolicitacao(Date dataSolicitacao) {
-        this.dataSolicitacao = dataSolicitacao;
-    }
-
-    public String getNomeRequerente() {
-        return nomeRequerente;
-    }
-
-    public void setNomeRequerente(String nomeRequerente) {
-        this.nomeRequerente = nomeRequerente;
-    }
-
     public EPaymentMethod getFormaPagamento() {
         return formaPagamento;
     }
 
     public void setFormaPagamento(EPaymentMethod formaPagamento) {
         this.formaPagamento = formaPagamento;
-    }
-
-    public String getUrlComprovante() {
-        return urlComprovante;
-    }
-
-    public void setUrlComprovante(String urlComprovante) {
-        this.urlComprovante = urlComprovante;
-    }
-
-    public Long getIdFaixa() {
-        return idFaixa;
-    }
-
-    public void setIdFaixa(Long idFaixa) {
-        this.idFaixa = idFaixa;
-    }
-
-    public boolean isPaga() {
-        return paga;
-    }
-
-    public void setPaga(boolean paga) {
-        this.paga = paga;
     }
 
     public String getObservacoes() {
@@ -279,5 +214,13 @@ public class CastrationRequestDto {
 
     public void setGeneroAnimal(EAnimalGender generoAnimal) {
         this.generoAnimal = generoAnimal;
+    }
+
+    public Long getIdFaixa() {
+        return idFaixa;
+    }
+
+    public void setIdFaixa(Long idFaixa) {
+        this.idFaixa = idFaixa;
     }
 }

@@ -2,6 +2,7 @@ package org.sos.animais.gestao.controller;
 
 import org.sos.animais.gestao.dto.CastrationDto;
 import org.sos.animais.gestao.dto.CastrationRequestDto;
+import org.sos.animais.gestao.dto.CastrationRequestReturnDTO;
 import org.sos.animais.gestao.dto.CastrationRequestTotalDto;
 import org.sos.animais.gestao.service.CastrationService;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class CastrationController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/waitingList")
-    public ResponseEntity<List<CastrationRequestDto>> findAllWaitingList(){
+    public ResponseEntity<List<CastrationRequestReturnDTO>> findAllWaitingList(){
         return ResponseEntity.ok(castrationService.findAllRequest());
     }
     @GetMapping("/waitingList/{id}")

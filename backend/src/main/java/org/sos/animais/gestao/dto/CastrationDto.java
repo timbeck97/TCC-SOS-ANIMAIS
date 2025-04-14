@@ -16,7 +16,7 @@ public class CastrationDto {
     private String observacao;
     private int quantidadeAnimais;
     private ERequestSituation situacao;
-    private List<CastrationRequestDto> animais;
+    private List<CastrationRequestReturnDTO> animais;
     private double valoPagoPopulacao;
     private double valorPagoSos;
 
@@ -48,11 +48,11 @@ public class CastrationDto {
         this.observacao = observacao;
     }
 
-    public List<CastrationRequestDto> getAnimais() {
+    public List<CastrationRequestReturnDTO> getAnimais() {
         return animais;
     }
 
-    public void setAnimais(List<CastrationRequestDto> animais) {
+    public void setAnimais(List<CastrationRequestReturnDTO> animais) {
         this.animais = animais;
     }
 
