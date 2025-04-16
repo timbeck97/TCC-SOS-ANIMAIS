@@ -1,5 +1,6 @@
 package org.sos.animais.gestao.dto;
 
+import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.model.CastrationFile;
 import org.sos.animais.gestao.model.CastrationRequest;
 
@@ -20,9 +21,9 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
         this.paga = c.isPaga();
         this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
         for (CastrationFile arq : c.getArquivos()) {
-            if (arq.getTipoArquivo().equals("IMAGEM")) {
+            if (arq.getTipoArquivo().equals(EFileType.FOTO)) {
                 this.urlImagem = arq.getUrl();
-            } else if (arq.getTipoArquivo().equals("COMPROVANTE")) {
+            } else if (arq.getTipoArquivo().equals(EFileType.COMPROVANTE_PAGAMENTO)) {
                 this.urlComprovante = arq.getUrl();
             }
         }
