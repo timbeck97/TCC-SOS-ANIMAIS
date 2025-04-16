@@ -11,7 +11,7 @@ import { Dropdown, Modal } from "flowbite-react"
 import { FaCheck, FaRegFilePdf, FaSearch } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
-import { deleteRequest, get, post, put, request } from "../../services/Axios"
+import {api,  deleteRequest, post, put, request } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
 import { ConfirmModal } from "../../components/modal/ConfirmModal"
@@ -145,8 +145,7 @@ export const Castration = () => {
 
     }
     const generateReport = (row: any) => {
-        get('/report/castration/' + row.id, { responseType: 'blob' }).then((response:any) => {
-
+        api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response:any) => {
             const contentDisposition = response.headers['content-disposition'];
             let fileName = 'pdfCastracaoSOSAnimais.pdf';
 

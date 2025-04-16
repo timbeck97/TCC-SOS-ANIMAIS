@@ -298,7 +298,7 @@ export const Dashboard = () => {
                 </div>
             </div>
             <div>
-                <div className="grid md:grid-cols-4 grid-cols-1 md:space-y-0 space-y-3 auto-rows-auto md:w-4/5 w-3/4 gap-10 m-auto mt-5 ">
+                <div className="grid md:grid-cols-4 grid-cols-1 md:space-y-0 space-y-3  md:w-4/5 w-3/4 space-x-2 m-auto mt-5 ">
                     {renderCard('Tempo de Espera', formatValorMoeda(listDate.totalCards.averageTime, false), 'dias', 'Tempo de espera desde a solicitação até a finalização da castração.')}
                     {renderCard('Animais', String(listDate.totalCards.totalCastrations), 'animais', 'Total de animais castrados no período')}
                     {renderCard('Cachorros', String(listDate.totalCards.totalDogs), 'animais', 'Total de cachorros castrados no período')}

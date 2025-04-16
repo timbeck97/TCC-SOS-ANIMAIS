@@ -8,7 +8,7 @@ const URL = process.env.REACT_APP_API_URL
 
 
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: URL,
 });
 api.interceptors.request.use(async (config) => {

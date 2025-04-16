@@ -1,11 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Menu } from "../components/menu/Menu";
 import { useAuthContext } from "../context/AuthContextInterface";
+import { useDevice } from "../context/DeviceContext";
 
 
 export const PrivateRoute = () => {
 
     const { isAutenticated, loading } = useAuthContext();
+    const {isMobile} = useDevice()
 
 
     if (loading) {
@@ -19,7 +21,7 @@ export const PrivateRoute = () => {
         </div>
     }
     if (!loading && isAutenticated()) {
-        return <div className="flex flex-col min-h-0 grow">
+        return <div className={`flex ${isMobile?'flex-col':'flex-row'} min-h-0 grow`}>
             <Menu />
             <div className="flex flex-col grow" style={{ overflowY: 'scroll' }}>
                 <Outlet />
