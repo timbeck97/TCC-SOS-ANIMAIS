@@ -23,6 +23,7 @@ import org.sos.animais.gestao.service.file.FileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -69,6 +70,9 @@ public class CastrationService {
     }
     public ResponseEntity<?> removeCastrationRequest(Long id){
         return castrationRequestRepository.findById(id).map(castrationRequest -> {
+            if(castrationRequest.getCastracao().getSituacao()==ERequestSituation.FINALIZADA){
+                throw new RuntimeException("Não é possível remover uma solicitação de castração vinculada a uma castração finalizada");
+            }
             castrationRequest.setCastracao(null);
             castrationRequest.setSituacao(ERequestSituation.AGUARDANDO);
             castrationRequestRepository.save(castrationRequest);
@@ -137,6 +141,7 @@ public class CastrationService {
         return dto;
     }
 
+    @Transactional
     public CastrationRequestReturnDTO saveCastrationRequest(CastrationRequestDto castrationRequestDto, Long id, MultipartFile file){
         logger.info("Saving castration request: {}", Utils.convertObjectToJson(castrationRequestDto));
         CastrationRequest entity=new CastrationRequest();
@@ -156,7 +161,8 @@ public class CastrationService {
         }
         entity = castrationRequestRepository.save(entity);
         if(id==null && file!=null){
-            fileService.uploadFileCastrationRequest(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
+            CastrationFile castrationFile = fileService.uploadFileCastrationRequest(file, Constantes.CASTRATION_FOLDER, entity, EFileType.FOTO);
+            entity.getArquivos().add(castrationFile);
         }
         if(id==null){
             notificationService.createNotification(ENotification.CASTRATION_REQUEST_CREATED, entity.getNomeFormatado());

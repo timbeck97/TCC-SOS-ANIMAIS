@@ -323,8 +323,8 @@ class CastrationRequestRepositoryTest {
        @Test
        void sumPaymentPercent_shouldSumAll() {
 
-           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").build();
-           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").build();
+           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
+           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
 
            priceRangeRepository.saveAll(Arrays.asList(p1, p2));
 
@@ -362,8 +362,8 @@ class CastrationRequestRepositoryTest {
        @Test
        void sumPaymentPercent_shouldNotSumWaitingCastrations() {
 
-           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").build();
-           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").build();
+           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
+           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
 
            priceRangeRepository.saveAll(Arrays.asList(p1, p2));
 
@@ -390,8 +390,8 @@ class CastrationRequestRepositoryTest {
        @Test
        void sumPaymentPercent_shouldNotSumInProgressCastrations() {
 
-           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").build();
-           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").build();
+           PriceRange p1= PriceRangeFactory.init().withValor(100.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
+           PriceRange p2= PriceRangeFactory.init().withValor(150.0).withDescricao("50-100").withDataInicio(new Date()).withDataFim(new Date()).build();
            priceRangeRepository.saveAll(Arrays.asList(p1, p2));
            CastrationRequest c1 =  getDefault().withFaixapreco(p1).withFormaPagamento(EPaymentMethod.CASTRACAO_SOLIDARIA).withCastracao(castrations.get(4)).build();
            CastrationRequest c2 =  getDefault().withFaixapreco(p1).withFormaPagamento(EPaymentMethod.CASTRACAO_SOLIDARIA).withCastracao(castrations.get(4)).build();

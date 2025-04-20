@@ -96,7 +96,7 @@ export const WaitingList = () => {
 
                     </div>
                     <div>
-                        {isMobile? <div className='space-y-2'>{data.map(x => <CardAnimal castracao={x}/>)}</div>
+                        {isMobile? <div className='space-y-2'>{data.map((x,idx) => <CardAnimal key={idx} castracao={x}/>)}</div>
                         :
                         <Table id='tableAnimaisIdx' data={data} enablePagination={true}>
                             <Column field="nomeRequerente" align='center' label="Nome do Requerente" />

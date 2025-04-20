@@ -156,6 +156,7 @@ class CastrationServiceTest {
         Mockito.when(priceRangeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(faixa));
         Mockito.when(castrationRequestRepository.findById(1L)).thenReturn(Optional.of(existingRequest));
         Mockito.when(castrationRequestRepository.save(Mockito.any(CastrationRequest.class))).thenReturn(existingRequest);
+
         CastrationRequestDto result = castrationService.saveCastrationRequest(dto, 1L, file);
         Mockito.verify(castrationRequestRepository).save(castrationRequestCapture.capture()); // Captura o argumento
         CastrationRequest captured = castrationRequestCapture.getValue();

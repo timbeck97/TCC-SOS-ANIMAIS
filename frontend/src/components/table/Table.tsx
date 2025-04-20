@@ -33,7 +33,12 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
 
         // eslint-disable-next-line
     }, [data, enablePagination])
-
+    useEffect(() => {
+        if (onSelectRow) {
+            onSelectRow(listData.filter(d => d.selected).map(x => ({ ...x } as T)))
+        }
+     // eslint-disable-next-line
+    },[listData])
     const renderColumn = <T,>(column: React.ReactElement<TableColumn<T>>, row: any, rowIndex: number) => {
         if (column.props.component) {
             return column.props.component(rowIndex, row);
@@ -81,12 +86,13 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         let value = e.target.checked;
         setListData((prev) => {
             let newData = setListChecked(prev, rowIndex, value)
-            if (onSelectRow) {
-                onSelectRow(newData.filter(d => d.selected).map(x => ({ ...x } as T)))
-            }
             return newData
         })
         setOriginalData((prev) => {
+            if(rowIndex !== 'all'){
+                rowIndex = Number(rowIndex)
+                rowIndex = rowIndex + (pagination.pageSize * (pagination.pageNumber - 1))
+            }
             let newData = setListChecked(prev, rowIndex, value)
             return newData
         })

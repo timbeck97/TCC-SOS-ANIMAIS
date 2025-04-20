@@ -74,6 +74,23 @@ public class Utils {
         }
         return stringMes;
     }
+    public static boolean isDateBetween(Date data, Date dataInicio, Date dataFim) {
+        if (data == null || dataInicio == null || dataFim == null) {
+            return false;
+        }
+        data = clearHours(data);
+        dataInicio = clearHours(dataInicio);
+        dataFim = clearHours(dataFim);
+        return !data.before(dataInicio) && !data.after(dataFim);
+    }
+    public static Date clearHours(Date data) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(data);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
     public static String formateCompetencia(String competencia) {
         if (competencia == null || competencia.length() != 6) {
             return "";

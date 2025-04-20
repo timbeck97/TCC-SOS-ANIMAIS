@@ -29,15 +29,21 @@ public class PriceRangeController {
     public ResponseEntity<List<PriceRange>> findAll(){
         return ResponseEntity.ok(priceRangeRepository.findAll(Sort.by(Sort.Order.asc("id"))));
     }
+    @GetMapping("/ativos")
+    public ResponseEntity<List<PriceRange>> findAllAtivos(){
+        return ResponseEntity.ok(priceRangeRepository.findAllAtivos());
+    }
     @PostMapping
     public ResponseEntity<PriceRange> save(@RequestBody PriceRangeDto faixaPreco){
-        return ResponseEntity.ok(priceRangeRepository.save(new PriceRange(faixaPreco.getDescricao(), faixaPreco.getValor())));
+        return ResponseEntity.ok(priceRangeRepository.save(new PriceRange(faixaPreco.getDescricao(), faixaPreco.getValor(), faixaPreco.getDataInicio(), faixaPreco.getDataFim())));
     }
     @PutMapping("/{id}")
     public ResponseEntity<PriceRange> update(@PathVariable long id, @RequestBody PriceRangeDto faixaPreco){
         PriceRange faixa = priceRangeRepository.findById(id).orElseThrow(()->new RuntimeException("Faixa de preço não encontrada"));
         faixa.setDescricao(faixaPreco.getDescricao());
         faixa.setValor(faixaPreco.getValor());
+        faixa.setDataInicio(faixaPreco.getDataInicio());
+        faixa.setDataFim(faixaPreco.getDataFim());
         return ResponseEntity.ok(priceRangeRepository.save(faixa));
     }
     @DeleteMapping("/{id}")

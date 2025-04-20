@@ -7,7 +7,7 @@ export const PublicRoute = () => {
     return (
         <div className={`flex ${isMobile?'flex-col':'flex-row'} min-h-0 grow`} >
             <Menu />
-            <div className="flex flex-col grow" style={{ overflowY: 'scroll' }}>
+            <div className="flex flex-col grow overflow-auto">
                 <Outlet />
             </div>
         </div>

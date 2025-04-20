@@ -1,9 +1,13 @@
 package org.sos.animais.gestao.dto;
 
+import java.util.Date;
+
 public class PriceRangeDto {
     private long id;
     private String descricao;
     private double valor;
+    private Date dataInicio;
+    private Date dataFim;
 
     public PriceRangeDto() {
     }
@@ -30,5 +34,21 @@ public class PriceRangeDto {
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
     }
 }

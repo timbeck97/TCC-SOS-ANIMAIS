@@ -10,7 +10,7 @@ import { InputFile } from "../../components/input/InputFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 import { InputNumber } from "../../components/input/InputNumber";
-import { FORMA_PAGAMENTO, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
+import {  FORMA_PAGAMENTO_PUBLIC, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
 import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
@@ -24,8 +24,8 @@ export const CastrationRequest = () => {
     const topRef = useRef<HTMLDivElement | null>(null);
     useEffect(()=>{
         topRef.current?.scrollIntoView({
-            behavior: 'smooth', // faz a rolagem suave
-            block: 'start',     // garante que o elemento fique no topo da tela
+            behavior: 'smooth',
+            block: 'start',     
           });
     },[])
 
@@ -43,9 +43,10 @@ export const CastrationRequest = () => {
             // racaAnimal: "Vira-lata",
             // pesoAnimal: '4.5',
             // descricaoAnimal: "Animal dócil e brincalhão",
-
-             animalVacinado: true,
-            // porteAnimal: "PEQUENO",
+            // generoAnimal: "MACHO",
+            // formaPagamento: "DINHEIRO",
+            animalVacinado: true,
+            //porteAnimal: "PEQUENO",
         },
         resolver: zodResolver(WaitingListRequestSchema),
         mode: "onChange"
@@ -54,6 +55,7 @@ export const CastrationRequest = () => {
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
     const [submittedData, setSubmittedData] = useState<EsperaCastracao | null>(null);
     const formValues = watch();
+    const [loading, setLoading] = useState(false);
 
     const registerWithMask = useHookFormMask(register);
 
@@ -67,8 +69,10 @@ export const CastrationRequest = () => {
             formData.append("file", file?.file);
         }
         formData.append("dto", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        setLoading(true);
         publicPost<EsperaCastracao>('/public/castration', formData, headers, (resp) => {
             setSubmittedData(resp);
+            setLoading(false);
         })
     };
     const handleFile = (name: string, files: FileList | null) => {
@@ -263,7 +267,7 @@ export const CastrationRequest = () => {
                             label="Forma de Pagamento"
                             valueKey="value"
                             arrayKey="label"
-                            comboboxValues={FORMA_PAGAMENTO}
+                            comboboxValues={FORMA_PAGAMENTO_PUBLIC}
                             errors={errors.formaPagamento}
                             {...register('formaPagamento')} />
                     </div>
@@ -328,6 +332,12 @@ export const CastrationRequest = () => {
                     <hr />
                 </div>
                 {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
+            </div>
+            <div
+                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
+          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            >
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
             </div>
         </Pawbackground>
 

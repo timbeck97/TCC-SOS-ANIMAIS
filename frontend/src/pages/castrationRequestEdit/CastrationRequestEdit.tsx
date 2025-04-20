@@ -17,7 +17,7 @@ import { Button } from "../../components/button/Button";
 import { GrLinkPrevious } from "react-icons/gr";
 import { FaSave } from "react-icons/fa";
 import { openAlertSuccess } from "../../services/Alert";
-import { formatValorMoeda } from "../../services/Util";
+import { formatDateYYYYMMDD, formatValorMoeda } from "../../services/Util";
 
 export const CastrationRequestEdit = () => {
 
@@ -63,9 +63,9 @@ export const CastrationRequestEdit = () => {
     }, [getData])
 
     const getFaixasPreco = async () => {
-        let response = await request<FaixaValor[]>('get', '/faixapreco')
+        let response = await request<FaixaValor[]>('get', '/faixapreco/ativos')
         let data = response || []
-        data.unshift({ id: null, descricao: 'Não Informado', valor: '0' })
+        data.unshift({ id: null, descricao: 'Não Informado', valor: '0', dataInicio: formatDateYYYYMMDD(new Date()) })
         setFaixaValores(data)
     }
     const onSubmit: SubmitHandler<CastrationRequestInterface> = async data => {

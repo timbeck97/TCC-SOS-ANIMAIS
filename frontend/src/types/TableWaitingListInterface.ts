@@ -14,5 +14,6 @@ export interface TableWaitingListInterface {
     permiteUploadPagamento?:boolean,
     permiteAlterarFaixaPreco?:boolean,
     refresh?:()=>void
+    situacao?:string
 
 }

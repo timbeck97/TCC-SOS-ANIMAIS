@@ -3,6 +3,7 @@ package org.sos.animais.gestao.dto;
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.model.CastrationFile;
 import org.sos.animais.gestao.model.CastrationRequest;
+import org.sos.animais.gestao.service.Utils;
 
 import java.util.Date;
 
@@ -12,6 +13,9 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
     private String urlImagem;
     private String urlComprovante;
     private boolean paga;
+    private String descricaoFaixa;
+    private boolean faixaAtiva;
+    private double valorFaixa;
 
     public CastrationRequestReturnDTO() {
     }
@@ -26,6 +30,11 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
             } else if (arq.getTipoArquivo().equals(EFileType.COMPROVANTE_PAGAMENTO)) {
                 this.urlComprovante = arq.getUrl();
             }
+        }
+        if(c.getFaixaPreco()!=null){
+            this.descricaoFaixa = c.getFaixaPreco().getDescricao();
+            this.faixaAtiva= c.getFaixaPreco().getDataFim()==null || Utils.isDateBetween(new Date(),c.getFaixaPreco().getDataInicio(), c.getFaixaPreco().getDataFim());
+            this.valorFaixa=c.getFaixaPreco().getValor();
         }
 
     }
@@ -68,5 +77,29 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
 
     public void setPaga(boolean paga) {
         this.paga = paga;
+    }
+
+    public String getDescricaoFaixa() {
+        return descricaoFaixa;
+    }
+
+    public void setDescricaoFaixa(String descricaoFaixa) {
+        this.descricaoFaixa = descricaoFaixa;
+    }
+
+    public boolean isFaixaAtiva() {
+        return faixaAtiva;
+    }
+
+    public void setFaixaAtiva(boolean faixaAtiva) {
+        this.faixaAtiva = faixaAtiva;
+    }
+
+    public double getValorFaixa() {
+        return valorFaixa;
+    }
+
+    public void setValorFaixa(double valorFaixa) {
+        this.valorFaixa = valorFaixa;
     }
 }

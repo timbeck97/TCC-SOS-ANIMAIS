@@ -22,6 +22,7 @@ export interface CardEsperaCastracao {
     formaPagamento:string,
     idFaixa?:number,
     descricaoFaixa?:string,
+    valorFaixa?:number,
     paga:boolean,
     observacoes?:string,
     generoAnimal:'MACHO'|'FEMEA',

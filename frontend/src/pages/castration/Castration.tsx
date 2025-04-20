@@ -8,10 +8,10 @@ import { FcInfo, FcList, FcOvertime, FcStatistics } from "react-icons/fc"
 import { CastrationModel } from "../../types/CastrationModel"
 import { PiDog } from "react-icons/pi";
 import { Dropdown, Modal } from "flowbite-react"
-import { FaCheck, FaRegFilePdf, FaSearch } from "react-icons/fa"
+import { FaCheck, FaRegFilePdf, FaSearch, FaTimes } from "react-icons/fa"
 import { MdOutlineFileDownload } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
-import {api,  deleteRequest, post, put, request } from "../../services/Axios"
+import { api, post, put, request } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
 import { ConfirmModal } from "../../components/modal/ConfirmModal"
@@ -27,6 +27,10 @@ import { CastrationAnimals } from "../../components/castrationAnimals/Castration
 import { Table } from "../../components/table/Table"
 import { Column } from "../../components/table/Column"
 import { WaitListModal } from "../../components/WaitListModal/WaitListModal"
+import { useDevice } from "../../context/DeviceContext";
+import { CardAnimal } from "../../components/cards/CardAnimal";
+import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
+import { CardButton } from "../../types/CardButton";
 
 
 
@@ -46,7 +50,7 @@ export const Castration = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [showAdicionarAnimal, setShowAdicionarAnimal] = useState(false)
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
-
+    const {isMobile} = useDevice()
     const [showSelecionarCaixas, setShowSelecionarCaixas] = useState<boolean>(false)
     const [confirmFinalizarCastracao, setConfirmFinalizarCastracao] = useState<boolean>(false)
 
@@ -65,17 +69,16 @@ export const Castration = () => {
             getWaitingList();
         } else if (id) {
             getCastration(id)
-        } else {
-            getCastrations()
         }
-    // eslint-disable-next-line
-    }, [id])
+        getCastrations()
+        // eslint-disable-next-line
+    }, [])
 
 
     const getWaitingList = async () => {
         let response = await request<EsperaCastracao[]>('get', '/castration/waitingList')
         setListsEspera(response || [])
-        if(loading){
+        if (loading) {
             setLoading(false)
         }
     }
@@ -88,14 +91,14 @@ export const Castration = () => {
         if (callback) {
             callback()
         }
-        if(loading){
+        if (loading) {
             setLoading(false)
         }
     }
     const getCastrations = async () => {
         let response = await request<CastrationModel[]>('get', '/castration', {}, {})
         setCastracoes(response || [])
-        if(loading){
+        if (loading) {
             setLoading(false)
         }
     }
@@ -114,7 +117,7 @@ export const Castration = () => {
     }
     const permitidoConcluir = (showAlert: boolean) => {
         if (castracao && castracao.animais && castracao.animais.length > 0) {
-            if (!castracao.animais.filter(c=>c.formaPagamento!=='CASTRACAO_SOLIDARIA').every(a => a.idFaixa && a.idFaixa !== 0)) {
+            if (!castracao.animais.filter(c => c.formaPagamento !== 'CASTRACAO_SOLIDARIA').every(a => a.idFaixa && a.idFaixa !== 0)) {
                 if (showAlert) {
                     openAlertWarning('Para finalizar a castração é necessário informar as faixas de valores')
                 }
@@ -145,7 +148,7 @@ export const Castration = () => {
 
     }
     const generateReport = (row: any) => {
-        api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response:any) => {
+        api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response: any) => {
             const contentDisposition = response.headers['content-disposition'];
             let fileName = 'pdfCastracaoSOSAnimais.pdf';
 
@@ -208,6 +211,21 @@ export const Castration = () => {
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
         setAnimais(selectedRows)
     }
+    const selecionarAnimalLista = (card:EsperaCastracao)=>{
+        setAnimais((prev) => {
+            const selected = prev.find((a) => a.id === card.id);
+            if (selected) {
+                return prev.filter((a) => a.id !== card.id);
+            } else {
+                return [...prev, { ...card, selected: true }];
+            }
+        })
+    }
+    const removerAnimalLista = (animal: EsperaCastracao) => {
+        setAnimais((prev) => {
+            return prev.filter((a) => a.id !== animal.id);
+        })
+    }
     const selectAnimais = () => {
         let qttCaixasPequenas = castracao?.quantidadeCaixasPequenas || 0
         let qttCaixasMedias = castracao?.quantidadeCaixasMedias || 0
@@ -266,39 +284,42 @@ export const Castration = () => {
             openAlertWarning('Selecione os animais para castração')
             return
         }
-
+        console.log(data)
         let obj = {
             data: new Date(data?.data).toISOString(),
             observacao: data?.observacao,
             quantidadeAnimais: animais.length,
             animais: animais
         }
-
+        console.log(obj)
         post<CastrationModel>('/castration', obj, {}, (response) => {
             openAlertSuccess('Castração cadastrada com sucesso')
             navigate('/gerenciar/castracoes')
             setListsEspera([])
             setAnimais([])
+            getCastrations()
+
         })
     }
-     const adicionarAnimalCastracao = async (id:number) => {
-            await request<void>('post', `/castration/waitingList/${castracao.id}/addAnimal/${id}`)
-            openAlertSuccess('Animal adicionado com sucesso')
-            setShowAdicionarAnimal(false)
-            getCastration(castracao.id)
-        }
+    const adicionarAnimalCastracao = async (id: number) => {
+        await request<void>('post', `/castration/waitingList/${castracao.id}/addAnimal/${id}`)
+        openAlertSuccess('Animal adicionado com sucesso')
+        setShowAdicionarAnimal(false)
+        getCastration(castracao.id)
+    }
     const removerAnimal = (animal: EsperaCastracao) => {
-        deleteRequest<void>('/castration/waitingList/' + animal.id, (response) => {
-            openAlertSuccess('Animal removido da lista de espera')
+        request<void>('delete', '/castration/waitingList/' + animal.id).then(() => {
+            openAlertSuccess('Animal removido da castração e retornado para a lista de espera')
             if (castracao?.id) {
                 getCastration(castracao.id, () => {
                     setSaveAnimalRemover(null)
                 })
             }
         })
+       
     }
-    const handleAddNovoAnimal = ()=>{
-        if(listsEspera.length===0){
+    const handleAddNovoAnimal = () => {
+        if (listsEspera.length === 0) {
             getWaitingList()
         }
         setShowAdicionarAnimal(true)
@@ -364,6 +385,14 @@ export const Castration = () => {
             </div>
         )
     }
+    const isSelecionado = (card:EsperaCastracao)=>{
+        return animais.some((a)=>a.id===card.id)
+    }
+    const getButtonsCard = ():CardButton[]=>{
+        return [{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'default', onClick: (row: CardEsperaCastracao) => selecionarAnimalLista(row), isRender: (row: CardEsperaCastracao) => !isSelecionado(row) },
+            { buttonType: 'button', icon: <FaTimes />, text: 'Remover', type: 'default', onClick: (row: CardEsperaCastracao) => removerAnimalLista(row), isRender: (row: CardEsperaCastracao) => isSelecionado(row) }
+        ]
+    }
     const renderCadastrarNovaCastracao = () => {
         return (
             <div className="p-3">
@@ -412,17 +441,21 @@ export const Castration = () => {
                                 <h2 className="text-lg/7 font-semibold text-gray-900 ml-2">Lista de Espera</h2>
                             </div>
                             <div className="mt-3">
-                                <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
-                                    <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" />
-                                    <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
-                                    <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
-                                    <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
-                                    <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                                    <Column<EsperaCastracao> label="Ações" component={(idx, row) => <button type="button" onClick={() => setWaitListSelect(row)} >
-                                        <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
-                                    </button>} />
-
-                                </Table>
+                                {isMobile ? <div className="mt-6 space-y-2">
+                                        {listsEspera.map((x, idx) => <CardAnimal key={idx} castracao={x} selecionado={isSelecionado(x)} options={getButtonsCard()} />)}
+                                    </div>
+                                        :
+                                        <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
+                                            <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" />
+                                            <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
+                                            <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
+                                            <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
+                                            <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
+                                            <Column<EsperaCastracao> label="Ações" component={(idx, row) => <button type="button" onClick={() => setWaitListSelect(row)} >
+                                                <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
+                                            </button>} />
+                                    </Table>
+                        }
                                 <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
                             </div>
                         </div>
@@ -477,8 +510,12 @@ export const Castration = () => {
                         <Title text='Lista de animais' icon={<FcList size={30} />} />
                         <div className="mt-3">
                             <CastrationAnimals
+                                situacao={castracao?.situacao}
                                 dataProps={castracao?.animais}
-                                refresh={() => getCastration(castracao.id)}
+                                refresh={() => {
+                                    console.log('refresh')
+                                    getCastration(castracao.id)
+                                }}
                                 handleRemoveAnimal={(animal) => setSaveAnimalRemover(animal)}
                             />
                         </div>
@@ -486,9 +523,12 @@ export const Castration = () => {
                 </div>
                 <div className="space-x-0 sm:space-x-2 mt-4 sm:mt-1">
                     {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" onClick={validarConclusao} class="w-full sm:w-60 mt-1" icon={<FaCheck />} type="success" />}
-                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' &&  <Button text="Adicionar Animal" onClick={() => handleAddNovoAnimal()} class="w-full sm:w-60 mt-1" icon={<FiCheck />} type="default" />}
+                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Adicionar Animal" onClick={() => handleAddNovoAnimal()} class="w-full sm:w-60 mt-1" icon={<FiCheck />} type="default" />}
                     <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-60 mt-1" icon={<FaRegFilePdf />} type="neutral" />
-                    <Button text="Voltar" onClick={() => navigate(-1)} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
+                    <Button text="Voltar" onClick={() => {
+                        getCastrations()
+                        navigate(-1)
+                    }} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
                 </div>
                 {renderModalAdicionarAnimal()}
                 <ConfirmModal
@@ -518,13 +558,18 @@ export const Castration = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <Table id='tableAnimaisAdicionarIdx' data={listsEspera} enablePagination={true}>
+                         {isMobile ? <div className="mt-6">
+                                        {listsEspera.map(x => <CardAnimal castracao={x} options={[{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'neutral', onClick: (row: CardEsperaCastracao) => adicionarAnimalCastracao(row.id) }]} />)}
+                                    </div>
+                                        :
+                                        <Table id='tableAnimaisAdicionarIdx' data={listsEspera} enablePagination={true}>
                             <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
                             <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
                             <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
                             <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                            <Column label="" component={(idx, row: EsperaCastracao) => <Button text="Selecionar" onClick={()=>adicionarAnimalCastracao(row.id)}  type="default" />} />
+                            <Column label="" component={(idx, row: EsperaCastracao) => <Button text="Selecionar" onClick={() => adicionarAnimalCastracao(row.id)} type="default" />} />
                         </Table>
+                    }
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -556,17 +601,63 @@ export const Castration = () => {
                         })
                     }} icon={<FiPlus />} type="default" />
                 </div>
-                <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
-                    columnsRowClick={[0, 1, 2, 3,4,5]}
-                >
-                    <Column field="data" label="Data" format="dataHora" align="center" />
-                    <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
-                    <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
-                    <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
-                    <Column field="situacao" label="Situação" format="situacaoCastracao" align="center" />
-                    <Column field="observacao" label="Observação" align="center" />
-                    <Column label="Ações" component={(idx, row)=>renderAcoes(row)} />
-                </Table>
+                    {isMobile ? <div className="space-y-2">
+                        {castracoes.map((c, idx)=>(
+                            <div
+                            key={idx}
+                            className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 "
+                          >
+                            <div className="grid grid-cols-2">
+                            <div className="flex flex-col">
+                                <span className="text-sm text-gray-500 mb-1">Data</span>
+                                <span className="font-medium text-gray-800 mb-2">{formatDateWithHour(c.data)}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm text-gray-500 mb-1">Situação</span>
+                                <span className="mb-2">{formatSituacao(c.situacao)}</span>
+                            </div>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <div className="flex flex-col">
+                                    <span className="text-sm text-gray-500 mb-1">Valor pago SOS Animais</span>
+                                    <span className="mb-2">R$ {c.valorPagoSos}</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="text-sm text-gray-500 mb-1">Valor pago População</div>
+                                    <div className="mb-2">R$ {c.valoPagoPopulacao}</div>
+                                </div>
+
+                            </div>
+
+                      
+                          
+                      
+                           
+                      
+                            <div className="text-sm text-gray-500 mb-1">Quantidade de Animais</div>
+                            <div className="mb-2">{c.quantidadeAnimais}</div>
+                      
+                            
+                      
+                            <div className="text-sm text-gray-500 mb-1">Observação</div>
+                            <div className="text-gray-700">{c.observacao || '—'}</div>
+                            <div className="flex mt-3">
+                                <Button text="Abrir" class="flex-1" onClick={() => handleAbrirCastracao(c)} type="default" />
+                            </div>
+                          </div>
+                        ))}
+                    </div>:
+                       <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
+                       columnsRowClick={[0, 1, 2, 3, 4, 5]}
+                   >
+                       <Column field="data" label="Data" format="dataHora" align="center" />
+                       <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
+                       <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
+                       <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
+                       <Column field="situacao" label="Situação" format="situacaoCastracao" align="center" />
+                       <Column field="observacao" label="Observação" align="center" />
+                       <Column label="Ações" component={(idx, row) => renderAcoes(row)} />
+                   </Table>}
 
 
             </div>

@@ -2,7 +2,7 @@ import DataTable, { TableColumn } from "react-data-table-component"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
-import { formatDate, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal } from "../../services/Util"
+import { formatDate, formatDateYYYYMMDD, formatFormaPagamento, formatPorteAnimal, formatTipoAnimal } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
 import { get, post, put, request } from "../../services/Axios"
@@ -73,9 +73,9 @@ export const TableWaitingList = ({ handleSelectRows, selectAnimals = false,
         return 0
     }, [])
     const getFaixasPreco = async () => {
-        let response = await request<FaixaValor[]>('get', '/faixapreco')
+        let response = await request<FaixaValor[]>('get', '/faixapreco/ativos')
         let data = response || []
-        data.unshift({ id: 0, descricao: 'Não Informado', valor: '0' })
+        data.unshift({ id: 0, descricao: 'Não Informado', valor: '0', dataInicio: formatDateYYYYMMDD(new Date()) })
         setFaixaValores(data)
     }
     const columns: TableColumn<EsperaCastracao>[] = useMemo(() => {

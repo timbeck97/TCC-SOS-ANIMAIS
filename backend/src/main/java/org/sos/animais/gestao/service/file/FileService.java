@@ -23,7 +23,7 @@ public class FileService {
         this.castrationFileRepository = castrationFileRepository;
     }
 
-    public void uploadFileCastrationRequest(MultipartFile file, String folder, CastrationRequest castrationRequest, EFileType tipo) {
+    public CastrationFile uploadFileCastrationRequest(MultipartFile file, String folder, CastrationRequest castrationRequest, EFileType tipo) {
         String randomFileName = UUID.randomUUID().toString() + "_" + castrationRequest.getId() + "_" + file.getOriginalFilename();
         String urlFile = fileUpload.uploadFile(file, folder, randomFileName);
         CastrationFile castrationFile = new CastrationFile();
@@ -34,7 +34,7 @@ public class FileService {
         castrationFile.setCastrationRequest(castrationRequest);
         castrationFile.setTipoArquivo(tipo);
         castrationFile.setFolder(folder);
-        castrationFileRepository.save(castrationFile);
+        return castrationFileRepository.save(castrationFile);
     }
     public void deleteFileCastrationRequest(CastrationFile castrationFile) {
         fileUpload.deleteFile(castrationFile.getName(), castrationFile.getFolder());

@@ -56,14 +56,14 @@ export const parseDate = (date: string) => {
     return new Date(parseInt(dateArray[2]), parseInt(dateArray[1]) - 1, parseInt(dateArray[0]))
 }
 export const formatDate = (date: Date | string) => {
-    console.log(date)
     if (!date) {
         return ''
     }
     if (typeof date === 'string') {
-        date = new Date(date)
+        let dateArray = date.split('-')
+        date = new Date(parseInt(dateArray[0]), parseInt(dateArray[1]) - 1, parseInt(dateArray[2]))
     }
-    //format date to dd/mm/yyyy
+ 
     return date.toLocaleDateString('pt-BR')
 }
 export const formatDateWithHour = (date: Date | string) => {
@@ -73,7 +73,6 @@ export const formatDateWithHour = (date: Date | string) => {
     if (typeof date === 'string') {
         date = new Date(date)
     }
-    //format date to dd/mm/yyyy hh:mm
     return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR')
 
 }
@@ -173,4 +172,14 @@ export const formatNumeroTelefone = (numero:string)=>{
       return 'Número inválido';
     }
     return `(${numero.slice(0, 2)})${numero[2]} ${numero.slice(3, 7)}-${numero.slice(7)}`;
+}
+export const formatDateYYYYMMDD = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); 
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+export const parseStringToDate = (dataString:string)=>{
+    const [ano, mes, dia] = dataString.split("-").map(Number);
+    return new Date(ano, mes - 1, dia);
 }

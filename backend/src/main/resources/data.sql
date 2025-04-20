@@ -11,12 +11,12 @@ insert into notification(id, data, mensagem, tipo, lida) values
 (104,'2025-03-27 19:20:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
 (105,'2025-03-27 21:45:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false);
 
-insert into price_range(id, descricao, valor) values
-(600, 'Até 5KG', 70.0),
-(601, '5KG até 10KG', 90.0),
-(602, '10KG até 15KG', 100.0),
-(603, '15KG até 20KG', 110.0),
-(604, '20KG até 25KG', 125.0);
+insert into price_range(id, descricao, valor, data_inicio) values
+(600, 'Até 5KG', 70.0, '2025-01-01'),
+(601, '5KG até 10KG', 90.0,'2025-01-01'),
+(602, '10KG até 15KG', 100.0,'2025-01-01'),
+(603, '15KG até 20KG', 110.0, '2025-01-01'),
+(604, '20KG até 25KG', 125.0, '2025-01-01');
 
 INSERT INTO castration_request (
     id, nome, sobrenome, cpf, telefone, rua, bairro, numero,

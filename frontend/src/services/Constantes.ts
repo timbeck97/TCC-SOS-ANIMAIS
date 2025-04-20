@@ -29,6 +29,12 @@ export const FORMA_PAGAMENTO = [
     { label: 'PIX', value: 'PIX' },
     { label: 'Castração Solidária', value: 'CASTRACAO_SOLIDARIA' },
 ]
+export const FORMA_PAGAMENTO_PUBLIC = [
+    { label: 'Selecione', value: null },
+    { label: 'Dinheiro', value: 'DINHEIRO' },
+    { label: 'PIX', value: 'PIX' },
+    
+]
 export const MESES =  [
     { label: 'Janeiro', value: '01' },
     { label: 'Fevereiro', value: '02' },

@@ -2,6 +2,8 @@ package org.sos.animais.gestao.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 public class PriceRange {
 
@@ -16,12 +18,21 @@ public class PriceRange {
     @Column(columnDefinition = "numeric(14,2)", nullable = false)
     private double valor;
 
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private Date dataInicio;
+
+    @Temporal(TemporalType.DATE)
+    private Date dataFim;
+
     public PriceRange() {
     }
 
-    public PriceRange(String descricao, double valor) {
+    public PriceRange(String descricao, double valor, Date dataInicio, Date dataFim) {
         this.descricao = descricao;
         this.valor = valor;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
     }
 
     public long getId() {
@@ -46,5 +57,21 @@ public class PriceRange {
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
     }
 }
