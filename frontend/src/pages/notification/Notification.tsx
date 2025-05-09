@@ -6,6 +6,7 @@ import { Notification as NotificacioInterface } from "../../types/Notification"
 import { Column } from "../../components/table/Column"
 import { request } from "../../services/Axios"
 import { Subtitle } from "../../components/title/Subtitle"
+import { FaCheck, FaTimes } from "react-icons/fa"
 
 export const Notification = () => {
 
@@ -17,7 +18,16 @@ export const Notification = () => {
         let resp = await request<NotificacioInterface[]>('get','/notification/all')
         setNotificacoes(resp || [])
     }
-
+    const renderLido = (idx:number, row: NotificacioInterface) => {
+        if(!row.lida){
+            return(
+                <div className="flex justify-center"><FaTimes color="red" size={25}/></div>
+            )
+        }
+        return(
+            <div className="flex justify-center"><FaCheck color="green" size={25} /></div>
+        )
+    }
     return (
         <Pawbackground>
             <div className='border-b border-gray-900/10 pb-12 px-5 shadow-lg rounded-md bg-white relative'>
@@ -27,10 +37,11 @@ export const Notification = () => {
                 <div className="rounded px-2 pt-4 flex items-center ">
 
                    <Table<NotificacioInterface> id='tbNotificacoes' data={notificacoes} enablePagination={true}>
+                     <Column<NotificacioInterface> field="lida" align='center' label="Lida" component={renderLido} />
+                     <Column<NotificacioInterface> field="dataLeitura" align='center' label="Data Leitura" format="dataHora"/>
                      <Column<NotificacioInterface> field="mensagem" align='center' label="Mensagem" />
-                     <Column<NotificacioInterface> field="data" align='center' label="Data" format="dataHora"/>
+                     <Column<NotificacioInterface> field="data" align='center' label="Data Notificação" format="dataHora"/>
                      <Column<NotificacioInterface> field="usuario" align='center' label="Usuário" />
-                     <Column<NotificacioInterface> field="lida" align='center' label="Lida" format="boolean" />
                    </Table>
                 </div>
             </div>

@@ -9,6 +9,7 @@ import { Dashboard } from "../pages/dashboard/Dashboard";
 import { Configurations } from "../pages/configuration/Configurations";
 import { CastrationRequestEdit } from "../pages/castrationRequestEdit/CastrationRequestEdit";
 import { Notification } from "../pages/notification/Notification";
+import { Status } from "../pages/status/Status";
 
 
 export const Routes = () => {
@@ -28,6 +29,7 @@ export const Routes = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="configuracoes" element={<Configurations />} />
           <Route path="notificacoes" element={<Notification />} />
+          <Route path="status" element={<Status />} />
         </Route>
       </Route>
 

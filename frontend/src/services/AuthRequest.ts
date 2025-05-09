@@ -29,10 +29,12 @@ const updateRefreshToken = async (): Promise<TokenAuth | null> => {
                 expiresIn: data.expires_in,
                 refreshToken: data.refresh_token,
                 refreshExpiresIn: data.refresh_expires_in,
-                tokenId: data.id_token
+                tokenId: data.id_token,
+                roles: data.roles
             };
 
             localStorage.setItem("token", JSON.stringify(newToken));
+            localStorage.setItem("roles", JSON.stringify(data.roles));
             openAlertSuccess('Token atualizado com sucesso');
             return newToken;
         } catch (error: any) {
@@ -62,8 +64,10 @@ const fetchToken = async (code: string):Promise<TokenAuth|null> => {
             expiresIn: data.expires_in,
             refreshToken: data.refresh_token,
             refreshExpiresIn: data.refresh_expires_in,
-            tokenId: data.id_token
+            tokenId: data.id_token,
+            roles: data.roles
         }
+        localStorage.setItem("roles", JSON.stringify(data.roles))
         localStorage.setItem("token", JSON.stringify(token))
         window.history.replaceState({}, document.title, "/");
         return token;
@@ -77,6 +81,7 @@ const logout = () => {
     let stringTk = localStorage.getItem('token')
     let token = JSON.parse(stringTk || '');
     localStorage.removeItem("token");
+    localStorage.removeItem("roles");
     window.location.href=URL+'/public/auth/keycloak/logout?tokenId='+token?.tokenId
 };
 const isAutenticado = () => {

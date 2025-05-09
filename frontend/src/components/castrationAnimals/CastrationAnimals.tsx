@@ -97,10 +97,10 @@ export const CastrationAnimals = ({ dataProps,situacao,
                 >
 
                     <Dropdown.Item icon={FcInfo} onClick={() => setWaitListSelect(row)}>Abrir</Dropdown.Item>
-                    <Dropdown.Item icon={FcFolder} className="w-40" onClick={() => {
+                    {!row.paga && situacao!=='FINALIZADA' && <Dropdown.Item icon={FcFolder} className="w-40" onClick={() => {
                         setShowUploadPagamento(true)
                         setIdWaitList(row.id)
-                    }}>Pagamento</Dropdown.Item>
+                    }}>Pagamento</Dropdown.Item>}
                     {row.urlComprovante && <Dropdown.Item icon={FaDownload} onClick={() => {
                         window.open(row.urlComprovante.replace('http','https'), '_blank', 'noopener,noreferrer');
                     }}>Download Comprovante</Dropdown.Item>}
@@ -229,6 +229,14 @@ export const CastrationAnimals = ({ dataProps,situacao,
             </Modal>
         )
     }
+    const renderNome = (idx: number, row: EsperaCastracao) => {
+        return (
+            <div className="flex flex-col items-center">
+                <span className="poppins-bold">{row.nomeRequerente}</span>
+                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+            </div>
+        )
+    }
     
     return (
         <div className="overflow-visible">
@@ -239,7 +247,7 @@ export const CastrationAnimals = ({ dataProps,situacao,
             </div>
                 :
                 <Table id='tableAnimaisIdx' data={data}>
-                    <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
+                    <Column field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome} />
                     <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
                     <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
                     <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />

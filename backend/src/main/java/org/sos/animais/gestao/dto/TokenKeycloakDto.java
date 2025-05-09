@@ -2,6 +2,8 @@ package org.sos.animais.gestao.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class TokenKeycloakDto {
 
     @JsonProperty("access_token")
@@ -18,6 +20,7 @@ public class TokenKeycloakDto {
     private String scope;
     @JsonProperty("id_token")
     private String ikToken;
+    private List<String> roles;
 
     public TokenKeycloakDto() {
     }
@@ -75,6 +78,14 @@ public class TokenKeycloakDto {
 
     public void setIkToken(String ikToken) {
         this.ikToken = ikToken;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     @Override

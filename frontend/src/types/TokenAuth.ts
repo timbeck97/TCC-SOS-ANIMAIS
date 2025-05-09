@@ -3,5 +3,6 @@ export interface TokenAuth {
     expiresIn: number,
     refreshToken: string,
     refreshExpiresIn: number,
-    tokenId: string
+    tokenId: string,
+    roles?: string[]
 }

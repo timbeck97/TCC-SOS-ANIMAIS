@@ -14,7 +14,9 @@ export const Button = (props: ButtonInterface) => {
         }
     }
     return (
-        <button onClick={props.onClick} className={`${getClass()} ${props.class} text-sm sm:text-base md:text-sm lg:text-md poppins-medium`} type={props.buttonType?props.buttonType:'button'}>
+        // <button onClick={props.onClick} className={`${getClass()} ${props.class} text-sm sm:text-base md:text-sm lg:text-md poppins-medium`} type={props.buttonType?props.buttonType:'button'}>
+        <button onClick={props.onClick} className={`${getClass()} ${props.class} hd:text-base mobile:text-xs poppins-medium`} type={props.buttonType ? props.buttonType : 'button'}>
+
             <div className="flex items-center justify-center space-x-1">
                 {props.icon}
                 <span>

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }: any) => {
 
 
     const [token, setToken] = useState<TokenAuth|null>(null);
+    const [roles, setRoles] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
 
@@ -26,6 +27,13 @@ export const AuthProvider = ({ children }: any) => {
                     setToken(tk);
                 }
             }
+            let stringRoles=localStorage.getItem('roles')
+            if(stringRoles){
+                let roles=JSON.parse(JSON.stringify(stringRoles)) as string[];
+                if(roles){
+                    setRoles(roles);
+                }
+            }
             setLoading(false);
         }
 
@@ -35,6 +43,7 @@ export const AuthProvider = ({ children }: any) => {
         const token:TokenAuth|null = await fetchToken(code);
         setToken(token);
         setLoading(false)
+        setRoles(token?.roles || []);
     }
   
  
@@ -44,7 +53,7 @@ export const AuthProvider = ({ children }: any) => {
 
 
     return (
-        <AuthContext.Provider value={{isAutenticated, loading}}>
+        <AuthContext.Provider value={{isAutenticated, loading, roles}}>
             {children}
         </AuthContext.Provider>
     );

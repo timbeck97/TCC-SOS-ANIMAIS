@@ -35,7 +35,7 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
     }, [data, enablePagination])
     useEffect(() => {
         if (onSelectRow) {
-            onSelectRow(listData.filter(d => d.selected).map(x => ({ ...x } as T)))
+            onSelectRow(originalData.filter(d => d.selected).map(x => ({ ...x } as T)))
         }
      // eslint-disable-next-line
     },[listData])

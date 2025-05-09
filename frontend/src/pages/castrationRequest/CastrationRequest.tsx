@@ -16,6 +16,7 @@ import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/W
 import {publicPost } from "../../services/Axios";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
 import { formatCpf, formatNumeroTelefone, formatValorMoeda } from "../../services/Util";
+import { Loading } from "../../components/loading/Loading";
 
 
 
@@ -333,12 +334,7 @@ export const CastrationRequest = () => {
                 </div>
                 {submittedData !== null ? renderConfirmacaoCastracao() : renderFormCastracao()}
             </div>
-            <div
-                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
-          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-            >
-                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-            </div>
+            <Loading loading={loading} />
         </Pawbackground>
 
     )

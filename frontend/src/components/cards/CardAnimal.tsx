@@ -26,7 +26,7 @@ export const CardAnimal = (props:{castracao:CardEsperaCastracao, options?:CardBu
                     <h2 className="text-lg font-semibold">{castracao.nomeAnimal} ({castracao.tipoAnimal})</h2>
                     {selecionado && <div className="bg-green-500 flex items-center gap-2 px-2 rounded rounded-md text-white"><FaCheck/>Selecionado</div>}
                 </div>
-                <p className="text-sm font-bold text-gray-800">Data da Solicitação: {formatDate(castracao.dataSolicitacao) || "A definir"}</p>
+                <p className="text-sm font-bold text-gray-800">Data da Solicitação: <span className="poppins-bold text-indigo-500">{formatDate(castracao.dataSolicitacao) || "A definir"}</span></p>
                 <p className="text-sm text-gray-600">Requerente: {castracao.nomeRequerente}</p>
                 <p className="text-sm text-gray-600">Contato: {formatNumeroTelefone(castracao.telefone)}</p>
                 {/* <p className="text-sm text-gray-600">Endereço: {castracao.rua}, {castracao.numero}, {castracao.bairro}</p> */}

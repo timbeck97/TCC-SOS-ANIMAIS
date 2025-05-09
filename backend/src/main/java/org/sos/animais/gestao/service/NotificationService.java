@@ -27,8 +27,12 @@ public class NotificationService {
     public List<NotificationDto> markAsRead(Long id){
         UserDto user = AutenticationService.getUser();
         notificationRepository.findById(id).map(notification -> {
+            if(notification.isLida()){
+                return notification;
+            }
             notification.setLida(true);
-            notification.setUsuario(user.userName());
+            notification.setDataLeitura(new Date());
+            notification.setUsuario(user.name());
             notification=notificationRepository.save(notification);
             return notification;
         }).orElseThrow(()->new RuntimeException("Notification not found"));

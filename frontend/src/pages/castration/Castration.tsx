@@ -31,6 +31,7 @@ import { useDevice } from "../../context/DeviceContext";
 import { CardAnimal } from "../../components/cards/CardAnimal";
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
 import { CardButton } from "../../types/CardButton";
+import { Loading } from "../../components/loading/Loading";
 
 
 
@@ -148,6 +149,7 @@ export const Castration = () => {
 
     }
     const generateReport = (row: any) => {
+        setLoading(true)
         api.get('/report/castration/' + row.id, { responseType: 'blob' }).then((response: any) => {
             const contentDisposition = response.headers['content-disposition'];
             let fileName = 'pdfCastracaoSOSAnimais.pdf';
@@ -168,6 +170,7 @@ export const Castration = () => {
 
             link?.parentNode?.removeChild(link);
             window.URL.revokeObjectURL(urlBlob);
+            setLoading(false)
         })
     }
     const handleChangeCastracao = <K extends keyof NonNullable<CastrationModel>>(name: K, value: NonNullable<CastrationModel[K]>) => {
@@ -209,6 +212,7 @@ export const Castration = () => {
 
 
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
+        console.log('selectedRows', selectedRows)
         setAnimais(selectedRows)
     }
     const selecionarAnimalLista = (card:EsperaCastracao)=>{
@@ -393,6 +397,14 @@ export const Castration = () => {
             { buttonType: 'button', icon: <FaTimes />, text: 'Remover', type: 'default', onClick: (row: CardEsperaCastracao) => removerAnimalLista(row), isRender: (row: CardEsperaCastracao) => isSelecionado(row) }
         ]
     }
+     const renderNome = (idx: number, row: EsperaCastracao) => {
+        return (
+            <div className="flex flex-col items-center">
+                <span className="poppins-bold">{row.nomeRequerente}</span>
+                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+            </div>
+        )
+    }
     const renderCadastrarNovaCastracao = () => {
         return (
             <div className="p-3">
@@ -403,7 +415,7 @@ export const Castration = () => {
                     <div className="flex flex-col gap-5">
                         <div className="border-b border-gray-900/10 pb-5 mt-5">
                             <div className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
-                                <div className="sm:col-span-1 space-y-4">
+                                <div className="col-span-3 hd:col-span-2 fullhd:col-span-1 space-y-4">
                                     <Subtitle text="Dados da Castração" extraClasses="mb-3" />
                                     <hr />
                                     <Input id="dataIdx"
@@ -446,14 +458,14 @@ export const Castration = () => {
                                     </div>
                                         :
                                         <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
-                                            <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" />
+                                            <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome}/>
                                             <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
                                             <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
                                             <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
                                             <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                                            <Column<EsperaCastracao> label="Ações" component={(idx, row) => <button type="button" onClick={() => setWaitListSelect(row)} >
+                                            <Column<EsperaCastracao> label="Ações" align="center"  component={(idx, row) =><div className="flex justify-center"><button type="button" onClick={() => setWaitListSelect(row)} >
                                                 <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
-                                            </button>} />
+                                            </button></div> } />
                                     </Table>
                         }
                                 <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
@@ -559,7 +571,7 @@ export const Castration = () => {
                 <Modal.Body>
                     <div>
                          {isMobile ? <div className="mt-6">
-                                        {listsEspera.map(x => <CardAnimal castracao={x} options={[{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'neutral', onClick: (row: CardEsperaCastracao) => adicionarAnimalCastracao(row.id) }]} />)}
+                                        {listsEspera.map((x,idx) => <CardAnimal key={idx} castracao={x} options={[{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'neutral', onClick: (row: CardEsperaCastracao) => adicionarAnimalCastracao(row.id) }]} />)}
                                     </div>
                                         :
                                         <Table id='tableAnimaisAdicionarIdx' data={listsEspera} enablePagination={true}>
@@ -665,14 +677,9 @@ export const Castration = () => {
     }
     return (
 
-        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow relative">
+        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
             {!id ? renderCastracoes() : renderDetalheCastracao()}
-            <div
-                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
-          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-            >
-                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-            </div>
+          <Loading loading={loading} />
         </div>
 
     )

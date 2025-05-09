@@ -88,7 +88,7 @@ export const Dashboard = () => {
                     </div>
                 </div>
                 <div className="p-4 mt-3 h-full">
-                    <h3 className="font-bold text-xl text-[#464549] dark:text-white">{title}</h3>
+                    <h3 className="font-bold hd:text-xl mobile:text-md text-[#464549] dark:text-white">{title}</h3>
                     <p className="mt-2 text-sm text-[#464549] dark:text-gray-400">{detail}</p>
                 </div>
             </div>
@@ -98,17 +98,17 @@ export const Dashboard = () => {
         return (
             <div className="p-6 ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="p-4 border rounded-lg shadow-lg col-span-2">
-                        <h2 className="text-xl text-[#464549] poppins-semibold mb-2">Castrações Realizadas no Período</h2>
+                    <div className="p-4 border rounded-lg shadow-lg col-span-2 text-center">
+                        <h2 className="hd:text-xl mobile:text-md  text-[#464549] poppins-semibold mb-2">Castrações Realizadas no Período</h2>
                         {renderLineChart()}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 col-span-2">
-                        <div className="p-4 border rounded-lg shadow-lg col-span-1">
-                            <h2 className="text-xl text-[#464549] poppins-semibold mb-2">Castrações por Meio de Pagamento</h2>
+                        <div className="p-4 border rounded-lg shadow-lg col-span-1  text-center">
+                            <h2 className="hd:text-xl mobile:text-md  text-[#464549] poppins-semibold mb-2">Castrações por Meio de Pagamento</h2>
                             {renderBarChart()}
                         </div>
-                        <div className="p-4 border rounded-lg shadow-lg col-span-1">
-                            <h2 className="text-xl text-[#464549] poppins-semibold mb-2">Percentuais de Pagamento</h2>
+                        <div className="p-4 border rounded-lg shadow-lg col-span-1  text-center">
+                            <h2 className="hd:text-xl mobile:text-md   text-[#464549] poppins-semibold mb-2">Percentuais de Pagamento</h2>
                             {renderPieChart()}
                         </div>
                     </div>

@@ -14,6 +14,7 @@ import { formatPorteAnimal, formatTipoAnimal } from '../../services/Util';
 import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 import { useDevice } from '../../context/DeviceContext';
 import { CardAnimal } from '../../components/cards/CardAnimal';
+import { Loading } from '../../components/loading/Loading';
 
 
 
@@ -55,6 +56,14 @@ export const WaitingList = () => {
                 </div>
             )
         }
+     const renderNome = (idx: number, row: EsperaCastracao) => {
+        return (
+            <div className="flex flex-col items-center">
+                <span className="poppins-bold">{row.nomeRequerente}</span>
+                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+            </div>
+        )
+    }
     return (
         <Pawbackground>
 
@@ -99,13 +108,15 @@ export const WaitingList = () => {
                         {isMobile? <div className='space-y-2'>{data.map((x,idx) => <CardAnimal key={idx} castracao={x}/>)}</div>
                         :
                         <Table id='tableAnimaisIdx' data={data} enablePagination={true}>
-                            <Column field="nomeRequerente" align='center' label="Nome do Requerente" />
+                            <Column field="nomeRequerente" align='center' label="Nome do Requerente" component={renderNome} />
                             <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
                             <Column field="dataSolicitacao" align='center'  label="Data da Solicitação" format="data" />
                             <Column field="formaPagamento" align='center' label="Forma de Pagamento" format="formaPagamento" />
-                            <Column label="Ações" component={(idx, row: EsperaCastracao) => <button type="button" onClick={() => setWaitListSelect(row)} >
+                            <Column label="Ações" align='center'  component={(idx, row: EsperaCastracao) => <div className='flex justify-center'>
+                                <button type="button" onClick={() => setWaitListSelect(row)} >
                                 <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
-                            </button>} />
+                            </button>
+                            </div>} />
 
                         </Table>
                         }
@@ -114,12 +125,7 @@ export const WaitingList = () => {
 
 
                 </div>
-                <div
-                className={`absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center 
-          transition-opacity duration-50 ${loading ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-            >
-                <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-            </div>
+                <Loading loading={loading} />
             </div>
         </Pawbackground>
 

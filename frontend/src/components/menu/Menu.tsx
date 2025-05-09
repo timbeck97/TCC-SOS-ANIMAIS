@@ -12,6 +12,7 @@ import { Notification } from '../../types/Notification';
 import { CiLogout } from "react-icons/ci";
 import { IoListSharp } from 'react-icons/io5';
 import { BsList } from "react-icons/bs";
+import { FcChargeBattery } from 'react-icons/fc';
 
 
 export const Menu = () => {
@@ -21,7 +22,7 @@ export const Menu = () => {
     const [notifications, setNotifications] = useState<Notification[]>([])
     const { isMobile } = useDevice();
     const navigate = useNavigate();
-    const { isAutenticated } = useAuthContext()
+    const { isAutenticated, roles } = useAuthContext()
     const getNotifications = async () => {
         let response = await request<Notification[]>('get', '/notification')
         setNotifications(response || [])
@@ -172,6 +173,9 @@ export const Menu = () => {
         if (isAutenticated()) {
             itens.push(<Dropdown.Item key={1} icon={FaCog} onClick={() => navigate('/gerenciar/configuracoes')}>Configurações</Dropdown.Item>)
             itens.push(<Dropdown.Item key={2} icon={FaBell} onClick={() => navigate('/gerenciar/notificacoes')}>Notificações</Dropdown.Item>)
+            if(roles.includes('ADMIN')) {
+                itens.push(<Dropdown.Item key={2} icon={FcChargeBattery} onClick={() => navigate('/gerenciar/status')}>Status do Sistema</Dropdown.Item>)
+            }
             itens.push(<DropdownDivider key={3} />)
             itens.push(<Dropdown.Item key={4} icon={CiLogout} onClick={logout}>Sair</Dropdown.Item>)
         } else {

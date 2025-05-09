@@ -1,5 +1,7 @@
 package org.sos.animais.gestao.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.http.HttpServletResponse;
 import org.sos.animais.gestao.dto.TokenKeycloakDto;
 import org.sos.animais.gestao.dto.UserDto;
@@ -18,9 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AutenticationService {
@@ -71,9 +71,23 @@ public class AutenticationService {
                 KEYCLOACK_TOKEN_URL, HttpMethod.POST, request, TokenKeycloakDto.class);
 
         TokenKeycloakDto body = response.getBody();
+        body.setRoles(getRoles(body.getAccessToken()));
         body.setExpiresIn((System.currentTimeMillis()/1000) + (body.getExpiresIn()));
         body.setRefreshExpiresIn((System.currentTimeMillis()/1000) + (body.getRefreshExpiresIn()));
         return body;
+    }
+    public List<String> getRoles(String tokenJwt){
+        DecodedJWT jwt = JWT.decode(tokenJwt);
+
+        Map<String, Object> resourceAccess = jwt.getClaim("resource_access").asMap();
+        Map<String, Object> clientRoles = (Map<String, Object>) resourceAccess.get(KEYCLOACK_CLIENT_ID);
+        List<String> roles = (List<String>) clientRoles.get("roles");
+        StringBuilder rolesString = new StringBuilder();
+        for (String role : roles) {
+            rolesString.append(role).append(" ");
+        }
+        return roles;
+
     }
     public TokenKeycloakDto getRefreshToken(String refreshToken){
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
@@ -91,6 +105,7 @@ public class AutenticationService {
                 KEYCLOACK_TOKEN_URL, HttpMethod.POST, request, TokenKeycloakDto.class);
 
         TokenKeycloakDto body = response.getBody();
+        body.setRoles(getRoles(body.getAccessToken()));
         body.setExpiresIn((System.currentTimeMillis()/1000) + body.getExpiresIn());
         body.setRefreshExpiresIn((System.currentTimeMillis()/1000) + body.getRefreshExpiresIn());
         return body;
@@ -112,19 +127,22 @@ public class AutenticationService {
             throw new RuntimeException("Usuário não autenticado");
         }
         String username = null;
+        String name = null;
         if (authentication.getPrincipal() instanceof Jwt) {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             username = jwt.getClaim("preferred_username");
+            name = jwt.getClaim("name");
         } else if (authentication.getPrincipal() instanceof OAuth2User) {
             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
             username = oauth2User.getAttribute("preferred_username");
+            name = oauth2User.getAttribute("name");
         }
         Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
         StringBuilder rolesString = new StringBuilder();
         for (GrantedAuthority role : roles) {
             rolesString.append(role.getAuthority()).append(" ");
         }
-        return new UserDto(username, rolesString.toString());
+        return new UserDto(username, name, rolesString.toString());
     }
 
 

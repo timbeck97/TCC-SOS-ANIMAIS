@@ -3,13 +3,13 @@ insert into castration(id,data, observacao, situacao) values (51, '2025-02-13 14
 insert into castration(id,data, observacao, situacao) values (52, '2025-03-20 08:45:00', 'Castração de cachorro', 'FINALIZADA');
 insert into castration(id,data, observacao, situacao) values (53, '2025-06-20 08:45:00', NULL, 'FINALIZADA');
 
-insert into notification(id, data, mensagem, tipo, lida) values
-(101,'2025-03-27 21:20:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
-(102,'2025-03-27 21:15:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
-(100,'2025-03-27 21:00:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
-(103,'2025-03-27 20:18:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
-(104,'2025-03-27 19:20:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false),
-(105,'2025-03-27 21:45:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false);
+insert into notification(id, data, mensagem, tipo, lida, usuario, data_leitura) values
+(101,'2025-03-27 21:20:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00'),
+(102,'2025-03-27 21:15:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00'),
+(100,'2025-03-27 21:00:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00'),
+(103,'2025-03-27 20:18:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00'),
+(104,'2025-03-27 19:20:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00'),
+(105,'2025-03-27 21:45:00','Criada nova castracao hehe','CASTRATION_REQUEST_CREATED', false, 'Tim Morgenstern', '2025-03-28 08:00:00');
 
 insert into price_range(id, descricao, valor, data_inicio) values
 (600, 'Até 5KG', 70.0, '2025-01-01'),
