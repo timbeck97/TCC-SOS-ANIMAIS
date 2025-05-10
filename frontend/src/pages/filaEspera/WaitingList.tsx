@@ -10,7 +10,7 @@ import { Title } from '../../components/title/Title';
 import { Table } from '../../components/table/Table';
 import { Column } from '../../components/table/Column';
 import { EsperaCastracao } from '../../types/EsperaCastracao';
-import { formatPorteAnimal, formatTipoAnimal } from '../../services/Util';
+import { formatNumeroTelefone, formatPorteAnimal, formatTipoAnimal } from '../../services/Util';
 import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 import { useDevice } from '../../context/DeviceContext';
 import { CardAnimal } from '../../components/cards/CardAnimal';
@@ -60,7 +60,7 @@ export const WaitingList = () => {
         return (
             <div className="flex flex-col items-center">
                 <span className="poppins-bold">{row.nomeRequerente}</span>
-                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+                <span className="poppins-bold text-indigo-500">{formatNumeroTelefone(row.telefone)}</span>
             </div>
         )
     }

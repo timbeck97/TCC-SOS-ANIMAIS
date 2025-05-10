@@ -1,7 +1,7 @@
 import { EsperaCastracao } from "../../types/EsperaCastracao"
 import { useEffect, useState } from "react"
 import { TableWaitingListInterface } from "../../types/TableWaitingListInterface"
-import { formatDateYYYYMMDD, formatPorteAnimal, formatTipoAnimal, formatValorMoeda, isEmpty } from "../../services/Util"
+import { formatDateYYYYMMDD, formatNumeroTelefone, formatPorteAnimal, formatTipoAnimal, formatValorMoeda, isEmpty } from "../../services/Util"
 import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
 import { post, put, request } from "../../services/Axios"
@@ -116,7 +116,7 @@ export const CastrationAnimals = ({ dataProps,situacao,
         if(row.formaPagamento==='CASTRACAO_SOLIDARIA'){
             return(
                 <div className="flex justify-center items-center gap-x-2">
-                    <span className="text-md">Isento</span>
+                    <span className="text-md">Não se aplica</span>
                 </div>
             )
         }
@@ -211,7 +211,7 @@ export const CastrationAnimals = ({ dataProps,situacao,
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <div>
+                        <div className="flex">
                             <button className={"p-2 border-t border-l border-b border-gray-300 rounded-l-md md:text-md text-sm " + (tipoPagamento === 'CONFIRMAR' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('CONFIRMAR')}>Apenas Confirmar Pagamento</button>
                             <button className={"p-2 border-t border-r border-b border-gray-300 rounded-r-md md:text-md text-sm " + (tipoPagamento === 'COMPROVANTE' ? 'bg-green-500 text-white' : 'bg-gray-100')} onClick={() => setTipoPagamento('COMPROVANTE')}>Enviar Comprovante</button>
                         </div>
@@ -233,7 +233,7 @@ export const CastrationAnimals = ({ dataProps,situacao,
         return (
             <div className="flex flex-col items-center">
                 <span className="poppins-bold">{row.nomeRequerente}</span>
-                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+                <span className="poppins-bold text-indigo-500">{formatNumeroTelefone(row.telefone)}</span>
             </div>
         )
     }

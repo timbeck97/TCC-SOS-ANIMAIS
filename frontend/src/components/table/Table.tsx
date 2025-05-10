@@ -113,14 +113,14 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
     }
     return (
         <div className="overflow-x-auto flex flex-col flex-1">
-            <table id={id} className="min-w-full table-auto border-collapse border border-gray-200">
+            <table id={id} className="min-w-full table-auto border-collapse border border-gray-200 shadow-sm">
                 <thead>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-indigo-500">
                         {selectable && <th className="px-6 py-3 border-b text-left text-xs  text-gray-700 poppins-semibold">
                             <input type="checkbox" checked={isChecked(undefined)} onChange={e => handleCheckbox(e, 'all')} />
                         </th>}
                         {children.map((column: React.ReactElement, index) => (
-                            <th key={index} className={`px-6 py-3 border-b text-left text-xs  text-gray-700 poppins-semibold ${column.props.align?'text-'+column.props.align:''}`}>
+                            <th key={index} className={`px-6 py-3 border-b text-left text-xs  text-white poppins-semibold ${column.props.align?'text-'+column.props.align:''}`}>
                                 {column.props.label}
                             </th>
                         ))}

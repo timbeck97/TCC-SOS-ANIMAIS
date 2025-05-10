@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import Input from "../../components/input/Input"
 import { EsperaCastracao } from "../../types/EsperaCastracao"
-import { fintNextMonday, formatDateWithHour, formatPorteAnimal, formatSituacao, formatTipoAnimal } from "../../services/Util"
+import { fintNextMonday, formatDateWithHour, formatNumeroTelefone, formatPorteAnimal, formatSituacao, formatTipoAnimal } from "../../services/Util"
 import { HiOutlineCube } from "react-icons/hi";
 import { useEffect, useState } from "react"
 import { FcInfo, FcList, FcOvertime, FcStatistics } from "react-icons/fc"
@@ -32,6 +32,7 @@ import { CardAnimal } from "../../components/cards/CardAnimal";
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
 import { CardButton } from "../../types/CardButton";
 import { Loading } from "../../components/loading/Loading";
+import { Pawbackground } from "../../components/pawbackground/Pawbackground";
 
 
 
@@ -51,7 +52,7 @@ export const Castration = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [showAdicionarAnimal, setShowAdicionarAnimal] = useState(false)
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
-    const {isMobile} = useDevice()
+    const { isMobile } = useDevice()
     const [showSelecionarCaixas, setShowSelecionarCaixas] = useState<boolean>(false)
     const [confirmFinalizarCastracao, setConfirmFinalizarCastracao] = useState<boolean>(false)
 
@@ -215,7 +216,7 @@ export const Castration = () => {
         console.log('selectedRows', selectedRows)
         setAnimais(selectedRows)
     }
-    const selecionarAnimalLista = (card:EsperaCastracao)=>{
+    const selecionarAnimalLista = (card: EsperaCastracao) => {
         setAnimais((prev) => {
             const selected = prev.find((a) => a.id === card.id);
             if (selected) {
@@ -320,7 +321,7 @@ export const Castration = () => {
                 })
             }
         })
-       
+
     }
     const handleAddNovoAnimal = () => {
         if (listsEspera.length === 0) {
@@ -389,19 +390,19 @@ export const Castration = () => {
             </div>
         )
     }
-    const isSelecionado = (card:EsperaCastracao)=>{
-        return animais.some((a)=>a.id===card.id)
+    const isSelecionado = (card: EsperaCastracao) => {
+        return animais.some((a) => a.id === card.id)
     }
-    const getButtonsCard = ():CardButton[]=>{
+    const getButtonsCard = (): CardButton[] => {
         return [{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'default', onClick: (row: CardEsperaCastracao) => selecionarAnimalLista(row), isRender: (row: CardEsperaCastracao) => !isSelecionado(row) },
-            { buttonType: 'button', icon: <FaTimes />, text: 'Remover', type: 'default', onClick: (row: CardEsperaCastracao) => removerAnimalLista(row), isRender: (row: CardEsperaCastracao) => isSelecionado(row) }
+        { buttonType: 'button', icon: <FaTimes />, text: 'Remover', type: 'default', onClick: (row: CardEsperaCastracao) => removerAnimalLista(row), isRender: (row: CardEsperaCastracao) => isSelecionado(row) }
         ]
     }
-     const renderNome = (idx: number, row: EsperaCastracao) => {
+    const renderNome = (idx: number, row: EsperaCastracao) => {
         return (
             <div className="flex flex-col items-center">
                 <span className="poppins-bold">{row.nomeRequerente}</span>
-                <span className="poppins-bold text-indigo-500">{row.telefone}</span>
+                <span className="poppins-bold text-indigo-500">{formatNumeroTelefone(row.telefone)}</span>
             </div>
         )
     }
@@ -414,33 +415,34 @@ export const Castration = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-5">
                         <div className="border-b border-gray-900/10 pb-5 mt-5">
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-4">
-                                <div className="col-span-3 hd:col-span-2 fullhd:col-span-1 space-y-4">
+                            <div className="grid grid-cols-1 mt-3 gap-y-1 sm:grid-cols-3">
+                                <div>
                                     <Subtitle text="Dados da Castração" extraClasses="mb-3" />
                                     <hr />
-                                    <Input id="dataIdx"
-                                        label="Data da Castração"
-                                        type="datetime-local"
-                                        errors={errors.data}
-                                        {...register('data')}
-                                    />
-
-
-                                    <Input id="observacaoIdx"
-                                        label="Observações"
-                                        type="textarea"
-                                        lines={4}
-                                        errors={errors.observacao}
-                                        {...register('observacao')}
-
-
-                                    />
-
                                 </div>
-
-
-
                             </div>
+                            <div className="grid grid-cols-1 mt-3  sm:grid-cols-3">
+                                <Input id="dataIdx"
+                                    label="Data da Castração"
+                                    type="datetime-local"
+                                    errors={errors.data}
+                                    {...register('data')}
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 mt-3  sm:grid-cols-2">
+                                <Input id="observacaoIdx"
+                                    label="Observações"
+                                    type="textarea"
+                                    lines={4}
+                                    errors={errors.observacao}
+                                    {...register('observacao')}
+                                />
+                            </div>
+
+
+
+
+
                             <div className="mt-3 space-x-2 sm:block grid space-y-2 sm:space-y-0">
                                 <Button buttonType="submit" text='Cadastrar' icon={<FiPlus />} type="default" />
                                 <Button text="Selecionar Animais Automaticamente" buttonType="button" onClick={() => setShowSelecionarCaixas(true)} icon={<HiOutlineCube />} type="neutral" />
@@ -454,20 +456,20 @@ export const Castration = () => {
                             </div>
                             <div className="mt-3">
                                 {isMobile ? <div className="mt-6 space-y-2">
-                                        {listsEspera.map((x, idx) => <CardAnimal key={idx} castracao={x} selecionado={isSelecionado(x)} options={getButtonsCard()} />)}
-                                    </div>
-                                        :
-                                        <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
-                                            <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome}/>
-                                            <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
-                                            <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
-                                            <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
-                                            <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                                            <Column<EsperaCastracao> label="Ações" align="center"  component={(idx, row) =><div className="flex justify-center"><button type="button" onClick={() => setWaitListSelect(row)} >
-                                                <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
-                                            </button></div> } />
+                                    {listsEspera.map((x, idx) => <CardAnimal key={idx} castracao={x} selecionado={isSelecionado(x)} options={getButtonsCard()} />)}
+                                </div>
+                                    :
+                                    <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
+                                        <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome} />
+                                        <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
+                                        <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
+                                        <Column<EsperaCastracao> field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
+                                        <Column<EsperaCastracao> field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
+                                        <Column<EsperaCastracao> label="Ações" align="center" component={(idx, row) => <div className="flex justify-center"><button type="button" onClick={() => setWaitListSelect(row)} >
+                                            <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
+                                        </button></div>} />
                                     </Table>
-                        }
+                                }
                                 <WaitListModal show={waitListSelect !== null} handleClose={() => setWaitListSelect(null)} obj={waitListSelect} />
                             </div>
                         </div>
@@ -570,18 +572,18 @@ export const Castration = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                         {isMobile ? <div className="mt-6">
-                                        {listsEspera.map((x,idx) => <CardAnimal key={idx} castracao={x} options={[{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'neutral', onClick: (row: CardEsperaCastracao) => adicionarAnimalCastracao(row.id) }]} />)}
-                                    </div>
-                                        :
-                                        <Table id='tableAnimaisAdicionarIdx' data={listsEspera} enablePagination={true}>
-                            <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
-                            <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
-                            <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
-                            <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
-                            <Column label="" component={(idx, row: EsperaCastracao) => <Button text="Selecionar" onClick={() => adicionarAnimalCastracao(row.id)} type="default" />} />
-                        </Table>
-                    }
+                        {isMobile ? <div className="mt-6">
+                            {listsEspera.map((x, idx) => <CardAnimal key={idx} castracao={x} options={[{ buttonType: 'button', icon: <FaCheck />, text: 'Selecionar', type: 'neutral', onClick: (row: CardEsperaCastracao) => adicionarAnimalCastracao(row.id) }]} />)}
+                        </div>
+                            :
+                            <Table id='tableAnimaisAdicionarIdx' data={listsEspera} enablePagination={true}>
+                                <Column field="nomeRequerente" align="center" label="Nome do Requerente" />
+                                <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
+                                <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
+                                <Column field="formaPagamento" align="center" label="Forma de Pagamento" format="formaPagamento" />
+                                <Column label="" component={(idx, row: EsperaCastracao) => <Button text="Selecionar" onClick={() => adicionarAnimalCastracao(row.id)} type="default" />} />
+                            </Table>
+                        }
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -613,21 +615,21 @@ export const Castration = () => {
                         })
                     }} icon={<FiPlus />} type="default" />
                 </div>
-                    {isMobile ? <div className="space-y-2">
-                        {castracoes.map((c, idx)=>(
-                            <div
+                {isMobile ? <div className="space-y-2">
+                    {castracoes.map((c, idx) => (
+                        <div
                             key={idx}
                             className="bg-white rounded-2xl shadow-md p-4 border border-gray-200 "
-                          >
+                        >
                             <div className="grid grid-cols-2">
-                            <div className="flex flex-col">
-                                <span className="text-sm text-gray-500 mb-1">Data</span>
-                                <span className="font-medium text-gray-800 mb-2">{formatDateWithHour(c.data)}</span>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm text-gray-500 mb-1">Situação</span>
-                                <span className="mb-2">{formatSituacao(c.situacao)}</span>
-                            </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm text-gray-500 mb-1">Data</span>
+                                    <span className="font-medium text-gray-800 mb-2">{formatDateWithHour(c.data)}</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm text-gray-500 mb-1">Situação</span>
+                                    <span className="mb-2">{formatSituacao(c.situacao)}</span>
+                                </div>
                             </div>
                             <div className="grid grid-cols-2">
                                 <div className="flex flex-col">
@@ -641,35 +643,35 @@ export const Castration = () => {
 
                             </div>
 
-                      
-                          
-                      
-                           
-                      
+
+
+
+
+
                             <div className="text-sm text-gray-500 mb-1">Quantidade de Animais</div>
                             <div className="mb-2">{c.quantidadeAnimais}</div>
-                      
-                            
-                      
+
+
+
                             <div className="text-sm text-gray-500 mb-1">Observação</div>
                             <div className="text-gray-700">{c.observacao || '—'}</div>
                             <div className="flex mt-3">
                                 <Button text="Abrir" class="flex-1" onClick={() => handleAbrirCastracao(c)} type="default" />
                             </div>
-                          </div>
-                        ))}
-                    </div>:
-                       <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
-                       columnsRowClick={[0, 1, 2, 3, 4, 5]}
-                   >
-                       <Column field="data" label="Data" format="dataHora" align="center" />
-                       <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
-                       <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
-                       <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
-                       <Column field="situacao" label="Situação" format="situacaoCastracao" align="center" />
-                       <Column field="observacao" label="Observação" align="center" />
-                       <Column label="Ações" component={(idx, row) => renderAcoes(row)} />
-                   </Table>}
+                        </div>
+                    ))}
+                </div> :
+                    <Table id='tableAnimaisIdx' data={castracoes} enablePagination={true} onRowClick={handleAbrirCastracao}
+                        columnsRowClick={[0, 1, 2, 3, 4, 5]}
+                    >
+                        <Column field="data" label="Data" format="dataHora" align="center" />
+                        <Column field="valorPagoSos" label="Valor pago SOS Animais" format="moedaCifrao" align="center" />
+                        <Column field="valoPagoPopulacao" label="Valor pago População" format='moedaCifrao' align="center" />
+                        <Column field="quantidadeAnimais" label="Quantidade de Animais" align="center" />
+                        <Column field="situacao" label="Situação" format="situacaoCastracao" align="center" />
+                        <Column field="observacao" label="Observação" align="center" />
+                        <Column label="Ações" component={(idx, row) => renderAcoes(row)} />
+                    </Table>}
 
 
             </div>
@@ -677,10 +679,13 @@ export const Castration = () => {
     }
     return (
 
-        <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
-            {!id ? renderCastracoes() : renderDetalheCastracao()}
-          <Loading loading={loading} />
-        </div>
+        <Pawbackground>
+            <div className="pb-12 px-10 bg-[#f3f4f6] flex flex-col grow">
+
+                {!id ? renderCastracoes() : renderDetalheCastracao()}
+                <Loading loading={loading} />
+            </div>
+        </Pawbackground>
 
     )
 }
