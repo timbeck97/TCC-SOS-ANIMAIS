@@ -459,7 +459,7 @@ export const Castration = () => {
                                     {listsEspera.map((x, idx) => <CardAnimal key={idx} castracao={x} selecionado={isSelecionado(x)} options={getButtonsCard()} />)}
                                 </div>
                                     :
-                                    <Table<EsperaCastracao> id='tableAnimaisIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
+                                    <Table<EsperaCastracao> id='tableAnimaisFilaEsperaIdx' data={listsEspera} enablePagination={true} selectable={true} onSelectRow={(rows: EsperaCastracao[]) => handleSelect(rows)}>
                                         <Column<EsperaCastracao> field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome} />
                                         <Column<EsperaCastracao> field="porteAnimal" align="center" label="Porte do Animal" format="porteAnimal" />
                                         <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />

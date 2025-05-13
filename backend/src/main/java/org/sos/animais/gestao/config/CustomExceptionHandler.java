@@ -51,6 +51,13 @@ public class CustomExceptionHandler {
         ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.FORBIDDEN,HttpStatus.FORBIDDEN.value(), "r" ,details);
         return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
     }
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<?> tokenExpired(Exception ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getMessage());
+        ApiErrorDto err = new ApiErrorDto(LocalDateTime.now(),HttpStatus.UNAUTHORIZED,HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage() ,details);
+        return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultException(Exception ex, WebRequest request) {
         logger.error("Erro inesperado: ", ex);

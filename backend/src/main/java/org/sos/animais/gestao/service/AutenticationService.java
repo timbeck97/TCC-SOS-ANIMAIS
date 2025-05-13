@@ -2,7 +2,9 @@ package org.sos.animais.gestao.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.sos.animais.gestao.config.TokenExpiredException;
 import org.sos.animais.gestao.dto.TokenKeycloakDto;
 import org.sos.animais.gestao.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,7 +54,6 @@ public class AutenticationService {
                 .append("&scope=openid")
                 .append("&redirect_uri=").append(URLEncoder.encode(KEYCLOACK_REDIRECT_URI,"UTF-8"))
                 .toString();
-        System.out.println(url);
         return url;
     }
     public TokenKeycloakDto getToken(String code) {
@@ -89,7 +91,7 @@ public class AutenticationService {
         return roles;
 
     }
-    public TokenKeycloakDto getRefreshToken(String refreshToken){
+    public TokenKeycloakDto getRefreshToken(String refreshToken) throws TokenExpiredException {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "refresh_token");
         requestBody.add("refresh_token", refreshToken);
@@ -101,8 +103,16 @@ public class AutenticationService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<TokenKeycloakDto> response = restTemplate.exchange(
-                KEYCLOACK_TOKEN_URL, HttpMethod.POST, request, TokenKeycloakDto.class);
+        ResponseEntity<TokenKeycloakDto> response;
+        try{
+            response = restTemplate.exchange(
+                    KEYCLOACK_TOKEN_URL, HttpMethod.POST, request, TokenKeycloakDto.class);
+        }catch (HttpStatusCodeException ex) {
+            String responseBody = ex.getResponseBodyAsString();
+            throw new TokenExpiredException(responseBody);
+        }catch (Exception e){
+            throw new RuntimeException("Erro ao atualizar o token");
+        }
 
         TokenKeycloakDto body = response.getBody();
         body.setRoles(getRoles(body.getAccessToken()));

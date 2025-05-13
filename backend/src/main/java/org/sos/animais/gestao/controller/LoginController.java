@@ -2,6 +2,7 @@ package org.sos.animais.gestao.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.sos.animais.gestao.config.TokenExpiredException;
 import org.sos.animais.gestao.dto.TokenKeycloakDto;
 import org.sos.animais.gestao.service.AutenticationService;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class LoginController {
         autenticationService.logoutKeycloak(tokenId,response);
     }
     @GetMapping("/keycloak/refresh")
-    public ResponseEntity<TokenKeycloakDto> refreshToken(@RequestParam String refreshToken) {
+    public ResponseEntity<TokenKeycloakDto> refreshToken(@RequestParam String refreshToken) throws TokenExpiredException {
         return ResponseEntity.ok(autenticationService.getRefreshToken(refreshToken));
     }
 

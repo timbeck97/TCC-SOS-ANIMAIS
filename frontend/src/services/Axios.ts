@@ -151,7 +151,7 @@ export async function request<T>(
       ...config,
     });
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     if (axios.isCancel(error)) {
       console.warn("Requisição cancelada:", error.message);

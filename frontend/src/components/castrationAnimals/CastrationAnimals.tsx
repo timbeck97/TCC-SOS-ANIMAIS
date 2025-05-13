@@ -246,7 +246,7 @@ export const CastrationAnimals = ({ dataProps,situacao,
                 {data.map((x,idx) => <CardAnimal key={idx} castracao={x} options={buttonsOptionsCard()} />)}
             </div>
                 :
-                <Table id='tableAnimaisIdx' data={data}>
+                <Table id='tableListaAnimaisIdx' data={data}>
                     <Column field="nomeRequerente" align="center" label="Nome do Requerente" component={renderNome} />
                     <Column label="Animal" align="center" component={(idx, row: EsperaCastracao) => renderDadosAnimal(row)} />
                     <Column field="dataSolicitacao" align="center" label="Data da Solicitação" format="data" />
