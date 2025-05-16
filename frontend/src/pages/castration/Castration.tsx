@@ -535,14 +535,14 @@ export const Castration = () => {
                         </div>
                     </div>
                 </div>
-                <div className="space-x-0 sm:space-x-2 mt-4 sm:mt-1">
-                    {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" onClick={validarConclusao} class="w-full sm:w-60 mt-1" icon={<FaCheck />} type="success" />}
-                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Adicionar Animal" onClick={() => handleAddNovoAnimal()} class="w-full sm:w-60 mt-1" icon={<FiCheck />} type="default" />}
-                    <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-60 mt-1" icon={<FaRegFilePdf />} type="neutral" />
+                <div className="space-x-0 space-y-2 sm:space-x-2 mt-4 sm:mt-1">
+                    {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" class="w-full sm:w-auto"  onClick={validarConclusao} icon={<FaCheck />} type="success" />}
+                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Adicionar Animal" class="w-full sm:w-auto"  onClick={() => handleAddNovoAnimal()} icon={<FiCheck />} type="default" />}
+                    <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-auto" icon={<FaRegFilePdf />} type="neutral" />
                     <Button text="Voltar" onClick={() => {
                         getCastrations()
                         navigate(-1)
-                    }} icon={<GrLinkPrevious />} class="w-full sm:w-40 mt-1" type="neutral" />
+                    }} icon={<GrLinkPrevious />} class="w-full sm:w-auto" type="neutral" />
                 </div>
                 {renderModalAdicionarAnimal()}
                 <ConfirmModal
