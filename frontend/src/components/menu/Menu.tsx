@@ -15,7 +15,7 @@ import { BsList } from "react-icons/bs";
 import { FcChargeBattery } from 'react-icons/fc';
 
 
-export const Menu = () => {
+const Menu = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -329,3 +329,6 @@ export const Menu = () => {
 
 
 }
+
+Menu.displayName = 'Menu';
+export default Menu;

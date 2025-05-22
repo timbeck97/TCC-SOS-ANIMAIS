@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
-import { Pawbackground } from "../../components/pawbackground/Pawbackground"
-import { Subtitle } from "../../components/title/Subtitle"
+import  Pawbackground  from "../../components/pawbackground/Pawbackground"
+import  Subtitle  from "../../components/title/Subtitle"
 import { SystemStatus } from "../../types/SystemStatus"
 import { request } from "../../services/Axios"
 import { FcChargeBattery } from "react-icons/fc"
 import { SlRefresh } from "react-icons/sl";
 
-import { Button } from "../../components/button/Button"
+import Button  from "../../components/button/Button"
 import { FaExclamationTriangle, FaHdd, FaMemory, FaMicrochip } from "react-icons/fa"
 
-export const Status = () => {
+const Status = () => {
 
     const [status, setStatus] = useState<SystemStatus>({
         cpu: 0,
@@ -103,3 +103,5 @@ export const Status = () => {
         </Pawbackground>
     )
 }
+Status.displayName = 'Status Screen'
+export default Status

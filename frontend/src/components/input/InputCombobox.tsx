@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { InputComboboxInterface } from "../../types/InputComboboxInterface";
 
-export const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxInterface>(({ id, name,readOnly, label,arrayKey, valueKey, value, onChange, className, comboboxValues, errors }: InputComboboxInterface, ref: any) => {
+const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxInterface>(({ id, name,readOnly, label,arrayKey, valueKey, value, onChange, className, comboboxValues, errors }: InputComboboxInterface, ref: any) => {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     useEffect(() => {
@@ -48,3 +48,5 @@ export const InputCombobox = React.forwardRef<HTMLSelectElement, InputComboboxIn
         </div>
     );
 });
+InputCombobox.displayName = 'InputCombobox';
+export default InputCombobox;

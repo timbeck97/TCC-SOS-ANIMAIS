@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { Menu } from "../components/menu/Menu";
+import  Menu  from "../components/menu/Menu";
 import { useAuthContext } from "../context/AuthContextInterface";
 import { useDevice } from "../context/DeviceContext";
 
 
-export const PrivateRoute = () => {
+const PrivateRoute = () => {
 
     const { isAutenticated, loading } = useAuthContext();
     const {isMobile} = useDevice()
@@ -34,3 +34,5 @@ export const PrivateRoute = () => {
     }
 
 }
+PrivateRoute.displayName = 'PrivateRoute';
+export default PrivateRoute;

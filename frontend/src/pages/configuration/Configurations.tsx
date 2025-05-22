@@ -1,8 +1,8 @@
-import { Pawbackground } from "../../components/pawbackground/Pawbackground";
-import { PriceRange } from "../../components/pricerange/PriceRange";
+import  Pawbackground  from "../../components/pawbackground/Pawbackground";
+import  PriceRange  from "../../components/pricerange/PriceRange";
 
 
-export const Configurations = () => {
+const Configurations = () => {
 
 
     return (
@@ -14,3 +14,5 @@ export const Configurations = () => {
     )
 
 }
+Configurations.displayName = 'Configurations';
+export default Configurations;

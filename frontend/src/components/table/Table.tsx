@@ -19,7 +19,7 @@ const formatter: TypesFormatter = {
     boolean:(value)=> Boolean(value)===true?'Sim':'Não'
 }
 
-export const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick, selectable, onSelectRow }: TableProps<T>) => {
+const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, columnsRowClick, selectable, onSelectRow }: TableProps<T>) => {
     const [originalData, setOriginalData] = useState<TableData<T>[]>([])
     const [listData, setListData] = useState<TableData<T>[]>([])
     const [pagination, setPagination] = useState<Pagination>({ pageNumber: 1, pageSize: 10, totalPages: 1 })
@@ -161,3 +161,5 @@ export const Table = <T,>({ id, data, children, enablePagination = false, onRowC
         </div>
     );
 };
+Table.displayName = 'Table';
+export default Table;

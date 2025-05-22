@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export const Loading = (props: { loading: boolean }) => {
+const Loading = (props: { loading: boolean }) => {
 
     const [loading, setLoading] = useState(false)
 
@@ -20,3 +20,5 @@ export const Loading = (props: { loading: boolean }) => {
         </div>
     )
 }
+Loading.displayName = 'Loading';
+export default Loading

@@ -6,27 +6,27 @@ import { WaitListModal } from "../WaitListModal/WaitListModal"
 import { FcCancel, FcFolder, FcInfo, FcOk } from "react-icons/fc"
 import { post, put, request } from "../../services/Axios"
 import { Dropdown, Modal } from "flowbite-react"
-import { InputFile } from "../input/InputFile"
-import { Button } from "../button/Button"
+import  InputFile  from "../input/InputFile"
+import  Button  from "../button/Button"
 import { openAlertSuccess } from "../../services/Alert"
 import { FaDownload, FaEdit, FaExchangeAlt, FaTrashAlt } from "react-icons/fa"
 import { FaixaValor } from "../../types/FaixaValor"
-import { InputCombobox } from "../input/InputCombobox"
+import  InputCombobox  from "../input/InputCombobox"
 import { LuPencil } from "react-icons/lu"
 import { useNavigate } from "react-router-dom"
 import { useDevice } from "../../context/DeviceContext"
-import { CardAnimal } from "../cards/CardAnimal"
+import  CardAnimal  from "../cards/CardAnimal"
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao"
 import { CardButton } from "../../types/CardButton"
-import { Subtitle } from "../title/Subtitle"
-import { Table } from "../table/Table"
-import { Column } from "../table/Column"
+import  Subtitle  from "../title/Subtitle"
+import  Table  from "../table/Table"
+import  Column  from "../table/Column"
 import Swal from "sweetalert2"
 
 
 
 
-export const CastrationAnimals = ({ dataProps,situacao,
+const CastrationAnimals = ({ dataProps,situacao,
     handleRemoveAnimal,
     refresh,
 }: TableWaitingListInterface) => {
@@ -261,3 +261,5 @@ export const CastrationAnimals = ({ dataProps,situacao,
         </div>
     )
 }
+CastrationAnimals.displayName = 'CastrationAnimals'
+export default CastrationAnimals

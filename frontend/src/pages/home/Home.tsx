@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 import banner from '../../assets/banner.jpg'
 import logo from '../../assets/logo.png'
-export const Home = () => {
+const Home = () => {
 
 
     return (
@@ -72,3 +72,5 @@ export const Home = () => {
         </div>
     )
 }
+Home.displayName = 'Home';
+export default Home

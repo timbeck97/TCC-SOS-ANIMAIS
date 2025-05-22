@@ -1,6 +1,6 @@
 import { ButtonInterface } from "../../types/ButtonInterface";
 
-export const Button = (props: ButtonInterface) => {
+const Button = (props: ButtonInterface) => {
     const getClass = () => {
         switch (props.type) {
             case 'neutral':
@@ -25,3 +25,5 @@ export const Button = (props: ButtonInterface) => {
         </button>
     )
 }
+Button.displayName = 'Button';
+export default Button;

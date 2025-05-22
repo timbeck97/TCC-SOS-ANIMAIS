@@ -2,7 +2,7 @@ import { ModalInterface } from "../../types/ModalInterface"
 import { IoClose } from "react-icons/io5";
 
 
-export const Modal = ({closeModal, isModalOpen, children, modalSize='medium'}: ModalInterface) => {
+const Modal = ({closeModal, isModalOpen, children, modalSize='medium'}: ModalInterface) => {
     return (
         <div
             onClick={closeModal}
@@ -24,3 +24,5 @@ export const Modal = ({closeModal, isModalOpen, children, modalSize='medium'}: M
         </div>
     )
 }
+Modal.displayName = 'Modal';
+export default Modal;

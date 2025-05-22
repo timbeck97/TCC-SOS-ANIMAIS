@@ -1,14 +1,14 @@
-import { Pawbackground } from "../../components/pawbackground/Pawbackground"
+import  Pawbackground  from "../../components/pawbackground/Pawbackground"
 import { IoNotifications } from "react-icons/io5"
-import { Table } from "../../components/table/Table"
+import  Table  from "../../components/table/Table"
 import { useEffect, useState } from "react"
 import { Notification as NotificacioInterface } from "../../types/Notification"
-import { Column } from "../../components/table/Column"
+import  Column  from "../../components/table/Column"
 import { request } from "../../services/Axios"
-import { Subtitle } from "../../components/title/Subtitle"
+import  Subtitle  from "../../components/title/Subtitle"
 import { FaCheck, FaTimes } from "react-icons/fa"
 
-export const Notification = () => {
+const Notification = () => {
 
     const [notificacoes, setNotificacoes] = useState<NotificacioInterface[]>([])
     useEffect(()=>{
@@ -48,3 +48,5 @@ export const Notification = () => {
         </Pawbackground>
     )
 }
+Notification.displayName = 'Notification'
+export default Notification

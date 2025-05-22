@@ -2,23 +2,23 @@ import dog from '../../assets/cachorro.jpg'
 import cat2 from '../../assets/cat-svgrepo-com.svg'
 import graph from '../../assets/graph.svg'
 import { FcInfo, FcOvertime } from "react-icons/fc";
-import { Pawbackground } from '../../components/pawbackground/Pawbackground';
+import  Pawbackground  from '../../components/pawbackground/Pawbackground';
 import { request } from '../../services/Axios';
 import { useEffect, useState } from 'react';
 import { CastrationRequestTotal } from '../../types/CastrationRequestTotal';
-import { Title } from '../../components/title/Title';
-import { Table } from '../../components/table/Table';
-import { Column } from '../../components/table/Column';
+import  Title  from '../../components/title/Title';
+import  Table  from '../../components/table/Table';
+import  Column  from '../../components/table/Column';
 import { EsperaCastracao } from '../../types/EsperaCastracao';
 import { formatNumeroTelefone, formatPorteAnimal, formatTipoAnimal } from '../../services/Util';
 import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 import { useDevice } from '../../context/DeviceContext';
-import { CardAnimal } from '../../components/cards/CardAnimal';
-import { Loading } from '../../components/loading/Loading';
+import  CardAnimal  from '../../components/cards/CardAnimal';
+import  Loading  from '../../components/loading/Loading';
 
 
 
-export const WaitingList = () => {
+const WaitingList = () => {
 
     const [data, setData] = useState<EsperaCastracao[]>([])
 
@@ -132,3 +132,5 @@ export const WaitingList = () => {
 
     )
 }
+WaitingList.displayName = 'WaitingList';
+export default WaitingList;

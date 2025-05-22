@@ -4,24 +4,24 @@ import check from '../../assets/check.png'
 import logo from '../../assets/logo.png'
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
 import Input from "../../components/input/Input"
-import { InputCombobox } from "../../components/input/InputCombobox";
-import { InputBoolean } from "../../components/input/InputBoolean";
-import { InputFile } from "../../components/input/InputFile";
+import  InputCombobox  from "../../components/input/InputCombobox";
+import  InputBoolean  from "../../components/input/InputBoolean";
+import  InputFile  from "../../components/input/InputFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
-import { InputNumber } from "../../components/input/InputNumber";
+import  InputNumber  from "../../components/input/InputNumber";
 import {  FORMA_PAGAMENTO_PUBLIC, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
-import { Pawbackground } from "../../components/pawbackground/Pawbackground";
+import  Pawbackground  from "../../components/pawbackground/Pawbackground";
 import { WaitingListFormSchema, WaitingListRequestSchema } from "../../schemas/WaitingListRequestSchema";
 import {publicPost } from "../../services/Axios";
 import { EsperaCastracao } from "../../types/EsperaCastracao";
 import { formatCpf, formatNumeroTelefone, formatValorMoeda } from "../../services/Util";
-import { Loading } from "../../components/loading/Loading";
+import  Loading  from "../../components/loading/Loading";
 
 
 
 
-export const CastrationRequest = () => {
+const CastrationRequest = () => {
     const topRef = useRef<HTMLDivElement | null>(null);
     useEffect(()=>{
         topRef.current?.scrollIntoView({
@@ -339,3 +339,5 @@ export const CastrationRequest = () => {
 
     )
 }
+CastrationRequest.displayName = 'CastrationRequest';
+export default CastrationRequest;

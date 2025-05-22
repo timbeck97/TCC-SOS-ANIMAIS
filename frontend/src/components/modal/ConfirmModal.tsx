@@ -1,6 +1,6 @@
 import { Modal } from "flowbite-react"
 
-export const ConfirmModal = ({ show, confirm, close, title, text }: {
+const ConfirmModal = ({ show, confirm, close, title, text }: {
     show: boolean,
     confirm: () => void,
     close: () => void,
@@ -37,3 +37,5 @@ export const ConfirmModal = ({ show, confirm, close, title, text }: {
         </Modal>
     )
 }
+ConfirmModal.displayName = 'ConfirmModal';
+export default ConfirmModal;

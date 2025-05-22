@@ -1,7 +1,7 @@
 import { useController } from "react-hook-form";
 import { InputBooleanInterface } from "../../types/InputBooleanInterface";
 
-export const InputBoolean = ({ id, name, label, value, control }: InputBooleanInterface) => {
+const InputBoolean = ({ id, name, label, value, control }: InputBooleanInterface) => {
 
     const { field } = useController({
         name,
@@ -37,3 +37,5 @@ export const InputBoolean = ({ id, name, label, value, control }: InputBooleanIn
         </div>
     )
 }
+InputBoolean.displayName = 'InputBoolean';
+export default InputBoolean;

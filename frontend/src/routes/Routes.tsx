@@ -1,18 +1,18 @@
 import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
-import { CastrationRequest } from "../pages/castrationRequest/CastrationRequest";
-import { PrivateRoute } from "./PrivateRoute";
-import { Home } from "../pages/home/Home";
-import { PublicRoute } from "./PublicRoute";
-import { WaitingList } from "../pages/filaEspera/WaitingList";
-import { Castration } from "../pages/castration/Castration";
-import { Dashboard } from "../pages/dashboard/Dashboard";
-import { Configurations } from "../pages/configuration/Configurations";
-import { CastrationRequestEdit } from "../pages/castrationRequestEdit/CastrationRequestEdit";
-import { Notification } from "../pages/notification/Notification";
-import { Status } from "../pages/status/Status";
+import  CastrationRequest  from "../pages/castrationRequest/CastrationRequest";
+import  PrivateRoute  from "./PrivateRoute";
+import  Home  from "../pages/home/Home";
+import  PublicRoute  from "./PublicRoute";
+import  WaitingList  from "../pages/filaEspera/WaitingList";
+import  Castration  from "../pages/castration/Castration";
+import  Dashboard  from "../pages/dashboard/Dashboard";
+import  Configurations  from "../pages/configuration/Configurations";
+import  CastrationRequestEdit  from "../pages/castrationRequestEdit/CastrationRequestEdit";
+import  Notification  from "../pages/notification/Notification";
+import  Status  from "../pages/status/Status";
 
 
-export const Routes = () => {
+const Routes = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
@@ -47,3 +47,5 @@ export const Routes = () => {
   );
   return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
 }
+Routes.displayName = 'Routes';
+export default Routes;

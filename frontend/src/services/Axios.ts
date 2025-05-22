@@ -64,7 +64,7 @@ const verifyTokenExpiration = (token: TokenAuth) => {
 
   let tokenExpiration = token.expiresIn;
   let now = Date.now() / 1000
-  console.log('verificadno expiração do token, ', tokenExpiration, now);
+
   return tokenExpiration < now;
 }
 let controller: AbortController | null = null;

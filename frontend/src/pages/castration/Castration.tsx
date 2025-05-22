@@ -14,29 +14,30 @@ import { LuPencil } from "react-icons/lu";
 import { api, post, put, request } from "../../services/Axios"
 import { openAlertSuccess, openAlertWarning } from "../../services/Alert"
 import { GrLinkPrevious } from "react-icons/gr";
-import { ConfirmModal } from "../../components/modal/ConfirmModal"
-import { Label } from "../../components/label/Label"
-import { Title } from "../../components/title/Title"
-import { Button } from "../../components/button/Button"
+import ConfirmModal from "../../components/modal/ConfirmModal"
+import Label from "../../components/label/Label"
+import Title from "../../components/title/Title"
+import Button from "../../components/button/Button"
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { SubmitHandler, useForm } from "react-hook-form"
 import { CastrationFormSchema, CastrationFormType } from "../../schemas/CastrationFormSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Subtitle } from "../../components/title/Subtitle"
-import { CastrationAnimals } from "../../components/castrationAnimals/CastrationAnimals"
-import { Table } from "../../components/table/Table"
-import { Column } from "../../components/table/Column"
+import Subtitle from "../../components/title/Subtitle"
+import CastrationAnimals from "../../components/castrationAnimals/CastrationAnimals"
+import Table from "../../components/table/Table"
+import Column from "../../components/table/Column"
 import { WaitListModal } from "../../components/WaitListModal/WaitListModal"
 import { useDevice } from "../../context/DeviceContext";
-import { CardAnimal } from "../../components/cards/CardAnimal";
+import CardAnimal from "../../components/cards/CardAnimal";
 import { CardEsperaCastracao } from "../../types/CardEsperaCastracao";
 import { CardButton } from "../../types/CardButton";
-import { Loading } from "../../components/loading/Loading";
-import { Pawbackground } from "../../components/pawbackground/Pawbackground";
+import Loading from "../../components/loading/Loading";
+import Pawbackground from "../../components/pawbackground/Pawbackground";
+import { BsBox } from "react-icons/bs";
 
 
 
-export const Castration = () => {
+const Castration = () => {
     const { id } = useParams<{ id: string | undefined }>()
     const { register, handleSubmit, formState: { errors } } = useForm<CastrationFormType>({
         defaultValues: {
@@ -60,6 +61,8 @@ export const Castration = () => {
         data: fintNextMonday(),
         observacao: '',
         quantidadeAnimais: 0,
+    })
+    const [caixas, setCaixas] = useState({
         quantidadeCaixasPequenas: 0,
         quantidadeCaixasMedias: 0,
         quantidadeCaixasGrandes: 0
@@ -143,7 +146,6 @@ export const Castration = () => {
 
     }
     const handleAbrirCastracao = (row: any) => {
-        console.log('clicou')
         getCastration(row.id, () => {
             navigate('/gerenciar/castracoes/' + row.id)
         })
@@ -174,20 +176,7 @@ export const Castration = () => {
             setLoading(false)
         })
     }
-    const handleChangeCastracao = <K extends keyof NonNullable<CastrationModel>>(name: K, value: NonNullable<CastrationModel[K]>) => {
-        if (castracao) {
-            setCastracao({ ...castracao, [name]: value })
-        } else {
-            let obj: CastrationModel = {
-                data: '',
-                observacao: '',
-                quantidadeAnimais: 0
-            }
-            obj[name] = value
-            setCastracao(obj)
-        }
 
-    };
     const renderAcoes = (row: any) => {
         return (
             <div>
@@ -213,7 +202,6 @@ export const Castration = () => {
 
 
     const handleSelect = (selectedRows: EsperaCastracao[]) => {
-        console.log('selectedRows', selectedRows)
         setAnimais(selectedRows)
     }
     const selecionarAnimalLista = (card: EsperaCastracao) => {
@@ -232,9 +220,9 @@ export const Castration = () => {
         })
     }
     const selectAnimais = () => {
-        let qttCaixasPequenas = castracao?.quantidadeCaixasPequenas || 0
-        let qttCaixasMedias = castracao?.quantidadeCaixasMedias || 0
-        let qttCaixasGrandes = castracao?.quantidadeCaixasGrandes || 0
+        let qttCaixasPequenas = caixas?.quantidadeCaixasPequenas || 0
+        let qttCaixasMedias = caixas?.quantidadeCaixasMedias || 0
+        let qttCaixasGrandes = caixas?.quantidadeCaixasGrandes || 0
         if (qttCaixasPequenas === 0 && qttCaixasMedias === 0 && qttCaixasGrandes === 0) {
             openAlertWarning('Informe a quantidade de caixas para selecionar os animais automaticamente')
             return;
@@ -254,7 +242,7 @@ export const Castration = () => {
         })
         let animaisCastracao: EsperaCastracao[] = []
         let newFila = filaEspera.map((animal) => {
-
+            animal.selected = false
             switch (animal.porteAnimal) {
                 case 'PEQUENO':
                     if (qttCaixasPequenas > 0) {
@@ -280,23 +268,26 @@ export const Castration = () => {
             }
             return animal;
         })
-
         setListsEspera([...newFila])
         setAnimais([...animaisCastracao])
+        setCaixas({
+            quantidadeCaixasPequenas: 0,
+            quantidadeCaixasMedias: 0,
+            quantidadeCaixasGrandes: 0
+        })
     }
     const postCastration = (data: CastrationFormType) => {
         if (animais.length === 0) {
             openAlertWarning('Selecione os animais para castração')
             return
         }
-        console.log(data)
         let obj = {
             data: new Date(data?.data).toISOString(),
             observacao: data?.observacao,
             quantidadeAnimais: animais.length,
             animais: animais
         }
-        console.log(obj)
+
         post<CastrationModel>('/castration', obj, {}, (response) => {
             openAlertSuccess('Castração cadastrada com sucesso')
             navigate('/gerenciar/castracoes')
@@ -329,6 +320,23 @@ export const Castration = () => {
         }
         setShowAdicionarAnimal(true)
     }
+    const renderBoxCaixa = (caixa: 'quantidadeCaixasPequenas'|'quantidadeCaixasMedias'|'quantidadeCaixasGrandes', label:string ) => {
+        return (
+            <div className="flex flex-col items-center justify-end">
+
+                <BsBox size={20} />
+                <div className="flex flex-col items-center">
+                    <Label text={label} />
+                    <span className="poppins-bold">{caixas[caixa]}</span>
+                </div>
+                <div className="flex space-x-1 mt-1">
+                    <div className="bg-stone-200 px-3 hover:bg-stone-300 cursor-pointer" onClick={() => setCaixas({ ...caixas, [caixa]: caixas[caixa] + 1 })}>+</div>
+                    <div className="bg-stone-200 px-3  hover:bg-stone-300 cursor-pointer" onClick={() => setCaixas({ ...caixas, [caixa]: caixas[caixa] > 0 ? caixas[caixa] - 1 : 0 })}>-</div>
+                </div>
+
+            </div>
+        )
+    }
     const renderModalSelecionarCaixas = () => {
         return (
             <Modal show={showSelecionarCaixas} onClose={() => setShowSelecionarCaixas(false)}>
@@ -337,30 +345,13 @@ export const Castration = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <Input id="quantidadeCaixasPequenasIdx"
-                            label="Quantidade de Caixas Pequenas"
-                            type="number"
-                            name="quantidadeCaixasPequenas"
-                            value={castracao?.quantidadeCaixasPequenas}
-                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasPequenas', e.target.value)}
+                        <div className="grid grid-cols-3">
+                            {renderBoxCaixa('quantidadeCaixasPequenas','Pequena')}
+                            {renderBoxCaixa('quantidadeCaixasMedias','Média')}
+                            {renderBoxCaixa('quantidadeCaixasGrandes','Grande')}
+                    
 
-                        />
-                        <Input id="quantidadeCaixasMediasIdx"
-                            label="Quantidade de Caixas Médias"
-                            type="number"
-                            name="quantidadeCaixasMedias"
-                            value={castracao?.quantidadeCaixasMedias}
-                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasMedias', e.target.value)}
-
-                        />
-                        <Input id="quantidadeCaixasGrandesIdx"
-                            label="Quantidade de Caixas Grandes"
-                            type="number"
-                            name='quantidadeCaixasGrandes'
-                            value={castracao?.quantidadeCaixasGrandes}
-                            onChange={(e: any) => handleChangeCastracao('quantidadeCaixasGrandes', e.target.value)}
-
-                        />
+                        </div>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -536,8 +527,8 @@ export const Castration = () => {
                     </div>
                 </div>
                 <div className="space-x-0 space-y-2 sm:space-x-2 mt-4 sm:mt-1">
-                    {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" class="w-full sm:w-auto"  onClick={validarConclusao} icon={<FaCheck />} type="success" />}
-                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Adicionar Animal" class="w-full sm:w-auto"  onClick={() => handleAddNovoAnimal()} icon={<FiCheck />} type="default" />}
+                    {castracao && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Concluir Castração" class="w-full sm:w-auto" onClick={validarConclusao} icon={<FaCheck />} type="success" />}
+                    {castracao && castracao.id && castracao.situacao === 'EM_ANDAMENTO' && <Button text="Adicionar Animal" class="w-full sm:w-auto" onClick={() => handleAddNovoAnimal()} icon={<FiCheck />} type="default" />}
                     <Button text="Gerar Relatório" onClick={() => generateReport(castracao)} class="w-full sm:w-auto" icon={<FaRegFilePdf />} type="neutral" />
                     <Button text="Voltar" onClick={() => {
                         getCastrations()
@@ -609,9 +600,6 @@ export const Castration = () => {
                             data: fintNextMonday(),
                             observacao: '',
                             quantidadeAnimais: 0,
-                            quantidadeCaixasPequenas: 0,
-                            quantidadeCaixasMedias: 0,
-                            quantidadeCaixasGrandes: 0
                         })
                     }} icon={<FiPlus />} type="default" />
                 </div>
@@ -689,3 +677,6 @@ export const Castration = () => {
 
     )
 }
+
+Castration.displayName = 'Castration'
+export default Castration

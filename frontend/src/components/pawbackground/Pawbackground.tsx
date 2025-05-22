@@ -1,5 +1,5 @@
 import pawBackground from "../../assets/paw.jpg"
-export const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
+const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
 
     return (
         <div style={{
@@ -13,3 +13,5 @@ export const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
         </div>
     )
 }
+Pawbackground.displayName = 'Pawbackground';
+export default Pawbackground;

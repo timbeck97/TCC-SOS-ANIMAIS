@@ -7,19 +7,19 @@ import { useHookFormMask } from "use-mask-input";
 import { CastrationRequestInterface } from "../../types/CastrationRequestInterface";
 import { useNavigate, useParams } from "react-router-dom";
 import { request } from "../../services/Axios";
-import { InputCombobox } from "../../components/input/InputCombobox";
+import  InputCombobox  from "../../components/input/InputCombobox";
 import { FORMA_PAGAMENTO, GENERO, PORTE_ANIMAIS, TIPO_ANIMAIS } from "../../services/Constantes";
-import { InputBoolean } from "../../components/input/InputBoolean";
-import { InputNumber } from "../../components/input/InputNumber";
+import  InputBoolean  from "../../components/input/InputBoolean";
+import  InputNumber  from "../../components/input/InputNumber";
 import Input from "../../components/input/Input";
 import { FaixaValor } from "../../types/FaixaValor";
-import { Button } from "../../components/button/Button";
+import  Button  from "../../components/button/Button";
 import { GrLinkPrevious } from "react-icons/gr";
 import { FaSave } from "react-icons/fa";
 import { openAlertSuccess } from "../../services/Alert";
 import { formatDateYYYYMMDD, formatValorMoeda } from "../../services/Util";
 
-export const CastrationRequestEdit = () => {
+const CastrationRequestEdit = () => {
 
     const { register, handleSubmit, formState: { errors, isValid, isSubmitted }, reset, control, watch } = useForm<WaitingListFormSchema>({
         resolver: zodResolver(WaitingListRequestSchema),
@@ -322,3 +322,5 @@ export const CastrationRequestEdit = () => {
         </div>
     )
 }
+CastrationRequestEdit.displayName = 'CastrationRequestEdit'
+export default CastrationRequestEdit

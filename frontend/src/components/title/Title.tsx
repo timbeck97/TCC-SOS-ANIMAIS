@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Title = (props: { text: string, icon?: React.ReactNode }) => {
+const Title = (props: { text: string, icon?: React.ReactNode }) => {
 
     return (
         <div className="flex items-center">
@@ -12,3 +12,5 @@ export const Title = (props: { text: string, icon?: React.ReactNode }) => {
     )
 
 }
+Title.displayName = 'Title';
+export default Title;

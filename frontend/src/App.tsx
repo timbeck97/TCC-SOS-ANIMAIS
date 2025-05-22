@@ -1,6 +1,6 @@
 
 import './App.css';
-import { Routes } from './routes/Routes';
+import  Routes  from './routes/Routes';
 import { AuthProvider } from './context/AuthContextInterface';
 import { ModalProvider } from './context/ModalContext';
 import GenericModal from './components/modal/GenericModal';
@@ -30,5 +30,5 @@ function App() {
     </div>
   );
 }
-
+App.displayName = 'App';
 export default App;

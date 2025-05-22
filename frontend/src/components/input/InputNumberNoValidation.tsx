@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { formatNumberInput } from "../../services/Util";
 import { InputNumberInterface } from "../../types/InputNumberInterface";
 
-export const InputNumberNoValidation = ({ id, name, label, value, type, onChange }: InputNumberInterface) => {
+const InputNumberNoValidation = ({ id, name, label, value, type, onChange }: InputNumberInterface) => {
 
     useEffect(()=>{
         if(value){
@@ -60,3 +60,5 @@ export const InputNumberNoValidation = ({ id, name, label, value, type, onChange
         </div>
     );
 }
+InputNumberNoValidation.displayName = 'InputNumberNoValidation';
+export default InputNumberNoValidation;

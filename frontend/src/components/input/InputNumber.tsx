@@ -3,7 +3,7 @@ import { useController } from "react-hook-form";
 import { formatNumberInput } from "../../services/Util";
 import { InputNumberInterface } from "../../types/InputNumberInterface";
 
-export const InputNumber = forwardRef<HTMLSelectElement, InputNumberInterface>(({ id, name, label, value, control, type, errors }: InputNumberInterface, ref: any) => {
+const InputNumber = forwardRef<HTMLSelectElement, InputNumberInterface>(({ id, name, label, value, control, type, errors }: InputNumberInterface, ref: any) => {
 
     const { field } = useController({
         name,
@@ -84,3 +84,5 @@ export const InputNumber = forwardRef<HTMLSelectElement, InputNumberInterface>((
         </div>
     );
 });
+InputNumber.displayName = 'InputNumber';
+export default InputNumber;

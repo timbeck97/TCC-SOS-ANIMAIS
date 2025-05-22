@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { InputFileInterface } from "../../types/InputFileInterface";
 
-export const InputFile = ({ id, name, label, value, onChange, types}: InputFileInterface) => {
+const InputFile = ({ id, name, label, value, onChange, types}: InputFileInterface) => {
 
     const [file, setFile] = useState<{ fileName: string, file: File } | null>(null);
 
@@ -51,3 +51,5 @@ export const InputFile = ({ id, name, label, value, onChange, types}: InputFileI
         </div>
     );
 };
+InputFile.displayName = 'InputFile';
+export default InputFile;

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Subtitle = (props: { text: string, icon?: React.ReactNode, extraClasses?:string }) => {
+const Subtitle = (props: { text: string, icon?: React.ReactNode, extraClasses?:string }) => {
 
     return (
         <div className={"flex items-center "+props.extraClasses}>
@@ -12,3 +12,5 @@ export const Subtitle = (props: { text: string, icon?: React.ReactNode, extraCla
     )
 
 }
+Subtitle.displayName = 'Subtitle';
+export default Subtitle;

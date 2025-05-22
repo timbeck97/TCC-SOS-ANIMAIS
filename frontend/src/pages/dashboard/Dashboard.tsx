@@ -12,10 +12,10 @@ import {
     LineElement,
     ArcElement,
 } from 'chart.js';
-import { Button } from "../../components/button/Button";
+import  Button  from "../../components/button/Button";
 import { request } from "../../services/Axios";
 import { Dashboards } from "../../types/Dashboards";
-import { InputCombobox } from "../../components/input/InputCombobox";
+import  InputCombobox  from "../../components/input/InputCombobox";
 import { formatValorMoeda, getInitialMonth, getYearsCombobox } from "../../services/Util";
 import { MESES } from "../../services/Constantes";
 import { DashboardCards } from "../../types/DashboardCards";
@@ -33,7 +33,7 @@ ChartJS.register(
     ArcElement,
     ChartDataLabels
 );
-export const Dashboard = () => {
+const Dashboard = () => {
 
 
     const [anoInicio, setAnoInicio] = useState<string>(String(new Date().getFullYear()))
@@ -321,3 +321,5 @@ export const Dashboard = () => {
         </div>
     )
 }
+Dashboard.displayName = 'Dashboard';
+export default Dashboard

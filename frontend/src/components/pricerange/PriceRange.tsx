@@ -2,18 +2,18 @@ import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import Input from "../../components/input/Input";
 import { FaixaValor } from "../../types/FaixaValor";
-import { Button } from "../../components/button/Button";
+import  Button  from "../../components/button/Button";
 import { VscTrash } from "react-icons/vsc";
 import { GoPencil } from "react-icons/go";
-import { Subtitle } from "../../components/title/Subtitle";
+import  Subtitle  from "../../components/title/Subtitle";
 import { deleteRequest, get, request } from "../../services/Axios";
 import { formatDate, formatDateYYYYMMDD, formatValorMoeda, parseStringToDate } from "../../services/Util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { InputNumber } from "../input/InputNumber";
+import  InputNumber  from "../input/InputNumber";
 
-export const PriceRange = () => {
+const PriceRange = () => {
     useEffect(() => {
         carregarFaixas();
     }, [])
@@ -195,3 +195,5 @@ export const PriceRange = () => {
         </div>
     )
 }
+PriceRange.displayName = 'PriceRange';
+export default PriceRange;
