@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContextInterface';
 import { FaBell, FaChartLine, FaCog, FaList, FaRegClock, FaUser } from 'react-icons/fa';
 import { IoIosHome } from "react-icons/io";
@@ -13,6 +13,7 @@ import { CiLogout } from "react-icons/ci";
 import { IoListSharp } from 'react-icons/io5';
 import { BsList } from "react-icons/bs";
 import { FcChargeBattery } from 'react-icons/fc';
+import { MdPets } from 'react-icons/md';
 
 
 const Menu = () => {
@@ -151,6 +152,11 @@ const Menu = () => {
                                     Indicadores
                                 </NavLink>
                             </li>
+                            <li className='w-full' onClick={toggleMenu}>
+                                <NavLink to="/gerenciar/adocao" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
+                                    Adoção
+                                </NavLink>
+                            </li>
                         </>}
                     </ul>
                 </div>
@@ -232,6 +238,17 @@ const Menu = () => {
                                 <FaChartLine size={22} className='ml-2' />
                                 <div className='w-0 overflow-hidden transition-all duration-300 ease-in-out transform whitespace-nowrap ml-3' style={{ width: isOpen ? '140px' : '0px' }}>
                                     <span>Indicadores</span>
+                                </div>
+
+                            </NavLink>
+                        </li>
+                          <li>
+
+                            <NavLink to="/gerenciar/adocao" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
+
+                                <MdPets size={22} className='ml-2' />
+                                <div className='w-0 overflow-hidden transition-all duration-300 ease-in-out transform whitespace-nowrap ml-3' style={{ width: isOpen ? '140px' : '0px' }}>
+                                    <span>Adoção</span>
                                 </div>
 
                             </NavLink>
@@ -323,7 +340,10 @@ const Menu = () => {
     let defaultCss = 'text-md text-white  hover:scale-105 transition-transform duration-300  flex items-center'
     let active = ''
     return (
-        isMobile ? renderMenusMobile() : renderDesktop()
+        <div className={`flex ${isMobile?'flex-col':'flex-row'} min-h-0 grow`} >
+            {isMobile ? renderMenusMobile() : renderDesktop()}
+            <Outlet />
+        </div>
 
     )
 

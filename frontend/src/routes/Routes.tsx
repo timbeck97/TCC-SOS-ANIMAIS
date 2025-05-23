@@ -10,12 +10,14 @@ import  Configurations  from "../pages/configuration/Configurations";
 import  CastrationRequestEdit  from "../pages/castrationRequestEdit/CastrationRequestEdit";
 import  Notification  from "../pages/notification/Notification";
 import  Status  from "../pages/status/Status";
+import AdoptionsConfig from "../components/adoptionConfig/AdoptionConfig";
+import Menu from "../components/menu/Menu";
 
 
 const Routes = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route>
+      <Route path="/" element={<Menu />}>
         <Route path="/" element={<PublicRoute />} >
           <Route path="" element={<Home />} />
           <Route path="/solicitarCastracao" element={<CastrationRequest />} />
@@ -30,6 +32,7 @@ const Routes = () => {
           <Route path="configuracoes" element={<Configurations />} />
           <Route path="notificacoes" element={<Notification />} />
           <Route path="status" element={<Status />} />
+          <Route path="adocao" element={<AdoptionsConfig />} />
         </Route>
       </Route>
 

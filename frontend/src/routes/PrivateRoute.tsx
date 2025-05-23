@@ -1,5 +1,4 @@
 import { Navigate, Outlet } from "react-router-dom";
-import  Menu  from "../components/menu/Menu";
 import { useAuthContext } from "../context/AuthContextInterface";
 import { useDevice } from "../context/DeviceContext";
 
@@ -22,7 +21,6 @@ const PrivateRoute = () => {
     }
     if (!loading && isAutenticated()) {
         return <div className={`flex ${isMobile?'flex-col':'flex-row'} min-h-0 grow`}>
-            <Menu />
             <div className="flex flex-col grow overflow-auto">
                 <Outlet />
             </div>
