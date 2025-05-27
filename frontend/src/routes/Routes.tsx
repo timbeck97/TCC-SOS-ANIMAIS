@@ -33,6 +33,7 @@ const Routes = () => {
           <Route path="notificacoes" element={<Notification />} />
           <Route path="status" element={<Status />} />
           <Route path="adocao" element={<AdoptionsConfig />} />
+          <Route path="adocao/:id" element={<AdoptionsConfig />} />
         </Route>
       </Route>
 

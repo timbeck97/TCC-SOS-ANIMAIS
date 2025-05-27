@@ -47,7 +47,12 @@ const Dashboard = () => {
         lineChart: { labels: [], values: [] },
         barChart: { labels: [], values: [] },
         pieChart: { labels: [], values: [] },
-        totalCards: {} as DashboardCards
+        totalCards: {
+            totalCastrations: 0,
+            totalDogs: 0,
+            totalCats: 0,
+            averageTime: 0
+        } as DashboardCards
     })
 
 

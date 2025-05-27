@@ -49,3 +49,8 @@ export const MESES =  [
     { label: 'Novembro', value: '11' },
     { label: 'Dezembro', value: '12' }
 ];
+export const SITUACAO_ADOCAO = [
+    { label: 'Selecione', value: '' },
+    { label: 'Disponível', value: 'DISPONIVEL' },
+    { label: 'Adotado', value: 'ADOTADO' },
+]

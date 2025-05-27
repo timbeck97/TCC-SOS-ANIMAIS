@@ -35,7 +35,7 @@ const Home = () => {
                         <h2 className="text-3xl font-bold text-emerald-600 mb-8">Nossos Serviços</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <div className="bg-white p-6 shadow-lg rounded-lg">
-                                <h3 className="text-xl font-semibold text-emerald-600 mb-4">Castração Gratuita</h3>
+                                <h3 className="text-xl font-semibold text-emerald-600 mb-4">Castração a Baixo Custo</h3>
                                 <p className="text-gray-700">Realizamos castração a baixo custo para animais que foram resgatados da rua. Agende a sua solicitação agora mesmo!</p>
                             </div>
                             <div className="bg-white p-6 shadow-lg rounded-lg">

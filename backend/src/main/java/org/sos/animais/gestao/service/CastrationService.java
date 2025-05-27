@@ -177,5 +177,6 @@ public class CastrationService {
             fileService.deleteFileCastrationRequest(file);
         }
         castrationRequestRepository.delete(entity);
+        logger.info("User {} Deleting castration request: {}", AutenticationService.getUser().name(), Utils.convertObjectToJson(entity));
     }
 }

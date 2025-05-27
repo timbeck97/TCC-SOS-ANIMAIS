@@ -58,11 +58,16 @@ const Table = <T,>({ id, data, children, enablePagination = false, onRowClick, c
     const initPaginationConfig = (data: any[]) => {
         let total = data.length;
         let pages = Math.ceil(total / pagination.pageSize);
-        setPagination({ ...pagination, totalPages: pages })
-        setListData(data.slice(0, (pagination.pageSize)))
-
+        let pageNumber = data.length <= pagination.pageSize ? 1 : pagination.pageNumber;
+        setPagination({ ...pagination, totalPages: pages, pageNumber: pageNumber });
+        let start = pagination.pageSize * (pageNumber-1);
+        let end = start + pagination.pageSize;
+        let newData = data.slice(start, end);
+        setListData(newData)
+    
     }
     const handleChangePagination = (page: number) => {
+        console.log('page numb: ',page)
         setPagination({ ...pagination, pageNumber: page });
         let start = pagination.pageSize * (page - 1);
         let end = start + pagination.pageSize;

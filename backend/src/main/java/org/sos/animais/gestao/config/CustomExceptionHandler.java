@@ -31,7 +31,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> ApiErrorDtohandleInvalidArgument(MethodArgumentNotValidException ex)
     {
-
+        ex.printStackTrace();
         List<String> details = ex
                 .getBindingResult()
                 .getFieldErrors()

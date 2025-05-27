@@ -10,7 +10,7 @@ const PrivateRoute = () => {
 
 
     if (loading) {
-        return <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        return <div className="flex items-center justify-center min-h-screen bg-gray-100 flex-1">
             <div className="flex items-center  space-x-2">
                 <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce"></div>
                 <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce delay-200"></div>

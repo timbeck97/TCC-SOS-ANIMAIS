@@ -126,33 +126,33 @@ const Menu = () => {
                         }`}
                 >
                     <ul className='flex flex-col items-center border-t border-gray-500'>
-                        <li className='w-full' onClick={toggleMenu}>
+                        <li className='w-full' onClick={toggleMenu} title='Página Inicial'>
                             <NavLink to="/" end className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center'>
                                 Página Inicial
                             </NavLink>
                         </li>
-                        <li className='w-full' onClick={toggleMenu}>
+                        <li className='w-full' onClick={toggleMenu} title='Solicitar Castração'>
                             <NavLink to="/solicitarCastracao" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                 Solicitar Castração
                             </NavLink>
                         </li>
                         {isAutenticated() && <>
-                            <li className='w-full' onClick={toggleMenu}>
+                            <li className='w-full' onClick={toggleMenu} title='Lista de Espera'>
                                 <NavLink to="/gerenciar/filaEspera" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                     Lista de Espera
                                 </NavLink>
                             </li>
-                            <li className='w-full' onClick={toggleMenu}>
+                            <li className='w-full' onClick={toggleMenu} title='Gerenciar Castrações'>
                                 <NavLink to="/gerenciar/castracoes" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                     Castrações
                                 </NavLink>
                             </li>
-                            <li className='w-full' onClick={toggleMenu}>
+                            <li className='w-full' onClick={toggleMenu} title='Indicadores'>
                                 <NavLink to="/gerenciar/dashboard" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                     Indicadores
                                 </NavLink>
                             </li>
-                            <li className='w-full' onClick={toggleMenu}>
+                            <li className='w-full' onClick={toggleMenu} title='Adoção'>
                                 <NavLink to="/gerenciar/adocao" className='block text-white p-2 hover:bg-cyan-300 hover:text-black w-full text-center' end>
                                     Adoção
                                 </NavLink>
@@ -193,13 +193,13 @@ const Menu = () => {
     const renderDesktop = () => {
         return (
             <nav className={`bg-[#3d454c] h-screen bg-gray-800 text-white transition-all flex items-center duration-300 ${isOpen ? 'w-56 min-w-56' : 'w-16 min-w-16'} flex flex-col`} >
-                <div className={`py-3 border-b-2 border-gray-400 w-full flex justify-center hover:bg-gray-700 cursor-pointer`} onClick={() => setIsOpen(!isOpen)}>
+                <div className={`py-3 border-b-2 border-gray-400 w-full flex justify-center hover:bg-gray-700 cursor-pointer`} onClick={() => setIsOpen(!isOpen)} title='Abrir menus'>
                     <BsList size={22} />
                 </div>
 
                 <ul className='flex flex-col gap-8 mt-4 items-center'>
                     {isAutenticated() && <>
-                        <li className='w-full'>
+                        <li className='w-full' title='Página Inicial'>
                             <NavLink to="/" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
 
                                 <IoIosHome size={22} className='ml-4' />
@@ -210,7 +210,7 @@ const Menu = () => {
                             </NavLink>
 
                         </li>
-                        <li className='w-full'>
+                        <li className='w-full' title='Lista de Espera'>
                             <NavLink to="/gerenciar/filaEspera" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
 
                                 <FaRegClock size={22} className='ml-4' />
@@ -221,7 +221,7 @@ const Menu = () => {
                             </NavLink>
 
                         </li>
-                        <li>
+                        <li title='Castrações'>
                             <NavLink to="/gerenciar/castracoes" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
 
                                 <FaList size={22} className='ml-2' />
@@ -231,7 +231,7 @@ const Menu = () => {
 
                             </NavLink>
                         </li>
-                        <li>
+                        <li title='Indicadores'>
 
                             <NavLink to="/gerenciar/dashboard" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
 
@@ -242,7 +242,7 @@ const Menu = () => {
 
                             </NavLink>
                         </li>
-                          <li>
+                          <li title='Adoção'>
 
                             <NavLink to="/gerenciar/adocao" className={({ isActive }) => `${defaultCss} ${isActive ? active : ''}`} end>
 

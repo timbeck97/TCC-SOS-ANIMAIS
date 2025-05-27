@@ -15,6 +15,11 @@ import { WaitListModal } from '../../components/WaitListModal/WaitListModal';
 import { useDevice } from '../../context/DeviceContext';
 import  CardAnimal  from '../../components/cards/CardAnimal';
 import  Loading  from '../../components/loading/Loading';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import ConfirmModal from '../../components/modal/ConfirmModal';
+import { Dropdown } from 'flowbite-react';
+import { LuPencil } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -36,7 +41,8 @@ const WaitingList = () => {
     const [waitListSelect, setWaitListSelect] = useState<EsperaCastracao | null>(null)
     const { isMobile } = useDevice();
     const [loading, setLoading] = useState(true)
-
+    const [animalDelete, setAnimalDelete] = useState<EsperaCastracao | null>(null)
+    const navigate = useNavigate();
     const getTotais = async () => {
         return request<CastrationRequestTotal>('get', '/castration/waitingList/totais')
        
@@ -44,7 +50,17 @@ const WaitingList = () => {
     const fetchCastracoes = async () => {
         return  request<EsperaCastracao[]>('get', '/castration/waitingList')
     }
-    
+    const deleteCastracao = async () => {
+        if(animalDelete!=null){
+            await request('delete', `/castration/waitingList/delete/${animalDelete.id}`)
+            setAnimalDelete(null)
+            setData(data.filter(x => x.id !== animalDelete.id))
+            let totais = await getTotais()
+            if(totais){
+                setTotais(totais)
+            }
+        }
+    }
     const renderDadosAnimal = (row: EsperaCastracao) => {
             return (
                 <div className="w-full">
@@ -64,6 +80,33 @@ const WaitingList = () => {
             </div>
         )
     }
+     const renderAcoes = (idx:number, row: any) => {
+            return (
+                <div className="">
+                    <Dropdown
+                        placement="top"
+                        inline
+                        arrowIcon={false}
+                        id={row.id}
+                        itemID={row.id}
+                        key={idx}
+                        className="mt-3 w-100"
+                        label={
+                            <span
+                                className="bg-indigo-500 float-right text-white flex items-center px-2 rounded-md py-1 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                <LuPencil />
+                                <span>&nbsp;Ações</span>
+                            </span>
+                        }
+                    >
+                        <Dropdown.Item icon={FcInfo} onClick={() => setWaitListSelect(row)}>Abrir</Dropdown.Item>
+                        <Dropdown.Item icon={FaEdit} onClick={() => navigate('/gerenciar/filaEspera/' + row.id)}>Editar</Dropdown.Item>
+                        <Dropdown.Item icon={FaTrashAlt} onClick={() => setAnimalDelete(row)}>Remover</Dropdown.Item>
+                    </Dropdown>
+                </div>
+            )
+        }
     return (
         <Pawbackground>
 
@@ -112,11 +155,7 @@ const WaitingList = () => {
                             <Column<EsperaCastracao> label="Animal" align="center" component={(idx, row) => renderDadosAnimal(row)} />
                             <Column field="dataSolicitacao" align='center'  label="Data da Solicitação" format="data" />
                             <Column field="formaPagamento" align='center' label="Forma de Pagamento" format="formaPagamento" />
-                            <Column label="Ações" align='center'  component={(idx, row: EsperaCastracao) => <div className='flex justify-center'>
-                                <button type="button" onClick={() => setWaitListSelect(row)} >
-                                <FcInfo title="Abri detalhes da solicitação" className="text-xl md:text-2xl" />
-                            </button>
-                            </div>} />
+                            <Column label="Ações"   component={(idx, row)=>renderAcoes(idx, row)} />
 
                         </Table>
                         }
@@ -126,6 +165,13 @@ const WaitingList = () => {
 
                 </div>
                 <Loading loading={loading} />
+                  <ConfirmModal
+                        show={animalDelete !== null}
+                        confirm={() => deleteCastracao()}
+                        close={() => setAnimalDelete(null)}
+                        title="Remover animal"
+                        text="Deseja realmente remover este animal da lista de espera das castrações?"
+                    />
             </div>
         </Pawbackground>
 

@@ -26,9 +26,9 @@ public class CastrationRequestReturnDTO extends CastrationRequestDto{
         this.nomeRequerente = c.getNome()+" "+c.getSobrenome();
         for (CastrationFile arq : c.getArquivos()) {
             if (arq.getTipoArquivo().equals(EFileType.FOTO)) {
-                this.urlImagem = arq.getUrl();
+                this.urlImagem = arq.getFile().getUrl();
             } else if (arq.getTipoArquivo().equals(EFileType.COMPROVANTE_PAGAMENTO)) {
-                this.urlComprovante = arq.getUrl();
+                this.urlComprovante = arq.getFile().getUrl();
             }
         }
         if(c.getFaixaPreco()!=null){

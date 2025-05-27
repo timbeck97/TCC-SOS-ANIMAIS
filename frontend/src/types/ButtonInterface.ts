@@ -5,6 +5,6 @@ export interface ButtonInterface {
     onClick?: (param:any | undefined) => void, 
     class?: string, 
     icon?: ReactNode, 
-    type?: 'neutral' | 'default' | 'success', 
+    type?: 'neutral' | 'default' | 'success' | 'danger', 
     buttonType?: 'button' | 'submit'
 }

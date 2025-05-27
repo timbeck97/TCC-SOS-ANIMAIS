@@ -1,5 +1,5 @@
 import pawBackground from "../../assets/paw.jpg"
-const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
+const Pawbackground = ({ children, className }: { children?: React.ReactNode, className?:string}) => {
 
     return (
         <div style={{
@@ -7,7 +7,7 @@ const Pawbackground = ({ children }: { children?: React.ReactNode}) => {
          
         }} className="flex flex-col grow">
 
-            <div className="container max-w-full  md:max-w-7xl mx-auto  shadow-md pt-3">
+            <div className={className?className:"container max-w-full  md:max-w-7xl mx-auto  shadow-md pt-3"}>
                 {children}
             </div>
         </div>
