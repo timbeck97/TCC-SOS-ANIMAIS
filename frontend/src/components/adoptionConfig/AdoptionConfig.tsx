@@ -19,10 +19,10 @@ import InputCombobox from "../input/InputCombobox";
 import ConfirmModal from "../modal/ConfirmModal";
 import { request } from "../../services/Axios";
 import { openAlertSuccess } from "../../services/Alert";
-import { AxiosRequestConfig } from "axios";
 import Loading from "../loading/Loading";
 import { ImageInterface } from "../../types/ImageInterface";
 import { FaStar, FaTrash } from "react-icons/fa";
+import { useHookFormMask } from "use-mask-input";
 
 
 
@@ -33,6 +33,7 @@ const AdoptionsConfig = () => {
         resolver: zodResolver(AdoptionSchema),
         mode: "onChange"
     });
+    const registerWithMask = useHookFormMask(register);
     const fileList = watch("imagens");
     const [lastFile, setLastFile] = useState<ImageInterface[] | null>(null);
     const [previewUrl, setPreviewUrl] = useState<ImageInterface[] | null>(null);
@@ -52,6 +53,7 @@ const AdoptionsConfig = () => {
                 console.log('revoked url: ', url);
             });
         }
+        // eslint-disable-next-line
     }, []);
     useEffect(() => {
         if (fileList && fileList.length > 0) {
@@ -99,6 +101,7 @@ const AdoptionsConfig = () => {
             setValue("raca", resp.raca);
             setValue("genero", resp.genero);
             setValue("situacao", resp.situacao);
+            setValue("telefone", resp.telefone);
             resp.imagens = await Promise.all(resp.imagens.map((adoptionImage) => getAdoptionImage(adoptionImage)));
             resp.imagens = resp.imagens.map((adoptionImage, idx) => { return { ...adoptionImage, number: idx + 1 } })
             setLastFile(resp.imagens);
@@ -152,11 +155,6 @@ const AdoptionsConfig = () => {
             }
         }
 
-        let config: AxiosRequestConfig = {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
         let method: 'put' | 'post' = id && id !== 'novo' ? 'put' : 'post';
         let uri: string = id && id !== 'novo' ? '/adoption/' + id : '/adoption';
         let resp = await request<AnimalAdoption>(method, uri, formData);
@@ -403,6 +401,12 @@ const AdoptionsConfig = () => {
                         </div>
 
                         <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Input id="telefoneIdx"
+                                label="Telefone"
+                                type="text"
+                                {...registerWithMask('telefone', '(99) 99999-9999', { autoUnmask: true })}
+                                errors={errors.telefone}
+                            />
                             <InputCombobox id="generoAnimalIdx"
                                 label="Gênero do Animal"
                                 comboboxValues={GENERO}

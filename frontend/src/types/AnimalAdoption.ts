@@ -6,6 +6,7 @@ export interface AnimalAdoption {
     nome: string;
     descricao: string;
     idade: string;
+    telefone: string;
     porte: 'PEQUENO' | 'MEDIO' | 'GRANDE';
     raca: string;
     genero: 'MACHO' | 'FEMEA';

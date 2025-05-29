@@ -35,7 +35,7 @@ public class AdoptionService {
     }
 
     public List<AdoptionAnimalDto> findAllAvailable() {
-        List<AdoptionAnimal> entities = adoptionRepository.findAllBySituacao(EAdoptionSituation.DISPONIVEL);
+        List<AdoptionAnimal> entities = adoptionRepository.findAllBySituacaoOrderByIdAsc(EAdoptionSituation.DISPONIVEL);
         return entities.stream().map(AdoptionAnimalDto::new).collect(Collectors.toList());
     }
 
@@ -58,6 +58,7 @@ public class AdoptionService {
         entity.setRaca(dto.getRaca());
         entity.setGenero(dto.getGenero());
         entity.setSituacao(dto.getSituacao());
+        entity.setTelefone(dto.getTelefone());
         entity = adoptionRepository.save(entity);
 
         if (dto.getId() == null) {

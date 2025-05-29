@@ -22,6 +22,7 @@ public class AdoptionAnimalDto {
     private EAnimalSize porte;
     @NotNull
     private String raca;
+    private String telefone;
     @NotNull
     private EAnimalGender genero;
     private EAdoptionSituation situacao;
@@ -39,6 +40,7 @@ public class AdoptionAnimalDto {
         this.raca = a.getRaca();
         this.genero = a.getGenero();
         this.situacao = a.getSituacao();
+        this.telefone = a.getTelefone();
         this.imagens = a.getImagens().stream().map(AdoptionImageDto::new).toList();
     }
     public Long getId() {
@@ -111,5 +113,13 @@ public class AdoptionAnimalDto {
 
     public void setImagens(List<AdoptionImageDto> imagens) {
         this.imagens = imagens;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AdoptionRepository extends JpaRepository<AdoptionAnimal, Long> {
 
-    List<AdoptionAnimal> findAllBySituacao(EAdoptionSituation situacao);
+    List<AdoptionAnimal> findAllBySituacaoOrderByIdAsc(EAdoptionSituation situacao);
 }

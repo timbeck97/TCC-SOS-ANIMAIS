@@ -162,4 +162,30 @@ export async function request<T>(
     return null; // Pode retornar null ou lançar um erro, dependendo do seu caso
   }
 }
+export async function publicRequest<T>(
+  method: "get" | "post" | "put" | "delete",
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+): Promise<T | null> {
+  try {
+    let api = axios.create({ baseURL: URL });
+    const response = await api.request<T>({
+      method,
+      url,
+      data,
+      ...config,
+    });
+
+    return response?.data;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.warn("Requisição cancelada:", error.message);
+    } else {
+      console.error("Erro na requisição:", error);
+    }
+
+    return null; 
+  }
+}
 

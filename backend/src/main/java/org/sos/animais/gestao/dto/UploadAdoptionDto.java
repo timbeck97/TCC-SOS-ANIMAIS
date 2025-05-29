@@ -21,6 +21,8 @@ public class UploadAdoptionDto {
     private String raca;
     @NotNull
     private EAnimalGender genero;
+    @NotNull
+    private String telefone;
     private EAdoptionSituation situacao;
     private boolean alterouImagem;
     private List<UploadImageDto> files;
@@ -106,5 +108,13 @@ public class UploadAdoptionDto {
 
     public void setFiles(List<UploadImageDto> files) {
         this.files = files;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 }

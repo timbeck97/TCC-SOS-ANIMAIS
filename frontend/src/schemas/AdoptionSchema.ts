@@ -12,6 +12,7 @@ export const AdoptionSchema = z.object({
     nome: z.string().min(1, "Nome é obrigatório"),
     descricao: z.string().min(1, "Descrição é obrigatória"),
     idade: z.string().min(1, "Idade é obrigatória"),
+    telefone: z.string().min(1, {message: 'O telefone deve ter 11 dígitos.'}).regex(/^\d{11}$/,'Número de telefone inválido.',),
     porte: z.enum(["PEQUENO", "MEDIO", "GRANDE"], { errorMap: () => ({ message: "Tamanho é obrigatório" }) }),
     raca: z.string().min(1, "Raça é obrigatória"),
     genero: z.enum(["MACHO", "FEMEA"], { errorMap: () => ({ message: "Gênero é obrigatório" }) }),

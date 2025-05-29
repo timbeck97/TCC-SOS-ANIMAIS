@@ -12,6 +12,7 @@ import  Notification  from "../pages/notification/Notification";
 import  Status  from "../pages/status/Status";
 import AdoptionsConfig from "../components/adoptionConfig/AdoptionConfig";
 import Menu from "../components/menu/Menu";
+import Adoption from "../pages/adoption/Adoption";
 
 
 const Routes = () => {
@@ -21,6 +22,8 @@ const Routes = () => {
         <Route path="/" element={<PublicRoute />} >
           <Route path="" element={<Home />} />
           <Route path="/solicitarCastracao" element={<CastrationRequest />} />
+          <Route path="/adocao" element={<Adoption />} />
+          <Route path="/adocao/:id" element={<Adoption />} />
         </Route>
         <Route path="/gerenciar" element={<PrivateRoute />}>
           <Route path="" element={<Navigate to="filaEspera" />} />

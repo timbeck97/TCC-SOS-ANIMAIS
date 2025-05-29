@@ -29,7 +29,8 @@ public class AdoptionAnimal {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     private EAnimalGender genero;
-
+    @Column(length = 15)
+    private String telefone;
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     private EAdoptionSituation situacao;
@@ -110,5 +111,13 @@ public class AdoptionAnimal {
 
     public void setImagens(List<AdoptionImage> imagens) {
         this.imagens = imagens;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 }

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
 import banner from '../../assets/banner.jpg'
 import logo from '../../assets/logo.png'
+import family from '../../assets/family2.jpg'
 const Home = () => {
 
 
@@ -52,13 +53,30 @@ const Home = () => {
 
                 <section className="py-16 px-4 text-center bg-emerald-500 text-white">
                     <h2 className="text-3xl font-bold mb-4">Solicite uma Castração</h2>
-                    <p className="mb-6">Se o seu animal foi resgatado da rua, ele pode ser castrado gratuitamente. Clique abaixo para fazer a solicitação.</p>
+                    <p className="mb-6">Se o seu animal foi resgatado da rua, ele pode ser castrado por um valor acessível. Clique abaixo para fazer a solicitação.</p>
                     <NavLink to="/solicitarCastracao" end>
                         <span className="bg-white text-emerald-500 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-200 transition duration-300">
                             Solicitar Castração
                         </span>
                     </NavLink>
 
+                </section>
+                {/* adoption section */}
+                <section className="py-16 px-4 bg-white drop-shadow-md">
+                    <div className="container mx-auto text-center flex justify-center items-center">
+                        <img src={family} alt="" className="h-96" />
+                        <div className="flex flex-col justify-center items-start ml-8">
+                            <h2 className="text-3xl font-bold text-emerald-600 mb-4">Adoção de Animais</h2>
+                            <p className="text-lg text-gray-700 mb-8">
+                                Conheça nossos animais disponíveis para adoção. Todos eles estão prontos para encontrar um lar amoroso.
+                            </p>
+                            <NavLink to="/adocao" end>
+                                <span className="bg-emerald-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-emerald-700 transition duration-300">
+                                    Ver Animais para Adoção
+                                </span>
+                            </NavLink>
+                        </div>
+                    </div>
                 </section>
 
                 <footer className="bg-gray-800 text-white py-6">
