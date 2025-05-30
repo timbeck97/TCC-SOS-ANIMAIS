@@ -14,7 +14,7 @@ const Home = () => {
                     <img alt="banner" className="w-full h-full object-cover object-center" src={banner} />
                     <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-40">
                        
-                            {/* <h1 className="text-8xl poppins-bold text-white ">SOS Animais</h1> */}
+                     
                             <img src={logo} alt="Logo" className="sm:w-fit sm:h-fit w-1/2 h-1/2" />
                       
                     </div>
@@ -61,11 +61,11 @@ const Home = () => {
                     </NavLink>
 
                 </section>
-                {/* adoption section */}
+               
                 <section className="py-16 px-4 bg-white drop-shadow-md">
-                    <div className="container mx-auto text-center flex justify-center items-center">
+                    <div className="container mx-auto text-center flex justify-center items-center justify-center flex-col sm:flex-row ">
                         <img src={family} alt="" className="h-96" />
-                        <div className="flex flex-col justify-center items-start ml-8">
+                        <div className="flex flex-col justify-center  items-center sm:items-start ml-8">
                             <h2 className="text-3xl font-bold text-emerald-600 mb-4">Adoção de Animais</h2>
                             <p className="text-lg text-gray-700 mb-8">
                                 Conheça nossos animais disponíveis para adoção. Todos eles estão prontos para encontrar um lar amoroso.
