@@ -80,14 +80,9 @@ public class AutenticationService {
     }
     public List<String> getRoles(String tokenJwt){
         DecodedJWT jwt = JWT.decode(tokenJwt);
-
         Map<String, Object> resourceAccess = jwt.getClaim("resource_access").asMap();
         Map<String, Object> clientRoles = (Map<String, Object>) resourceAccess.get(KEYCLOACK_CLIENT_ID);
         List<String> roles = (List<String>) clientRoles.get("roles");
-        StringBuilder rolesString = new StringBuilder();
-        for (String role : roles) {
-            rolesString.append(role).append(" ");
-        }
         return roles;
 
     }

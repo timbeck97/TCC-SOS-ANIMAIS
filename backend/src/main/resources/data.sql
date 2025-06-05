@@ -18,18 +18,28 @@ insert into price_range(id, descricao, valor, data_inicio) values
 (603, '15KG até 20KG', 110.0, '2025-01-01'),
 (604, '20KG até 25KG', 125.0, '2025-01-01');
 
-insert into adoption_animal(id, nome, descricao, idade, porte, raca, genero, situacao)
+insert into adoption_animal(id, nome, descricao, idade, porte, raca, genero, situacao, tipo_animal)
 values
-(50, 'Rex', 'Rex é um cãozinho resgatado das ruas, calmo, carinhoso e muito companheiro. Mesmo depois de tanto sofrer, ele ainda abana o rabo esperando por um lar cheio de amor. Está saudável, vacinado e pronto para ser seu melhor amigo. Que tal dar uma nova chance para o Rex? ', 3, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL'),
-(51, 'Mia', 'Mia é uma gatinha de olhos grandes e curiosos, resgatada ainda filhote. Adora colo, ronrona fácil e transforma qualquer canto da casa em um lugar aconchegante. Está castrada, vacinada e pronta para levar amor e tranquilidade para um novo lar. Que tal dar essa chance à Mia?', 2, 'PEQUENO', 'Siamês', 'FEMEA', 'DISPONIVEL'),
-(52, 'Bolt', 'Bolt é um cachorro cheio de energia e carinho, adora brincar e está sempre pronto para uma nova aventura. Foi resgatado das ruas, mas nunca perdeu a alegria. Já está vacinado, castrado e sonha com um lar onde possa correr, brincar e amar sem limites. Adote o Bolt e ganhe um amigo leal para a vida toda! ', 4, 'GRANDE', 'Pastor Alemão', 'MACHO', 'DISPONIVEL'),
-(53, 'Luna', 'Luna é uma gatinha doce e silenciosa, que adora janelas ensolaradas e cafuné atrás das orelhas. Foi resgatada ainda bebê e cresceu cheia de ternura. Já está castrada, vacinada e pronta para encher sua casa de amor e ronronados. Adote a Luna e deixe sua vida mais leve e encantadora', 1, 'PEQUENO', 'Persa', 'FEMEA', 'DISPONIVEL');
---(54, 'Thor', 'Cachorro brincalhão', 5, 'GRANDE', 'Labrador', 'MACHO', 'DISPONIVEL'),
---(55, 'Snow', 'Gato tranquilo', 3, 'PEQUENO', 'SRD', 'FEMEA', 'DISPONIVEL'),
---(56, 'Buddy', 'Cachorro curioso', 2, 'MEDIO', 'Beagle', 'MACHO', 'DISPONIVEL'),
---(57, 'Charlie', 'Cachorro carinhoso', 1, 'MEDIO', 'Poodle', 'FEMEA', 'DISPONIVEL'),
---(58, 'Shadow', 'Gato ágil', 4, 'PEQUENO', 'Siamês', 'MACHO', 'DISPONIVEL'),
---(59, 'Max', 'Cachorro amigável', 6, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL');
+(50, '1', 'Rex é um cãozinho resgatado das ruas, calmo, carinhoso e muito companheiro. Mesmo depois de tanto sofrer, ele ainda abana o rabo esperando por um lar cheio de amor. Está saudável, vacinado e pronto para ser seu melhor amigo. Que tal dar uma nova chance para o Rex? ', 3, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(51, '2', 'Mia é uma gatinha de olhos grandes e curiosos, resgatada ainda filhote. Adora colo, ronrona fácil e transforma qualquer canto da casa em um lugar aconchegante. Está castrada, vacinada e pronta para levar amor e tranquilidade para um novo lar. Que tal dar essa chance à Mia?', 2, 'PEQUENO', 'Siamês', 'FEMEA', 'DISPONIVEL','GATO'),
+(52, '3', 'Bolt é um cachorro cheio de energia e carinho, adora brincar e está sempre pronto para uma nova aventura. Foi resgatado das ruas, mas nunca perdeu a alegria. Já está vacinado, castrado e sonha com um lar onde possa correr, brincar e amar sem limites. Adote o Bolt e ganhe um amigo leal para a vida toda! ', 4, 'GRANDE', 'Pastor Alemão', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(53, '4', 'Luna é uma gatinha doce e silenciosa, que adora janelas ensolaradas e cafuné atrás das orelhas. Foi resgatada ainda bebê e cresceu cheia de ternura. Já está castrada, vacinada e pronta para encher sua casa de amor e ronronados. Adote a Luna e deixe sua vida mais leve e encantadora', 1, 'PEQUENO', 'Persa', 'FEMEA', 'DISPONIVEL','GATO'),
+(54, '5', 'Cachorro brincalhão', 5, 'GRANDE', 'Labrador', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(55, '6', 'Gato tranquilo', 3, 'PEQUENO', 'SRD', 'FEMEA', 'DISPONIVEL','GATO'),
+(56, '7', 'Cachorro curioso', 2, 'MEDIO', 'Beagle', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(57, '8', 'Cachorro carinhoso', 1, 'MEDIO', 'Poodle', 'FEMEA', 'DISPONIVEL','CACHORRO'),
+(58, '9', 'Gato ágil', 4, 'PEQUENO', 'Siamês', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(59, '10', 'Cachorro amigável', 6, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(60, '11', 'Rex é um cãozinho resgatado das ruas, calmo, carinhoso e muito companheiro. Mesmo depois de tanto sofrer, ele ainda abana o rabo esperando por um lar cheio de amor. Está saudável, vacinado e pronto para ser seu melhor amigo. Que tal dar uma nova chance para o Rex? ', 3, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(61, '12', 'Mia é uma gatinha de olhos grandes e curiosos, resgatada ainda filhote. Adora colo, ronrona fácil e transforma qualquer canto da casa em um lugar aconchegante. Está castrada, vacinada e pronta para levar amor e tranquilidade para um novo lar. Que tal dar essa chance à Mia?', 2, 'PEQUENO', 'Siamês', 'FEMEA', 'DISPONIVEL','GATO'),
+(62, '13', 'Bolt é um cachorro cheio de energia e carinho, adora brincar e está sempre pronto para uma nova aventura. Foi resgatado das ruas, mas nunca perdeu a alegria. Já está vacinado, castrado e sonha com um lar onde possa correr, brincar e amar sem limites. Adote o Bolt e ganhe um amigo leal para a vida toda! ', 4, 'GRANDE', 'Pastor Alemão', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(63, '14', 'Luna é uma gatinha doce e silenciosa, que adora janelas ensolaradas e cafuné atrás das orelhas. Foi resgatada ainda bebê e cresceu cheia de ternura. Já está castrada, vacinada e pronta para encher sua casa de amor e ronronados. Adote a Luna e deixe sua vida mais leve e encantadora', 1, 'PEQUENO', 'Persa', 'FEMEA', 'DISPONIVEL','GATO'),
+(64, '15', 'Cachorro brincalhão', 5, 'GRANDE', 'Labrador', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(65, '16', 'Gato tranquilo', 3, 'PEQUENO', 'SRD', 'FEMEA', 'DISPONIVEL','GATO'),
+(66, '17', 'Cachorro curioso', 2, 'MEDIO', 'Beagle', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(67, '18', 'Cachorro carinhoso', 1, 'MEDIO', 'Poodle', 'FEMEA', 'DISPONIVEL','GATO'),
+(68, '19', 'Gato ágil', 4, 'PEQUENO', 'Siamês', 'MACHO', 'DISPONIVEL','CACHORRO'),
+(69, '20', 'Cachorro amigável', 6, 'GRANDE', 'Golden Retriever', 'MACHO', 'DISPONIVEL','CACHORRO');
 
 insert into sos_animais_file(id, name, original_name, url, origin, folder) values
 (51, 'rex.jpg', 'Rex.jpg', 'https://res.cloudinary.com/petrescue/image/upload/b_auto:predominant,f_auto,c_pad,h_638,w_638/v1621938318/irhvrtblxwje1l1iukoh.jpg', 'LOCAL', 'sos_animais'),
@@ -37,12 +47,29 @@ insert into sos_animais_file(id, name, original_name, url, origin, folder) value
 (53, 'bolt.jpg', 'Bolt.jpg', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzq8dekEhpO_0nWmypnSa_IQldM2ciuEDLHw&s', 'LOCAL', 'sos_animais'),
 (54, 'luna.jpg', 'Luna.jpg', 'https://media.istockphoto.com/id/462139437/pt/foto/gato-bonito-branco-com-olhos-amarelos.jpg?s=612x612&w=0&k=20&c=6nXPCA8GMDTbP3FSqnC5zskJEbWJMCz6jadwx5HNLtw=', 'LOCAL', 'sos_animais');
 
-
+--
 insert into adoption_image(id, adoption_id, file_id, principal) values
 (50, 50, 51, true),
 (51, 51, 52, true),
 (52, 52, 53, true),
-(53, 53, 54, true);
+(53, 53, 54, true),
+(54, 54, 51, true),
+(55, 55, 52, true),
+(56, 56, 53, true),
+(57, 57, 53, true),
+(58, 58, 51, true),
+(59, 59, 53, true),
+(60, 60, 53, true),
+(61, 61, 54, true),
+(62, 62, 51, true),
+(63, 63, 52, true),
+(64, 64, 53, true),
+(65, 65, 54, true),
+(66, 66, 51, true),
+(67, 67, 52, true),
+(68, 68, 51, true),
+(69, 69, 51, true);
+
 
 
 INSERT INTO castration_request (

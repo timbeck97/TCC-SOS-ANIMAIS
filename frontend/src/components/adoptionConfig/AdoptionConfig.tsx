@@ -14,15 +14,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AdoptionSchema, AdoptionType } from "../../schemas/AdoptionSchema";
 import { BsCamera } from "react-icons/bs";
 import Input from "../input/Input";
-import { GENERO, PORTE_ANIMAIS, SITUACAO_ADOCAO } from "../../services/Constantes";
+import { GENERO, PORTE_ANIMAIS, SITUACAO_ADOCAO, TIPO_ANIMAIS } from "../../services/Constantes";
 import InputCombobox from "../input/InputCombobox";
 import ConfirmModal from "../modal/ConfirmModal";
 import { request } from "../../services/Axios";
 import { openAlertSuccess } from "../../services/Alert";
 import Loading from "../loading/Loading";
 import { ImageInterface } from "../../types/ImageInterface";
-import { FaStar, FaTrash } from "react-icons/fa";
+import { FaSearch, FaStar, FaTrash } from "react-icons/fa";
 import { useHookFormMask } from "use-mask-input";
+import AdoptionFilter from "../adoptionFilter/AdoptionFilter";
+import { AnimalRequestFilter } from "../../types/AnimalRequestFilter";
+import { AxiosRequestConfig } from "axios";
+import { PaginatedData } from "../../types/PaginatedData";
+import { PaginationConfig } from "../../types/PaginationConfig";
 
 
 
@@ -33,6 +38,8 @@ const AdoptionsConfig = () => {
         resolver: zodResolver(AdoptionSchema),
         mode: "onChange"
     });
+    const [filtro, setFiltro] = useState<AnimalRequestFilter>({ tipoAnimal: null });
+    const [paginacao, setPaginacao] = useState<PaginationConfig>({ quantidadeRegistros: 9, numeroPagina: 0, totalElements: 0, totalPages: 0 });
     const registerWithMask = useHookFormMask(register);
     const fileList = watch("imagens");
     const [lastFile, setLastFile] = useState<ImageInterface[] | null>(null);
@@ -45,7 +52,7 @@ const AdoptionsConfig = () => {
         if (id && id !== 'novo') {
             getAdoption(id);
         }
-        getAdoptions();
+        getAllAdoptions();
         // eslint-disable-next-line
         return () => {
             urlsRevoke.forEach((url: string) => {
@@ -55,6 +62,11 @@ const AdoptionsConfig = () => {
         }
         // eslint-disable-next-line
     }, []);
+    useEffect(() => {
+        getAllAdoptions();
+    // eslint-disable-next-line
+    }, [filtro])
+
     useEffect(() => {
         if (fileList && fileList.length > 0) {
             let imagens = fileList.map((file: ImageInterface) => {
@@ -72,14 +84,32 @@ const AdoptionsConfig = () => {
             setPreviewUrl(null);
         }
     }, [fileList]);
-
-    const getAdoptions = async () => {
+    const getAllAdoptions = async () => {
+        let list = await getAdoptions({
+            params: {
+                tipoAnimal: filtro.tipoAnimal,
+                genero: filtro.sexoAnimal,
+                situacaoAdocao: filtro.situacaoAdocao,
+                quantidadeRegistros: paginacao.quantidadeRegistros,
+            }
+        });
+        setAdoptions(list.data);
+        setPaginacao({
+            numeroPagina: 0,
+            quantidadeRegistros: paginacao.quantidadeRegistros,
+            totalElements: list.totalElements,
+            totalPages: list.totalPages
+        })
+    }
+    const getAdoptions = async (config: AxiosRequestConfig | {}): Promise<PaginatedData<AnimalAdoption>> => {
         setLoading(true);
-        const adoptions = await request<AnimalAdoption[]>('get', '/adoption');
+        const adoptions = await request<PaginatedData<AnimalAdoption>>('get', '/adoption', null, config);
         if (adoptions) {
-            setAdoptions(adoptions);
             setLoading(false);
+            return adoptions
         }
+        setLoading(false);
+        return { data: [], totalElements: 0, totalPages: 0 }
     }
     const getAdoptionImage = async (adoptionImage: ImageInterface) => {
         const resp = await fetch(adoptionImage.url || '');
@@ -226,6 +256,33 @@ const AdoptionsConfig = () => {
             setValue("imagens", newPreviewUrl, { shouldValidate: true });
         }
     }
+    const handleChangeFiltro = (filtro: AnimalRequestFilter) => {
+        setFiltro(filtro);
+    }
+    const handleCarregarMais = async () => {
+        setPaginacao((prev) => {
+            return { ...prev, numeroPagina: prev.numeroPagina + 1 };
+        });
+        const newAdoptions = await getAdoptions({
+            params: {
+                tipoAnimal: filtro.tipoAnimal,
+                genero: filtro.sexoAnimal,
+                situacaoAdocao: filtro.situacaoAdocao,
+                quantidadeRegistros: paginacao.quantidadeRegistros,
+                numeroPagina: paginacao.numeroPagina + 1
+            }
+        });
+        setAdoptions((prev) => {
+            return [...prev, ...newAdoptions.data];
+        });
+        setPaginacao((prev) => {
+            return {
+                ...prev,
+                totalElements: newAdoptions.totalElements,
+                totalPages: newAdoptions.totalPages
+            }
+        });
+    }
     const renderAdoptionList = () => {
         return (
             <Pawbackground>
@@ -236,6 +293,9 @@ const AdoptionsConfig = () => {
                             navigate('/gerenciar/adocao/novo');
                             reset();
                         }} />
+                    </div>
+                    <div className="w-full flex items-center justify-center mt-5  border-b border-gray-900/10 pb-5">
+                        <AdoptionFilter onFilterChange={(filtro: AnimalRequestFilter) => handleChangeFiltro(filtro)} filtrarSituacao={true}/>
                     </div>
                     <div className="grid  hd:grid-cols-3 mobile:grid-cols-1 fullhd:grid-cols-3 justify-items-center gap-4 p-4">
                         {adoptions.map((pet, idx) => (
@@ -262,6 +322,13 @@ const AdoptionsConfig = () => {
 
                         ))}
                     </div>
+
+                    {paginacao.totalElements > 0 && paginacao.totalElements > adoptions.length &&
+                        <div className="flex justify-center mb-4 px-5">
+                            <Button text="Carregar mais" class=" w-full sm:w-1/3" onClick={handleCarregarMais} type="success" icon={<FaSearch />} />
+                        </div>
+                    }
+
                 </div>
             </Pawbackground>
         )
@@ -366,7 +433,7 @@ const AdoptionsConfig = () => {
                             <Input id="descricaoAnimalIdx"
                                 label="Descrição do Animal"
                                 type="textarea"
-                                lines={4}
+                                lines={6}
                                 errors={errors.descricao}
                                 {...register('descricao')}
                             />
@@ -414,6 +481,15 @@ const AdoptionsConfig = () => {
                                 arrayKey="label"
                                 errors={errors.genero}
                                 {...register('genero')} />
+                            <InputCombobox id="tipoAnimalIdx"
+                                label="Tipo de Animal"
+                                comboboxValues={TIPO_ANIMAIS}
+                                valueKey="value"
+                                arrayKey="label"
+                                errors={errors.tipoAnimal}
+                                {...register('tipoAnimal')} />
+                        </div>
+                        <div>
                             <InputCombobox id="situacaoAdocaoIdx"
                                 label="Situação da Adoção"
                                 comboboxValues={SITUACAO_ADOCAO}
@@ -422,8 +498,7 @@ const AdoptionsConfig = () => {
                                 errors={errors.situacao}
                                 {...register('situacao')} />
                         </div>
-
-                        <div className="mb-4 flex justify-between">
+                        <div className="mb-4 flex justify-between mt-4">
                             <div className="gap-4 flex">
                                 <Button text="Salvar" class="w-32" type="default" buttonType="submit" />
                                 <Button text="Voltar" type="neutral" buttonType="button" onClick={() => {

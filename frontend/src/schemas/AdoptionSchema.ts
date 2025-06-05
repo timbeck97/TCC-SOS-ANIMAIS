@@ -17,6 +17,7 @@ export const AdoptionSchema = z.object({
     raca: z.string().min(1, "Raça é obrigatória"),
     genero: z.enum(["MACHO", "FEMEA"], { errorMap: () => ({ message: "Gênero é obrigatório" }) }),
     situacao: z.enum(["DISPONIVEL", "ADOTADO"], { errorMap: () => ({ message: "Situação é obrigatória" }) }),
+    tipoAnimal: z.enum(["CACHORRO", "GATO"], { errorMap: () => ({ message: "Tipo de animal é obrigatório" }) }),
 });
 
 export type AdoptionType = z.infer<typeof AdoptionSchema>;

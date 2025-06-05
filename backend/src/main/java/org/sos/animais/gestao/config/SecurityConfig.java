@@ -1,5 +1,8 @@
 package org.sos.animais.gestao.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sos.animais.gestao.service.CastrationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -28,13 +31,18 @@ public class SecurityConfig {
 
     @Value("${keycloak.client.id}")
     private String keyCloackClient;
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     private final AccessDeniedHandlerJwt accessDeniedHandlerJwt;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CorsProperties corsProperties;
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
-    public SecurityConfig(AccessDeniedHandlerJwt accessDeniedHandlerJwt, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+    public SecurityConfig(AccessDeniedHandlerJwt accessDeniedHandlerJwt, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CorsProperties corsProperties) {
         this.accessDeniedHandlerJwt = accessDeniedHandlerJwt;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.corsProperties = corsProperties;
     }
 
     @Bean
@@ -60,28 +68,7 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Bean
-//    public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
-//        Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
-//            Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
-//
-//            Object client = resourceAccess.get(keyCloackClient);
-//
-//            LinkedTreeMap<String, List<String>> clientRoleMap = (LinkedTreeMap<String, List<String>>) client;
-//
-//            List<String> clientRoles = new ArrayList<>(clientRoleMap.get("roles"));
-//
-//            return clientRoles.stream()
-//                    .map(SimpleGrantedAuthority::new)
-//                    .collect(Collectors.toList());
-//        };
-//
-//        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-//
-//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-//
-//        return jwtAuthenticationConverter;
-//    }
+
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
         Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
@@ -129,9 +116,13 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://timbeck.com.br"));
-        for (int i = 2; i <= 254; i++) {
-            config.addAllowedOrigin("http://192.168.2." + i + ":3000");
+        config.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        if(profile.equals("dev")){
+            for (int i = 2; i <= 254; i++) {
+                config.addAllowedOrigin("http://192.168.2." + i + ":3000");
+            }
+        }else{
+            config.getAllowedOrigins().forEach(x->logger.info("******* Allowed Origin: {}", x));
         }
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));

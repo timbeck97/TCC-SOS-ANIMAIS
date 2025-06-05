@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom"
 import banner from '../../assets/banner.jpg'
 import logo from '../../assets/logo.png'
 import family from '../../assets/family2.jpg'
+import { MdOutlinePhoneEnabled } from "react-icons/md"
 const Home = () => {
 
 
@@ -23,8 +24,8 @@ const Home = () => {
                     <div className="container mx-auto text-center">
                         <h2 className="text-3xl font-bold text-emerald-600 mb-4">Sobre a nossa ONG</h2>
                         <p className="text-lg text-gray-700 mb-8">
-                            A ONG SOS Animais é dedicada ao resgate, cuidado e bem-estar dos animais abandonados. Trabalhamos para garantir que
-                            todos os animais tenham uma vida digna, oferecendo serviços de castração gratuita para os animais resgatados da rua.
+                            ONG SOS Animais é dedicada ao cuidado e bem-estar dos animais de rua de nossa cidade. 
+                            Trabalhamos para garantir que todos os animais tenham uma vida digna, oferecendo serviços de castração a baixo custo para animais sem raça definida.
                         </p>
                     </div>
 
@@ -37,11 +38,11 @@ const Home = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <div className="bg-white p-6 shadow-lg rounded-lg">
                                 <h3 className="text-xl font-semibold text-emerald-600 mb-4">Castração a Baixo Custo</h3>
-                                <p className="text-gray-700">Realizamos castração a baixo custo para animais que foram resgatados da rua. Agende a sua solicitação agora mesmo!</p>
+                                <p className="text-gray-700">Realizamos castração a baixo custo para animais sem raça definida. Agende a sua solicitação agora mesmo!</p>
                             </div>
                             <div className="bg-white p-6 shadow-lg rounded-lg">
                                 <h3 className="text-xl font-semibold text-emerald-600 mb-4">Adoção Responsável</h3>
-                                <p className="text-gray-700">Oferecemos animais para adoção responsável, todos cuidados e prontos para encontrar uma nova família.</p>
+                                <p className="text-gray-700">Oferecemos animais para adoção responsável, todos  prontos para encontrar uma nova família. Aos que não estiverem castrados, asseguramos a castração a baixo custo.</p>
                             </div>
                             <div className="bg-white p-6 shadow-lg rounded-lg">
                                 <h3 className="text-xl font-semibold text-emerald-600 mb-4">Educação e Conscientização</h3>
@@ -80,9 +81,11 @@ const Home = () => {
                 </section>
 
                 <footer className="bg-gray-800 text-white py-6">
-                    <div className="container mx-auto text-center">
-                        <p>&copy; 2025 ONG SOS Animais. Todos os direitos reservados.</p>
-
+                    <div className="container mx-auto flex justify-center flex-col items-center">
+                        <p>&copy; Nova Hartz, 2025. ONG SOS Animais. Todos os direitos reservados.</p>
+                        <div className="flex items-center">
+                            <MdOutlinePhoneEnabled/><p> &nbsp;(51) 9 9660-7792</p>
+                        </div>
                     </div>
                 </footer>
             </div>

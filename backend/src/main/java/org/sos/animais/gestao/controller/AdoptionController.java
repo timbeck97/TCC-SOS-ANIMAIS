@@ -2,7 +2,11 @@ package org.sos.animais.gestao.controller;
 
 import jakarta.validation.Valid;
 import org.sos.animais.gestao.dto.AdoptionAnimalDto;
+import org.sos.animais.gestao.dto.PaginatedDataDto;
 import org.sos.animais.gestao.dto.UploadAdoptionDto;
+import org.sos.animais.gestao.enums.EAdoptionSituation;
+import org.sos.animais.gestao.enums.EAnimalGender;
+import org.sos.animais.gestao.enums.EAnimalType;
 import org.sos.animais.gestao.model.AdoptionAnimal;
 import org.sos.animais.gestao.service.AdoptionService;
 import org.springframework.http.MediaType;
@@ -22,9 +26,22 @@ public class AdoptionController {
         this.adoptionService = adoptionService;
     }
     @GetMapping
-    public ResponseEntity<List<AdoptionAnimalDto>> getAll(){
-        List<AdoptionAnimalDto> resp = adoptionService.findAll();
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<PaginatedDataDto<AdoptionAnimalDto>> getAll(
+            @RequestParam(required = false)EAnimalType tipoAnimal,
+            @RequestParam(required = false) EAnimalGender genero,
+            @RequestParam(required = false) EAdoptionSituation situacaoAdocao,
+            @RequestParam(required = false, defaultValue = "12") int quantidadeRegistros,
+             @RequestParam(required = false, defaultValue = "0") int numeroPagina
+            ){
+        System.out.println(tipoAnimal+"-"+ genero+"-"+situacaoAdocao);
+        System.out.println("quantidadeRegistros: "+quantidadeRegistros+" - numeroPagina: "+numeroPagina);
+        PaginatedDataDto<AdoptionAnimalDto> dto = adoptionService.findAll(tipoAnimal, genero, situacaoAdocao, quantidadeRegistros, numeroPagina);
+        dto.getData().forEach(x->System.out.print(x.getNome()+"-"));
+        System.out.println();
+        System.out.println("total elements: "+dto.getTotalElements());
+        System.out.println("total pages: "+dto.getTotalPages());
+        System.out.println("--------------------");
+        return ResponseEntity.ok(dto);
     }
     @GetMapping("/{id}")
     public ResponseEntity<AdoptionAnimalDto> getById(@PathVariable Long id){

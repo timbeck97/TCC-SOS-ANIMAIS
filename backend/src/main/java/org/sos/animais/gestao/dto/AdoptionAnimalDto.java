@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.sos.animais.gestao.enums.EAdoptionSituation;
 import org.sos.animais.gestao.enums.EAnimalGender;
 import org.sos.animais.gestao.enums.EAnimalSize;
+import org.sos.animais.gestao.enums.EAnimalType;
 import org.sos.animais.gestao.model.AdoptionAnimal;
 import org.sos.animais.gestao.model.AdoptionImage;
 
@@ -27,6 +28,7 @@ public class AdoptionAnimalDto {
     private EAnimalGender genero;
     private EAdoptionSituation situacao;
     private List<AdoptionImageDto> imagens;
+    private EAnimalType tipoAnimal;
 
     public AdoptionAnimalDto() {
     }
@@ -42,6 +44,7 @@ public class AdoptionAnimalDto {
         this.situacao = a.getSituacao();
         this.telefone = a.getTelefone();
         this.imagens = a.getImagens().stream().map(AdoptionImageDto::new).toList();
+        this.tipoAnimal = a.getTipoAnimal();
     }
     public Long getId() {
         return id;
@@ -121,5 +124,13 @@ public class AdoptionAnimalDto {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public EAnimalType getTipoAnimal() {
+        return tipoAnimal;
+    }
+
+    public void setTipoAnimal(EAnimalType tipoAnimal) {
+        this.tipoAnimal = tipoAnimal;
     }
 }

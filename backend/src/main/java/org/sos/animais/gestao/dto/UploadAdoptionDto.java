@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.sos.animais.gestao.enums.EAdoptionSituation;
 import org.sos.animais.gestao.enums.EAnimalGender;
 import org.sos.animais.gestao.enums.EAnimalSize;
+import org.sos.animais.gestao.enums.EAnimalType;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class UploadAdoptionDto {
     private EAdoptionSituation situacao;
     private boolean alterouImagem;
     private List<UploadImageDto> files;
+    private EAnimalType tipoAnimal;
 
     public UploadAdoptionDto() {
     }
@@ -116,5 +118,13 @@ public class UploadAdoptionDto {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public EAnimalType getTipoAnimal() {
+        return tipoAnimal;
+    }
+
+    public void setTipoAnimal(EAnimalType tipoAnimal) {
+        this.tipoAnimal = tipoAnimal;
     }
 }

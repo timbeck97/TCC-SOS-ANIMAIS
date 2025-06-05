@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Pawbackground from "../../components/pawbackground/Pawbackground";
 import { AnimalAdoption } from "../../types/AnimalAdoption";
 import Button from "../../components/button/Button";
@@ -13,6 +13,11 @@ import female from '../../assets/female.svg'
 import cake from '../../assets/cake.svg';
 import { formatGeneroAnimal, formatNumeroTelefone, formatPorteAnimal } from "../../services/Util";
 import Title from "../../components/title/Title";
+import { AnimalRequestFilter } from "../../types/AnimalRequestFilter";
+import { PaginationConfig } from "../../types/PaginationConfig";
+import { AxiosRequestConfig } from "axios";
+import { PaginatedData } from "../../types/PaginatedData";
+import AdoptionFilter from "../../components/adoptionFilter/AdoptionFilter";
 
 const Adoption = () => {
     const { id } = useParams<{ id: string | undefined }>()
@@ -21,24 +26,73 @@ const Adoption = () => {
     const [image, setImage] = useState<string | null>(null);
     const [animalAdoption, setAnimalAdoption] = useState<AnimalAdoption | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [filtro, setFiltro] = useState<AnimalRequestFilter>({});
+    const [paginacao, setPaginacao] = useState<PaginationConfig>({ quantidadeRegistros: 9, numeroPagina: 0, totalElements: 0, totalPages: 0 });
+    const observer = useRef<IntersectionObserver | null>(null);
+    const ultimoItemRef = useRef<HTMLDivElement | null>(null);     
 
     useEffect(() => {
-        getAnimals()
+        getAllAdoptions()
+        // eslint-disable-next-line
     }, []);
     useEffect(() => {
         if (id) {
             getAnimalAdoption(id);
         }
     }, [id]);
-    const getAnimals = async () => {
-        setIsLoading(true);
-        let resp = await publicRequest<AnimalAdoption[]>('get', '/public/adoption')
-        if (resp) {
-            setAnimals(resp || []);
-            console.log(resp)
-        }
-        setIsLoading(false);
+    useEffect(() => {
+        getAllAdoptions();
+    // eslint-disable-next-line
+    }, [filtro])
+  useEffect(() => {
+    if (observer.current) {
+      observer.current.disconnect();
     }
+    if (ultimoItemRef.current) {
+      observer.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            handleCarregarMais();
+          }
+        },
+        { threshold: 1.0 }
+      );
+      observer.current.observe(ultimoItemRef.current);
+    }
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+    // eslint-disable-next-line
+  }, [animals, id]);
+    const getAllAdoptions = async () => {
+        let list = await getAdoptions({
+            params: {
+                tipoAnimal: filtro.tipoAnimal,
+                genero: filtro.sexoAnimal,
+                situacaoAdocao: filtro.situacaoAdocao,
+                quantidadeRegistros: paginacao.quantidadeRegistros,
+            }
+        });
+        setAnimals(list.data||[]);
+        setPaginacao({
+            numeroPagina: 0,
+            quantidadeRegistros: paginacao.quantidadeRegistros,
+            totalElements: list.totalElements,
+            totalPages: list.totalPages
+        })
+    }
+     const getAdoptions = async (config: AxiosRequestConfig | {}): Promise<PaginatedData<AnimalAdoption>> => {
+           setIsLoading(true);
+           const adoptions = await publicRequest<PaginatedData<AnimalAdoption>>('get', '/public/adoption', null, config);
+           if (adoptions) {
+               setIsLoading(false);
+               return adoptions
+           }
+           setIsLoading(false);
+           return { data: [], totalElements: 0, totalPages: 0 }
+       }
     const getAnimalAdoption = async (id: string) => {
         setIsLoading(true);
         let resp = await publicRequest<AnimalAdoption>('get', `/public/adoption/${id}`)
@@ -60,6 +114,36 @@ const Adoption = () => {
         const url = `https://wa.me/${numero}?text=${mensagem}`;
         window.open(url, '_blank'); 
  
+    }
+    const handleChangeFiltro = (filtro: AnimalRequestFilter) => {
+            setFiltro(filtro);
+    }
+    const handleCarregarMais = async () => {
+        if( paginacao.numeroPagina + 1 >= paginacao.totalPages) {
+            return;
+        }
+        setPaginacao((prev) => {
+            return { ...prev, numeroPagina: prev.numeroPagina + 1 };
+        });
+        const newAdoptions = await getAdoptions({
+            params: {
+                tipoAnimal: filtro.tipoAnimal,
+                genero: filtro.sexoAnimal,
+                situacaoAdocao: filtro.situacaoAdocao,
+                quantidadeRegistros: paginacao.quantidadeRegistros,
+                numeroPagina: paginacao.numeroPagina + 1
+            }
+        });
+        setAnimals((prev) => {
+            return [...prev, ...newAdoptions.data || []];
+        });
+        setPaginacao((prev) => {
+            return {
+                ...prev,
+                totalElements: newAdoptions.totalElements,
+                totalPages: newAdoptions.totalPages
+            }
+        });
     }
     if (id) {
         return (
@@ -134,17 +218,20 @@ const Adoption = () => {
     }
     return (
         <Pawbackground>
-            <div className="flex flex-col bg-stone-100  items-center justify-center h-full">
-                <div className="bg-[#0e9f6e] container mx-auto text-center p-4 rounded-sm shadow-md mb-6">
-                    <h1 className="hd:text-2xl mobile:text-md  text-white poppins-semi-bold">Adoção de animais</h1>
+            <div className="flex flex-col bg-stone-100  items-center justify-center h-full pb-10">
+                <div className="bg-[#0e9f6e]  w-full text-center p-4 rounded-sm shadow-md mb-6">
+                    <h1 className="hd:text-2xl mobile:text-xl  text-white poppins-semi-bold">Adoção de animais</h1>
                     <p className="text-lg text-white mb-6">
                         Conheça nossos animais disponíveis para adoção. Todos eles estão prontos para encontrar um lar amoroso.
                     </p>
                 </div>
-
+                <div className="flex justify-start mb-4 px-5 w-full">
+                    <AdoptionFilter onFilterChange={(filtro: AnimalRequestFilter) => handleChangeFiltro(filtro)} filtrarSituacao={false} />
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 max-w-7xl w-full">
                     {animals.map((pet, idx) => (
-                        <div key={pet.id} className="flex flex-col justify-between bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
+                        <div key={pet.id} className="flex flex-col justify-between bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
+                        ref={idx === animals.length - 1 ? ultimoItemRef : null}>
                             <img
                                 className="w-full h-96 object-cover"
                                 src={pet.imagens.find(x => x.principal)?.url || ''}
@@ -166,6 +253,11 @@ const Adoption = () => {
                     ))}
 
                 </div>
+                 {/* {paginacao.totalElements > 0 && paginacao.totalElements > animals.length &&
+                    <div className="flex justify-center mb-4 px-5 w-full">
+                        <Button text="Carregar mais" class=" w-full sm:w-1/3" onClick={handleCarregarMais} type="success" icon={<FaSearch />} />
+                    </div>
+                } */}
                 <Loading loading={isLoading} />
 
             </div>

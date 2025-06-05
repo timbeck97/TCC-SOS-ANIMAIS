@@ -1,12 +1,13 @@
 package org.sos.animais.gestao.controller;
 
 import org.sos.animais.gestao.dto.AdoptionAnimalDto;
+import org.sos.animais.gestao.dto.PaginatedDataDto;
+import org.sos.animais.gestao.enums.EAdoptionSituation;
+import org.sos.animais.gestao.enums.EAnimalGender;
+import org.sos.animais.gestao.enums.EAnimalType;
 import org.sos.animais.gestao.service.AdoptionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,9 +21,14 @@ public class PublicAdoptionController {
         this.adoptionService = adoptionService;
     }
     @GetMapping
-    public ResponseEntity<List<AdoptionAnimalDto>> findAllAvailable(){
-        List<AdoptionAnimalDto> resp = adoptionService.findAllAvailable();
-        return ResponseEntity.ok(resp);
+    public ResponseEntity<PaginatedDataDto<AdoptionAnimalDto>> findAllAvailable(
+            @RequestParam(required = false) EAnimalType tipoAnimal,
+            @RequestParam(required = false) EAnimalGender genero,
+            @RequestParam(required = false, defaultValue = "12") int quantidadeRegistros,
+            @RequestParam(required = false, defaultValue = "0") int numeroPagina
+    ){
+        PaginatedDataDto<AdoptionAnimalDto> data = adoptionService.findAllAvailable(tipoAnimal, genero, quantidadeRegistros, numeroPagina);
+        return ResponseEntity.ok(data);
     }
     @GetMapping("/{id}")
     public ResponseEntity<AdoptionAnimalDto> findById(@PathVariable long id) {

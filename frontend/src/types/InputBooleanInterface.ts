@@ -4,4 +4,5 @@ export interface InputBooleanInterface {
     label: string;
     value?: any;
     control: any;
+    onChange?: (value: boolean) => void;
 }

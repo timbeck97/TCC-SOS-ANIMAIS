@@ -12,6 +12,7 @@ import org.sos.animais.gestao.repository.CastrationFileRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
 import org.sos.animais.gestao.repository.PriceRangeRepository;
 import org.sos.animais.gestao.service.file.FileService;
+import org.sos.animais.gestao.service.telegram.TelegramBot;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ class CastrationServiceTest {
 
     @Mock
     private NotificationService notificationService;
+
+    @Mock
+    private TelegramBot telegramBot;
+
     @Captor
     private ArgumentCaptor<CastrationRequest> castrationRequestCapture;
 

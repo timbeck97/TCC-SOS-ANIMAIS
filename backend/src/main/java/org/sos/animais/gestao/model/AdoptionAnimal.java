@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.sos.animais.gestao.enums.EAdoptionSituation;
 import org.sos.animais.gestao.enums.EAnimalGender;
 import org.sos.animais.gestao.enums.EAnimalSize;
+import org.sos.animais.gestao.enums.EAnimalType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class AdoptionAnimal {
     @OneToMany(mappedBy = "adoption", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
     private List<AdoptionImage> imagens;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(15)", nullable = false)
+    private EAnimalType tipoAnimal;
 
     public long getId() {
         return id;
@@ -119,5 +123,13 @@ public class AdoptionAnimal {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public EAnimalType getTipoAnimal() {
+        return tipoAnimal;
+    }
+
+    public void setTipoAnimal(EAnimalType tipoAnimal) {
+        this.tipoAnimal = tipoAnimal;
     }
 }

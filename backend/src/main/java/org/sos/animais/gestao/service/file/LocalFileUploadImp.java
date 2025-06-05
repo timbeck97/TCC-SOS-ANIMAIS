@@ -44,6 +44,7 @@ public class LocalFileUploadImp implements FileUploadService {
             System.out.println(profile);
             if(!profile.equals("dev")){
                 uriString = uriString.replace("/api", "/service");
+                uriString = uriString.replace("http", "https");
             }
             return uriString + "/public/arquivos/" + pasta + "/" + fileName;
         } catch (Exception e) {

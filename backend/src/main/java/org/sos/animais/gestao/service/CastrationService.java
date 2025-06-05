@@ -20,6 +20,7 @@ import org.sos.animais.gestao.repository.CastrationRepository;
 import org.sos.animais.gestao.repository.CastrationRequestRepository;
 import org.sos.animais.gestao.repository.PriceRangeRepository;
 import org.sos.animais.gestao.service.file.FileService;
+import org.sos.animais.gestao.service.telegram.TelegramBot;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,14 +43,16 @@ public class CastrationService {
     private final CastrationFileRepository castrationFileRepository;
     private final PriceRangeRepository priceRangeRepository;
     private final NotificationService notificationService;
+    private final TelegramBot telegramBot;
 
-    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileService fileService, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository, NotificationService notificationService) {
+    public CastrationService(CastrationRequestRepository castrationRequestRepository, CastrationRepository castrationRepository, FileService fileService, CastrationFileRepository castrationFileRepository, PriceRangeRepository priceRangeRepository, NotificationService notificationService, TelegramBot telegramBot) {
         this.castrationRequestRepository = castrationRequestRepository;
         this.castrationRepository = castrationRepository;
         this.fileService = fileService;
         this.castrationFileRepository = castrationFileRepository;
         this.priceRangeRepository = priceRangeRepository;
         this.notificationService = notificationService;
+        this.telegramBot = telegramBot;
     }
 
 
@@ -168,6 +171,22 @@ public class CastrationService {
             notificationService.createNotification(ENotification.CASTRATION_REQUEST_CREATED, entity.getNomeFormatado());
         }
         entity = castrationRequestRepository.findById(entity.getId()).orElseThrow(()->new RuntimeException("CastrationRequest not found"));
+        String mensagem = "<b>📋 Nova solicitação de castração recebida!</b>\n\n" +
+                "<b>👤 Tutor:</b>\n" +
+                "<b>Nome:</b> " + entity.getNome() + " " + entity.getSobrenome() + "\n" +
+                "<b>CPF:</b> " + entity.getCpf() + "\n" +
+                "<b>Telefone:</b> " + entity.getTelefone() + "\n" +
+                "<b>Endereço:</b> " + entity.getRua() + ", nº " + entity.getNumero() + " - " + entity.getBairro() + "\n\n" +
+                "<b>🐾 Animal:</b>\n" +
+                "<b>Nome:</b> " + entity.getNomeAnimal() + "\n" +
+                "<b>Espécie:</b> " + entity.getTipoAnimal() + "\n" +
+                "<b>Raça:</b> " + (entity.getRacaAnimal() != null ? entity.getRacaAnimal() : "Não informada") + "\n" +
+                "<b>Peso:</b> " + entity.getPesoAnimal() + " kg\n" +
+                "<b>Porte:</b> " + entity.getPorteAnimal() + "\n" +
+                "<b>Gênero:</b> " + entity.getGeneroAnimal() + "\n" +
+                "<b>Vacinado:</b> " + (entity.isAnimalVacinado() ? "Sim ✅" : "Não ❌") + "\n" +
+                "<b>Descrição:</b> " + (entity.getDescricaoAnimal() != null ? entity.getDescricaoAnimal() : "Não informada");
+        telegramBot.sendMessage(mensagem);
         return new CastrationRequestReturnDTO(entity);
     }
     public void deleteCastrationRequest(Long id){

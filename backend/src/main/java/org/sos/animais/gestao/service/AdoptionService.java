@@ -2,15 +2,23 @@ package org.sos.animais.gestao.service;
 
 import jakarta.transaction.Transactional;
 import org.sos.animais.gestao.dto.AdoptionAnimalDto;
+import org.sos.animais.gestao.dto.PaginatedDataDto;
 import org.sos.animais.gestao.dto.UploadImageDto;
 import org.sos.animais.gestao.dto.UploadAdoptionDto;
 import org.sos.animais.gestao.enums.EAdoptionSituation;
+import org.sos.animais.gestao.enums.EAnimalGender;
+import org.sos.animais.gestao.enums.EAnimalType;
 import org.sos.animais.gestao.model.AdoptionAnimal;
 import org.sos.animais.gestao.model.AdoptionImage;
 import org.sos.animais.gestao.model.SosAnimaisFile;
 import org.sos.animais.gestao.repository.AdoptionRepository;
 import org.sos.animais.gestao.service.file.FileService;
+import org.sos.animais.gestao.service.telegram.TelegramBot;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,22 +29,27 @@ public class AdoptionService {
 
     private final AdoptionRepository adoptionRepository;
     private final FileService fileService;
+    private final TelegramBot telegramBot;
 
-
-    public AdoptionService(AdoptionRepository adoptionRepository, FileService fileService) {
+    public AdoptionService(AdoptionRepository adoptionRepository, FileService fileService, TelegramBot telegramBot) {
         this.adoptionRepository = adoptionRepository;
         this.fileService = fileService;
 
+        this.telegramBot = telegramBot;
     }
 
-    public List<AdoptionAnimalDto> findAll() {
-        List<AdoptionAnimal> entities = adoptionRepository.findAll();
-        return entities.stream().map(AdoptionAnimalDto::new).collect(Collectors.toList());
+    public PaginatedDataDto<AdoptionAnimalDto> findAll(EAnimalType tipoAnimal, EAnimalGender genero, EAdoptionSituation situacaoAdocao, int quantidadeRegistros, int numeroPagina) {
+        Pageable page = PageRequest.of(numeroPagina,quantidadeRegistros);
+        Page<AdoptionAnimalDto> result = adoptionRepository.findAllFiltered(tipoAnimal, genero, situacaoAdocao, page);
+        PaginatedDataDto dto = new PaginatedDataDto(result.getContent(), result.getTotalElements(), result.getTotalPages());
+        return dto;
     }
 
-    public List<AdoptionAnimalDto> findAllAvailable() {
-        List<AdoptionAnimal> entities = adoptionRepository.findAllBySituacaoOrderByIdAsc(EAdoptionSituation.DISPONIVEL);
-        return entities.stream().map(AdoptionAnimalDto::new).collect(Collectors.toList());
+    public PaginatedDataDto<AdoptionAnimalDto> findAllAvailable(EAnimalType tipoAnimal, EAnimalGender genero, int quantidadeRegistros, int numeroPagina) {
+        Pageable page = PageRequest.of(numeroPagina,quantidadeRegistros);
+        Page<AdoptionAnimalDto> result = adoptionRepository.findAllFiltered(tipoAnimal, genero, EAdoptionSituation.DISPONIVEL, page);
+        PaginatedDataDto dto = new PaginatedDataDto(result.getContent(), result.getTotalElements(), result.getTotalPages());
+        return dto;
     }
 
     public AdoptionAnimalDto findById(Long id) {
@@ -59,6 +72,7 @@ public class AdoptionService {
         entity.setGenero(dto.getGenero());
         entity.setSituacao(dto.getSituacao());
         entity.setTelefone(dto.getTelefone());
+        entity.setTipoAnimal(dto.getTipoAnimal());
         entity = adoptionRepository.save(entity);
 
         if (dto.getId() == null) {
@@ -95,6 +109,14 @@ public class AdoptionService {
             }
         }
         entity = adoptionRepository.save(entity);
+        String mensagem = "<b>🐾 Novo animal para adoção cadastrado</b>\n" +
+                "<b>Nome:</b> " + entity.getNome() + "\n" +
+                "<b>ID:</b> " + entity.getId() + "\n" +
+                "<b>Tipo:</b> " + entity.getTipoAnimal() + "\n" +
+                "<b>Gênero:</b> " + entity.getGenero() + "\n" +
+                "<b>Porte:</b> " + entity.getPorte() + "\n" +
+                "<b>Situação:</b> " + entity.getSituacao();
+        telegramBot.sendMessage(mensagem);
         return new AdoptionAnimalDto(entity);
     }
 
