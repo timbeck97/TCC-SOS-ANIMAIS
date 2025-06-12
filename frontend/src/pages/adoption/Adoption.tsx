@@ -145,6 +145,10 @@ const Adoption = () => {
             }
         });
     }
+    const handleVoltar = () => {
+        setAnimalAdoption(null);
+        navigate('/adocao');
+    }
     if (id) {
         return (
             <Pawbackground>
@@ -205,7 +209,7 @@ const Adoption = () => {
                             </div>
                             <div className="mt-6">
                                 <Button text="Quero adotar" icon={<FcLike/>} onClick={() => mandarMensagem(animalAdoption||{} as AnimalAdoption)} type="success" class="w-full" />
-                                <Button text="Voltar" onClick={() => navigate('/adocao')} type="default" class="w-full mt-2" />
+                                <Button text="Voltar" onClick={handleVoltar} type="default" class="w-full mt-2" />
                             </div>
                         </div>
                     </div>

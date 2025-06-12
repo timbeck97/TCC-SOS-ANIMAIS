@@ -11,4 +11,5 @@ export interface AnimalAdoption {
     raca: string;
     genero: 'MACHO' | 'FEMEA';
     situacao: 'DISPONIVEL' | 'ADOTADO';
+    tipoAnimal: 'CACHORRO' | 'GATO';
 }

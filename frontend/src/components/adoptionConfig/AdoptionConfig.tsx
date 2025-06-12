@@ -9,7 +9,7 @@ import Button from "../button/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimalAdoption } from "../../types/AnimalAdoption";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdoptionSchema, AdoptionType } from "../../schemas/AdoptionSchema";
 import { BsCamera } from "react-icons/bs";
@@ -137,6 +137,7 @@ const AdoptionsConfig = () => {
             setLastFile(resp.imagens);
             setValue("imagens", resp.imagens, { shouldValidate: false });
             setPreviewUrl(resp.imagens);
+            setValue("tipoAnimal", resp.tipoAnimal);
             setUrlsRevoke((prev) => {
                 resp.imagens.forEach((adoptionImage) => {
                     if (adoptionImage.url) {
