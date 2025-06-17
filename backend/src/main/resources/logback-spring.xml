@@ -1,8 +1,24 @@
 <configuration>
+
+
+
+    <springProfile name="dev">
+        <property name="LOG_DIR" value="/opt/logs/dev" />
+        <property name="LOG_NAME" value="backend-dev" />
+
+    </springProfile>
+
+    <springProfile name="prod">
+        <property name="LOG_DIR" value="/opt/logs/prod" />
+        <property name="LOG_NAME" value="backend-prod" />
+
+    </springProfile>
+
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/logs/backend.log</file>
+        <file>${LOG_DIR}/backend.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/app-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>

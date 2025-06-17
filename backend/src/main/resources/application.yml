@@ -8,7 +8,7 @@ spring:
       max-file-size: 15MB
       max-request-size: 15MB
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
   servlet:
     context-path: /api
 keycloak:
@@ -24,12 +24,14 @@ keycloak:
     secret: ${KEYCLOACK_CLIENT_SECRET:1234}
 
 fileUploadPath: ${FILE_UPLOAD_PATH:/opt/sosfiles/}
+enableHttpsUrl: ${ENABLE_HTTPS_URL:false}
 app:
   cors:
     allowed-origins:
       - http://localhost:3000
       - http://localhost
       - https://sosnovahartz.com.br
+      - https://homologacao.sosnovahartz.com.br
 telegram:
   bot-token: ${TELEGRAM_BOT_TOKEN:teste}
   chat-id: ${TELEGRAM_CHAT_ID:teste}

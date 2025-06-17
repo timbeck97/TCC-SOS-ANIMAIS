@@ -1,10 +1,13 @@
 package org.sos.animais.gestao.service.file;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sos.animais.gestao.enums.EFileOrigin;
 import org.sos.animais.gestao.enums.EFileType;
 import org.sos.animais.gestao.model.CastrationFile;
 import org.sos.animais.gestao.model.CastrationRequest;
 import org.sos.animais.gestao.repository.CastrationFileRepository;
+import org.sos.animais.gestao.service.CastrationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +20,10 @@ public class LocalFileUploadImp implements FileUploadService {
 
     @Value("${fileUploadPath}")
     private String localPath;
-    @Value("${spring.profiles.active}")
-    private String profile;
-
+    private static final Logger logger = LoggerFactory.getLogger(LocalFileUploadImp.class);
     private final CastrationFileRepository castrationFileRepository;
+    @Value("${enableHttpsUrl}")
+    private boolean enableHttpsUrl;
 
     public LocalFileUploadImp(CastrationFileRepository castrationFileRepository) {
         this.castrationFileRepository = castrationFileRepository;
@@ -41,14 +44,13 @@ public class LocalFileUploadImp implements FileUploadService {
         try {
             file.transferTo(newFile);
             String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            System.out.println(profile);
-            if(!profile.equals("dev")){
+            if(enableHttpsUrl){
                 uriString = uriString.replace("/api", "/service");
                 uriString = uriString.replace("http", "https");
             }
             return uriString + "/public/arquivos/" + pasta + "/" + fileName;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error uploading file", e);
             throw new RuntimeException("Could not save file");
         }
     }
