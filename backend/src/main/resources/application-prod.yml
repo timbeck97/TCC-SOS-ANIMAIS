@@ -13,6 +13,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/sosanimais-realm
-          jwk-set-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/sosanimais-realm/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}
+          jwk-set-uri: ${KEYCLOACK_URL:http://localhost:8080}/realms/${KEYCLOACK_REALM:sosanimais-realm}/protocol/openid-connect/certs
 
