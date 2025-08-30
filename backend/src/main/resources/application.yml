@@ -9,6 +9,7 @@ spring:
       max-request-size: 15MB
 server:
   port: ${SERVER_PORT:8081}
+  forward-headers-strategy: FRAMEWORK
   servlet:
     context-path: /api
 keycloak:

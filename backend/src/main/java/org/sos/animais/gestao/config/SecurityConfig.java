@@ -3,6 +3,7 @@ package org.sos.animais.gestao.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sos.animais.gestao.service.CastrationService;
+import org.sos.animais.gestao.service.LogService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -38,11 +40,15 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CorsProperties corsProperties;
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    private final FilterConfig filterConfig;
 
-    public SecurityConfig(AccessDeniedHandlerJwt accessDeniedHandlerJwt, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CorsProperties corsProperties) {
+
+    public SecurityConfig(AccessDeniedHandlerJwt accessDeniedHandlerJwt, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CorsProperties corsProperties, FilterConfig filterConfig) {
         this.accessDeniedHandlerJwt = accessDeniedHandlerJwt;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.corsProperties = corsProperties;
+
+        this.filterConfig = filterConfig;
     }
 
     @Bean
@@ -64,6 +70,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandlerJwt)
 
                 )
+                .addFilterAfter(filterConfig, UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }

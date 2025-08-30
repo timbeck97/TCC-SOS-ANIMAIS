@@ -31,10 +31,7 @@ const Adoption = () => {
     const observer = useRef<IntersectionObserver | null>(null);
     const ultimoItemRef = useRef<HTMLDivElement | null>(null);     
 
-    useEffect(() => {
-        getAllAdoptions()
-        // eslint-disable-next-line
-    }, []);
+
     useEffect(() => {
         if (id) {
             getAnimalAdoption(id);
