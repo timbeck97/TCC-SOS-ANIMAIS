@@ -2,18 +2,30 @@ import axios from "axios";
 import { TokenAuth } from "../types/TokenAuth";
 import { openAlertSuccess } from "./Alert";
 import { openModalInstance } from "./ModalTrigger";
-const URL = process.env.REACT_APP_API_URL
 
 let refreshPromise: Promise<any> | null = null;
 
+const getUrl = ()=>{
+    if (process.env.NODE_ENV === 'development') {
+        return ''
+    }else{
+        return `${window.location.protocol}//${window.location.hostname}/service`
+    }
+}
+
 const apiAuth =  axios.create({
-    baseURL: URL, 
+    baseURL:  getUrl(), 
     headers: {
       'Content-Type': 'application/json',
     },
   });
 const login = () => {
-    window.location.href=URL+'/public/auth/keycloak'
+     if (process.env.NODE_ENV === 'development') {
+      window.location.href='http://localhost:8081/api/public/auth/keycloak';
+    }else{
+        window.location.href=getUrl()+'/public/auth/keycloak'
+    }
+   
 }
 const updateRefreshToken = async (): Promise<TokenAuth | null> => {
     if (refreshPromise) return refreshPromise;
@@ -21,7 +33,7 @@ const updateRefreshToken = async (): Promise<TokenAuth | null> => {
         try {
             let stringTk = localStorage.getItem('token');
             let token = JSON.parse(stringTk || '');
-            const response = await apiAuth.get(URL+'/public/auth/keycloak/refresh?refreshToken='+token.refreshToken)
+            const response = await apiAuth.get('/public/auth/keycloak/refresh?refreshToken='+token.refreshToken)
            
             const data = response.data;
             let newToken = {
@@ -82,7 +94,11 @@ const logout = () => {
     let token = JSON.parse(stringTk || '');
     localStorage.removeItem("token");
     localStorage.removeItem("roles");
-    window.location.href=URL+'/public/auth/keycloak/logout?tokenId='+token?.tokenId
+    if (process.env.NODE_ENV === 'development') {
+        window.location.href='http://localhost:8081/api/public/auth/keycloak/logout?tokenId='+token?.tokenId
+    }else{
+        window.location.href=getUrl()+'/public/auth/keycloak/logout?tokenId='+token?.tokenId
+    }
 };
 const isAutenticado = () => {
     const stringTk = localStorage.getItem('token')

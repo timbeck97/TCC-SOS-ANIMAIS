@@ -3,8 +3,15 @@ import { openModalInstance } from "./ModalTrigger";
 import { updateRefreshToken } from "./AuthRequest";
 import { TokenAuth } from "../types/TokenAuth";
 
-const URL = process.env.REACT_APP_API_URL
 
+const getUrl = ()=>{
+    if (process.env.NODE_ENV === 'development') {
+        return ''
+    }else{
+        return `${window.location.protocol}//${window.location.hostname}/service`
+    }
+}
+let URL = getUrl();
 
 
 
@@ -40,7 +47,7 @@ api.interceptors.response.use((response) => {
 }, error => {
   let { response } = error;
 
-  console.log('deu erro: ', error);
+
 
 
   if (error.code === 'ERR_NETWORK') {
@@ -143,7 +150,7 @@ export async function request<T>(
   config?: AxiosRequestConfig
 ): Promise<T | null> {
   try {
-    console.log(data)
+  
     const response = await api.request<T>({
       method,
       url,
