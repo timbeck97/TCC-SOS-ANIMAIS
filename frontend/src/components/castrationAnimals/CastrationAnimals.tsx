@@ -102,7 +102,7 @@ const CastrationAnimals = ({ dataProps,situacao,
                         setIdWaitList(row.id)
                     }}>Pagamento</Dropdown.Item>}
                     {row.urlComprovante && <Dropdown.Item icon={FaDownload} onClick={() => {
-                        window.open(row.urlComprovante.replace('http','https'), '_blank', 'noopener,noreferrer');
+                        window.open(row.urlComprovante.replace('http:','https:'), '_blank', 'noopener,noreferrer');
                     }}>Download Comprovante</Dropdown.Item>}
                     <Dropdown.Item icon={FaEdit} onClick={() => navigate('/gerenciar/filaEspera/' + row.id)}>Editar</Dropdown.Item>
                     {situacao!=='FINALIZADA' && handleRemoveAnimal && <Dropdown.Item icon={FaTrashAlt} onClick={() => handleRemoveAnimal(row)}>Remover</Dropdown.Item>}

@@ -9,7 +9,7 @@ import Button from "../button/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimalAdoption } from "../../types/AnimalAdoption";
 import { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdoptionSchema, AdoptionType } from "../../schemas/AdoptionSchema";
 import { BsCamera } from "react-icons/bs";
